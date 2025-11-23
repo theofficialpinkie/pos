@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weekly Planning – Typeform Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      background: #000;
+      font-family: 'JetBrains Mono', monospace;
+      color: white;
+      padding: 40px 20px;
+      overflow-x: hidden;
+      font-weight: 400;
+      letter-spacing: -0.25px;
+    }
+
+    /* --- Sleek Neon-Typeform Hybrid --- */
+    .progress-bar-wrapper {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto 40px auto;
+    }
+
+    .progress-label {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .progress-line {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #00ffbb, #00e19a);
+      box-shadow: 0 0 12px rgba(0,255,180,0.6);
+      transition: width 0.45s ease;
+    }
+
+    /* --- Section Title --- */
+    .section-header {
+      margin: 0 auto 50px;
+      max-width: 750px;
+      padding: 10px;
+      transform: translateY(20px);
+      opacity: 0;
+      animation: riseIn 0.7s forwards;
+    }
+
+    @keyframes riseIn {
+      to { opacity:1; transform: translateY(0); }
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #00ffbb;
+      margin-bottom: 8px;
+    }
+
+    .section-subtitle {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* --- Question Cards (full-width, soft fade) --- */
+    .question-card {
+      max-width: 750px;
+      margin: 0 auto 45px;
+      padding: 0px;
+      animation: fadeUp 0.7s ease forwards;
+      opacity: 0;
+      transform: translateY(25px);
+      background: transparent;
+      border: none;
+    }
+
+    @keyframes fadeUp {
+      to { opacity:1; transform: translateY(0); }
+    }
+
+    .question-label {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      font-weight: 500;
+      color: white;
+    }
+
+    /* --- Underline Input (Typeform-style) --- */
+    .underline-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.18);
+      padding: 6px 0;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.85);
+      transition: all 0.25s;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: -0.3px;
+    }
+
+    .underline-input:focus {
+      outline: none;
+      border-bottom: 1px solid #00ffbb;
+      box-shadow: none;
+      color: white;
+    }
+
+    textarea.underline-input {
+      min-height: 120px;
+      line-height: 1.5;
+    }
+
+    /* --- Radio Options (glowy, soft) --- */
+    .radio-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .radio-pill {
+      padding: 10px 18px;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: rgba(255,255,255,0.75);
+      font-size: 0.9rem;
+    }
+
+    .radio-pill:hover {
+      border-color: #00ffbb;
+      color: white;
+      box-shadow: 0 0 12px rgba(0,255,180,0.3);
+    }
+
+    input[type="radio"] { display:none; }
+
+    input[type="radio"]:checked + .radio-pill {
+      border-color: #00ffbb;
+      background: rgba(0,255,180,0.15);
+      color: white;
+      box-shadow: 0 0 15px rgba(0,255,180,0.45);
+    }
+
+    /* --- Slider Glow --- */
+    .slider-row { margin-top: 18px; }
+
+    .slider {
+      width: 100%;
+      -webkit-appearance: none;
+      background: rgba(255,255,255,0.15);
+      height: 6px;
+      border-radius: 20px;
+      outline: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: #00ffbb;
+      box-shadow: 0 0 15px rgba(0,255,180,0.7);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .slider-value {
+      text-align:center;
+      margin-top:10px;
+      font-size:1.6rem;
+      color:#00ffbb;
+    }
+
+    /* --- Buttons --- */
+    .nav-row {
+      display:flex;
+      justify-content: space-between;
+      max-width:750px;
+      margin:60px auto 0;
+    }
+
+    .btn {
+      padding:14px 28px;
+      text-transform:uppercase;
+      letter-spacing:2px;
+      font-size:0.8rem;
+      cursor:pointer;
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.35);
+      color:white;
+      transition:0.3s;
+    }
+
+    .btn:hover {
+      border-color:#00ffbb;
+      color:#00ffbb;
+      box-shadow:0 0 10px rgba(0,255,180,0.2);
+    }
+
+    .btn-primary {
+      border-color:#00ffbb;
+      background:#00ffbb;
+      color:black;
+    }
+
+    .btn-primary:hover {
+      background:#00e19a;
+      color:black;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="progress-bar-wrapper">
+    <div class="progress-label">Progress</div>
+    <div class="progress-line">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <div id="sectionContainer"></div>
+  <script>
+    /* === Full JS Port with New Aesthetic === */
+
+    const sectionNames = [
+      "Reality Check",
+      "Vision + Direction",
+      "Identity Lock-In",
+      "Compounding System",
+      "Execution Map",
+      "Energy Architecture",
+      "Pre-Decisions"
+    ];
+
+    const questions = [
+      // Part 1: Reality Check
+      {
+        section: "Reality Check",
+        sectionNumber: 1,
+        questions: [
+          { label: "What were your real wins from last week?", type: "textarea", placeholder: "// List 2-3 specific wins...", id: "wins" },
+          { label: "What felt off last week?", type: "textarea", placeholder: "// Be honest about what didn't feel right...", id: "feltOff" },
+          { label: "What pattern did you notice again?", type: "input", placeholder: "// Any recurring themes?", id: "pattern" }
+        ]
+      },
+      {
+        section: "Reality Check",
+        sectionNumber: 1,
+        questions: [
+          { label: "What's your energy baseline right now?", type: "radio", options: ["Stable","Scattered","Creative","Low"], id: "energyBaseline" },
+          { label: "Momentum score from last week (0-10)", type: "slider", min: 0, max: 10, id: "momentumLast" }
+        ]
+      },
+
+      // Part 2: Vision + Direction
+      {
+        section: "Vision + Direction",
+        sectionNumber: 2,
+        questions: [
+          { label: "Rate your 5 Pillars (0-10)", type: "pillars", pillars: [
+            { name: "Mastery", id: "mastery" },
+            { name: "Money", id: "money" },
+            { name: "Love", id: "love" },
+            { name: "Social", id: "social" },
+            { name: "Body", id: "body" }
+          ] }
+        ]
+      },
+      {
+        section: "Vision + Direction",
+        sectionNumber: 2,
+        questions: [
+          { label: "If you're living your ideal life in 3 years, what does this week look like?", type: "textarea", placeholder: "// Paint it...", id: "visionWeek" },
+          { label: "What's your ONE direction this week?", type: "input", placeholder: "// Single focus...", id: "oneDirection" },
+          { label: "What's the ONE big move?", type: "input", placeholder: "// The thing that changes everything...", id: "bigMove" }
+        ]
+      },
+
+      // Part 3: Identity Lock-In
+      {
+        section: "Identity Lock-In",
+        sectionNumber: 3,
+        questions: [
+          { label: 'Complete this: "I am the version of me who..."', type: "input", placeholder: "// ships products, takes care of her body...", id: "identity" },
+          { label: "What evidence will you create this week?", type: "textarea", placeholder: "// 2-3 actions that prove identity...", id: "evidence" },
+          { label: "What are you releasing this week?", type: "input", placeholder: "// Old patterns...", id: "releasing" }
+        ]
+      }
+    ];
+
+    let currentScreen = 0;
+    let formData = {};
+
+    function updateProgressBar() {
+      const progress = ((currentScreen + 1) / questions.length) * 100;
+      document.getElementById("progressFill").style.width = progress + "%";
+    }
+
+    function renderScreen(screenIndex) {
+      const screen = questions[screenIndex];
+      const container = document.getElementById("sectionContainer");
+
+      let html = `
+        <div class="section-header">
+          <div class="section-title">${screen.section}</div>
+          <div class="section-subtitle">Section ${screen.sectionNumber} of 7</div>
+        </div>
+      `;
+
+      screen.questions.forEach((q, i) => {
+        html += `<div class="question-card" style="animation-delay:${i * 0.1}s">`;
+        html += `<div class="question-label">${q.label}</div>`;
+
+        if (q.type === "input") {
+          html += `<input class="underline-input" id="${q.id}" placeholder="${q.placeholder}" value="${formData[q.id] || ''}">`;
+
+        } else if (q.type === "textarea") {
+          html += `<textarea class="underline-input" id="${q.id}" placeholder="${q.placeholder}">${formData[q.id] || ''}</textarea>`;
+
+        } else if (q.type === "radio") {
+          html += `<div class="radio-row">`;
+          q.options.forEach(option => {
+            const checked = formData[q.id] === option ? "checked" : "";
+            html += `
+              <label>
+                <input type="radio" name="${q.id}" value="${option}" ${checked} />
+                <span class="radio-pill">${option}</span>
+              </label>
+            `;
+          });
+          html += `</div>`;
+
+        } else if (q.type === "slider") {
+          const value = formData[q.id] || 5;
+          html += `
+            <div class="slider-row">
+              <input type="range" min="${q.min}" max="${q.max}" value="${value}" class="slider" id="${q.id}" />
+              <div class="slider-value" id="${q.id}-value">${value}</div>
+            </div>
+          `;
+
+        } else if (q.type === "pillars") {
+          q.pillars.forEach(p => {
+            const val = formData[p.id] || 5;
+            html += `
+              <div class="question-card" style="margin-top:25px;">
+                <div class="question-label">${p.name}</div>
+                <input type="range" min="0" max="10" value="${val}" id="${p.id}" class="slider" />
+                <div class="slider-value" id="${p.id}-value">${val}</div>
+              </div>
+            `;
+          });
+        }
+
+        html += `</div>`; // end question-card
+      });
+
+      html += `
+        <div class="nav-row">
+          <button class="btn" onclick="previousScreen()" ${currentScreen === 0 ? 'style="opacity:0;pointer-events:none;"' : ''}>← Previous</button>
+          <button class="btn btn-primary" onclick="nextScreen()">${currentScreen === questions.length - 1 ? 'Generate →' : 'Next →'}</button>
+        </div>
+      `;
+
+      container.innerHTML = html;
+
+      // Slider listeners
+      document.querySelectorAll('.slider').forEach(slider => {
+        slider.oninput = e => {
+          document.getElementById(e.target.id + "-value").innerHTML = e.target.value;
+        };
+      });
+
+      updateProgressBar();
+    }
+
+    function saveScreen() {
+      const screen = questions[currentScreen];
+      screen.questions.forEach(q => {
+
+        if (q.type === "pillars") {
+          q.pillars.forEach(p => {
+            formData[p.id] = document.getElementById(p.id).value;
+          });
+
+        } else if (q.type === "radio") {
+          const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+          if (checked) formData[q.id] = checked.value;
+
+        } else {
+          const el = document.getElementById(q.id);
+          if (el) formData[q.id] = el.value;
+        }
+      });
+    }
+
+    function nextScreen() {
+      saveScreen();
+      if (currentScreen < questions.length - 1) {
+        currentScreen++;
+        renderScreen(currentScreen);
+      } else {
+        localStorage.setItem('weeklyPlanData', JSON.stringify(formData));
+        window.location.href = 'plan.html';
+      }
+    }
+
+    function previousScreen() {
+      saveScreen();
+      if (currentScreen > 0) {
+        currentScreen--;
+        renderScreen(currentScreen);
+      }
+    }
+
+    renderScreen(0);
+  </script>
+</body>
+</html>
