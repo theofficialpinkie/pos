@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Operating System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,400;1,600&family=JetBrains+Mono:wght@300;400&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #000000;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Messy artsy collage background */
+    .image-collage {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    
+    .collage-img {
+      position: absolute;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.5;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+    }
+    
+    /* Crown - biggest, center right */
+    .img-crown {
+      width: 340px;
+      height: 480px;
+      background-image: url('dark-fem-crown.jpg');
+      right: 15%;
+      top: 50%;
+      transform: translateY(-50%) rotate(4deg);
+      opacity: 0.6;
+      z-index: 2;
+    }
+    
+    /* Build computer - top right, fully visible (enlarged and repositioned) */
+    .img-build {
+      width: 320px;
+      height: 250px;
+      background-image: url('build.webp');
+      right: 38%;
+      top: 8%;
+      transform: rotate(-3deg);
+      opacity: 0.5;
+      z-index: 1;
+    }
+    
+    /* Text container - artsy angled design */
+    .container {
+      position: relative;
+      z-index: 4;
+      text-align: left;
+      max-width: 500px;
+      margin-right: auto;
+      margin-left: 80px;
+      padding: 50px 40px;
+      background: transparent;
+      transform: skewY(-1deg);
+    }
+    
+    .container > * {
+      transform: skewY(1deg);
+    }
+    
+    h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 3.2rem;
+      font-weight: 300;
+      letter-spacing: -1px;
+      color: #ffffff;
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+    
+    .line-1, .line-2 {
+      display: block;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    
+    .line-1 {
+      border-right: 3px solid rgba(255, 255, 255, 0.7);
+      animation: typing-1 1.5s steps(12) forwards, blink 0.75s step-end infinite;
+    }
+    
+    .line-2 {
+      border-right: 3px solid rgba(255, 255, 255, 0.7);
+      animation: typing-2 1.5s steps(10) 1.5s forwards, blink 0.75s step-end 1.5s infinite;
+      max-width: 0;
+    }
+    
+    @keyframes typing-1 {
+      from { max-width: 0; }
+      to { max-width: 100%; }
+    }
+    
+    @keyframes typing-2 {
+      from { max-width: 0; }
+      to { max-width: 100%; }
+    }
+    
+    @keyframes blink {
+      from, to { border-color: transparent; }
+      50% { border-color: rgba(255, 255, 255, 0.7); }
+    }
+    
+    .best {
+      font-family: 'Dancing Script', cursive;
+      font-weight: 600;
+      font-style: normal;
+      font-size: 3.8rem;
+      position: relative;
+      display: inline;
+      letter-spacing: 0px;
+    }
+    
+    .date-range {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: #ffffff;
+      margin-bottom: 30px;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Weekly planner component with animation */
+    .week-tracker {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 35px;
+      align-items: center;
+    }
+    
+    .week-day {
+      width: 10px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .week-day::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 0%;
+      background: linear-gradient(180deg, #00ff88, #00cc6a);
+      animation: fillUp 7s ease-in-out infinite;
+    }
+    
+    .week-day:nth-child(1)::after { animation-delay: 0s; }
+    .week-day:nth-child(2)::after { animation-delay: 1s; }
+    .week-day:nth-child(3)::after { animation-delay: 2s; }
+    .week-day:nth-child(4)::after { animation-delay: 3s; }
+    .week-day:nth-child(5)::after { animation-delay: 4s; }
+    .week-day:nth-child(6)::after { animation-delay: 5s; }
+    .week-day:nth-child(7)::after { animation-delay: 6s; }
+    
+    @keyframes fillUp {
+      0%, 100% { height: 0%; }
+      14%, 86% { height: 100%; }
+    }
+    
+    .week-label {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-left: 10px;
+    }
+    
+    .cta-button {
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      padding: 16px 48px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border-radius: 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .cta-button:hover {
+      background: rgba(255, 255, 255, 0.9);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(255, 255, 255, 0.3);
+    }
+    
+    .cta-button:active {
+      transform: translateY(0px);
+    }
+  </style>
+</head>
+<body>
+  <div class="image-collage">
+    <div class="collage-img img-crown"></div>
+    <div class="collage-img img-build"></div>
+  </div>
+  
+  <div class="container">
+    <h1>
+      <span class="line-1">Design Your</span>
+      <span class="line-2"><span class="best">Best</span> Week</span>
+    </h1>
+    <p class="date-range" id="dateRange">Planning for: Loading...</p>
+    
+    <div class="week-tracker">
+      <div class="week-day"></div>
+      <div class="week-day"></div>
+      <div class="week-day"></div>
+      <div class="week-day"></div>
+      <div class="week-day"></div>
+      <div class="week-day"></div>
+      <div class="week-day"></div>
+      <span class="week-label">7 Days</span>
+    </div>
+    
+    <button class="cta-button" onclick="startPlanning()">Start Weekly Planning</button>
+  </div>
+  
+  <script>
+    // Calculate next Monday to Sunday
+    function getNextWeekDates() {
+      const today = new Date();
+      const currentDay = today.getDay();
+      const daysUntilMonday = currentDay === 0 ? 1 : 8 - currentDay;
+      
+      const nextMonday = new Date(today);
+      nextMonday.setDate(today.getDate() + daysUntilMonday);
+      
+      const nextSunday = new Date(nextMonday);
+      nextSunday.setDate(nextMonday.getDate() + 6);
+      
+      const options = { month: 'short', day: 'numeric' };
+      const mondayStr = nextMonday.toLocaleDateString('en-US', options);
+      const sundayStr = nextSunday.toLocaleDateString('en-US', options);
+      
+      return `${mondayStr} - ${sundayStr}`;
+    }
+    
+    document.getElementById('dateRange').textContent = `Planning for: ${getNextWeekDates()}`;
+    
+    function startPlanning() {
+      window.location.href = '/questionnaire';
+    }
+  </script>
+</body>
+</html>
