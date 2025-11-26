@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Weekly Planning – Typeform Edition</title>
+  <title>Weekly Planning – Your Operating System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -17,9 +17,10 @@
       overflow-x: hidden;
       font-weight: 400;
       letter-spacing: -0.25px;
+      position: relative;
     }
 
-    /* --- Sleek Neon-Typeform Hybrid --- */
+    /* --- Progress Bar --- */
     .progress-bar-wrapper {
       width: 100%;
       max-width: 900px;
@@ -51,7 +52,91 @@
       transition: width 0.45s ease;
     }
 
-    /* --- Section Title --- */
+    /* --- Sticky Recommended Actions --- */
+    .sticky-actions {
+      position: fixed;
+      right: 30px;
+      top: 120px;
+      width: 280px;
+      max-height: 70vh;
+      overflow-y: auto;
+      padding: 20px;
+      background: rgba(0,255,187,0.08);
+      border: 1px solid rgba(0,255,187,0.3);
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0,255,187,0.2);
+      z-index: 1000;
+      display: none;
+    }
+
+    .sticky-actions.visible {
+      display: block;
+      animation: slideInRight 0.5s ease;
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .sticky-title {
+      font-size: 0.9rem;
+      color: #00ffbb;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .sticky-note {
+      margin-bottom: 12px;
+      padding: 10px;
+      background: rgba(0,0,0,0.4);
+      border-left: 2px solid #00ffbb;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+
+    .sticky-note-label {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.7rem;
+      margin-bottom: 4px;
+    }
+
+    /* --- Ritual Opening --- */
+    .ritual-card {
+      max-width: 750px;
+      margin: 60px auto;
+      padding: 40px;
+      background: rgba(0,255,187,0.05);
+      border: 1px solid rgba(0,255,187,0.2);
+      border-radius: 8px;
+      text-align: center;
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    .ritual-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    .ritual-title {
+      font-size: 1.5rem;
+      color: #00ffbb;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .ritual-text {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 30px;
+      white-space: pre-line;
+    }
+
+    /* --- Section Header --- */
     .section-header {
       margin: 0 auto 50px;
       max-width: 750px;
@@ -79,7 +164,58 @@
       text-transform: uppercase;
     }
 
-    /* --- Question Cards (full-width, soft fade) --- */
+    /* --- Pause Moments --- */
+    .pause-card {
+      max-width: 750px;
+      margin: 60px auto;
+      padding: 30px;
+      background: rgba(255,255,255,0.03);
+      border-left: 3px solid #00ffbb;
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    .pause-icon {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .pause-text {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.7);
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    /* --- Breath Moment --- */
+    .breath-card {
+      max-width: 750px;
+      margin: 60px auto;
+      padding: 40px;
+      background: rgba(0,255,187,0.05);
+      border: 2px solid rgba(0,255,187,0.3);
+      border-radius: 8px;
+      text-align: center;
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    .breath-icon {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+
+    .breath-text {
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.8;
+    }
+
+    /* --- Question Cards --- */
     .question-card {
       max-width: 750px;
       margin: 0 auto 45px;
@@ -102,7 +238,79 @@
       color: white;
     }
 
-    /* --- Underline Input (Typeform-style) --- */
+    .question-sublabel {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    /* --- Goal Checkbox List --- */
+    .goal-checkbox-list {
+      margin-top: 20px;
+    }
+
+    .goal-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      margin-bottom: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .goal-item:hover {
+      border-color: rgba(0,255,187,0.4);
+      background: rgba(0,255,187,0.05);
+    }
+
+    .goal-item.completed {
+      border-color: rgba(0,255,187,0.6);
+      background: rgba(0,255,187,0.1);
+    }
+
+    .goal-item.completed::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0,255,187,0.2), transparent);
+      animation: shine 0.8s;
+    }
+
+    @keyframes shine {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(100%); }
+    }
+
+    .goal-checkbox {
+      width: 24px;
+      height: 24px;
+      margin-right: 15px;
+      cursor: pointer;
+      accent-color: #00ffbb;
+    }
+
+    .goal-text {
+      flex: 1;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      transition: all 0.3s;
+    }
+
+    .goal-item.completed .goal-text {
+      color: #00ffbb;
+      text-decoration: line-through;
+    }
+
+    /* --- Inputs --- */
     .underline-input {
       width: 100%;
       background: transparent;
@@ -126,9 +334,58 @@
     textarea.underline-input {
       min-height: 120px;
       line-height: 1.5;
+      resize: vertical;
     }
 
-    /* --- Radio Options (glowy, soft) --- */
+    /* --- Good/Bad Toggle --- */
+    .toggle-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      padding: 12px 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+    }
+
+    .toggle-btn:hover {
+      border-color: rgba(255,255,255,0.4);
+    }
+
+    .toggle-btn.good.active {
+      border-color: #00ffbb;
+      background: rgba(0,255,187,0.15);
+      color: #00ffbb;
+      box-shadow: 0 0 15px rgba(0,255,187,0.3);
+    }
+
+    .toggle-btn.bad.active {
+      border-color: #ff6464;
+      background: rgba(255,100,100,0.15);
+      color: #ff6464;
+      box-shadow: 0 0 15px rgba(255,100,100,0.3);
+    }
+
+    .action-input-wrapper {
+      margin-top: 15px;
+      display: none;
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    .action-input-wrapper.visible {
+      display: block;
+    }
+
+    /* --- Radio Options --- */
     .radio-row {
       display: flex;
       gap: 12px;
@@ -161,7 +418,7 @@
       box-shadow: 0 0 15px rgba(0,255,180,0.45);
     }
 
-    /* --- Slider Glow --- */
+    /* --- Slider --- */
     .slider-row { margin-top: 18px; }
 
     .slider {
@@ -184,11 +441,162 @@
       transition: 0.2s;
     }
 
+    .slider::-moz-range-thumb {
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: #00ffbb;
+      box-shadow: 0 0 15px rgba(0,255,180,0.7);
+      cursor: pointer;
+      border: none;
+    }
+
     .slider-value {
       text-align:center;
       margin-top:10px;
       font-size:1.6rem;
       color:#00ffbb;
+    }
+
+    /* --- KPI Grid --- */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .kpi-item {
+      padding: 15px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+    }
+
+    .kpi-label {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 8px;
+    }
+
+    .kpi-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding: 4px 0;
+      font-size: 1.2rem;
+      color: #00ffbb;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .kpi-input:focus {
+      outline: none;
+      border-bottom-color: #00ffbb;
+    }
+
+    /* --- Context Display --- */
+    .context-display {
+      max-width: 750px;
+      margin: 0 auto 40px;
+      padding: 25px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+    }
+
+    .context-section {
+      margin-bottom: 20px;
+    }
+
+    .context-title {
+      font-size: 0.9rem;
+      color: #00ffbb;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .context-item {
+      padding: 10px;
+      margin-bottom: 8px;
+      background: rgba(0,0,0,0.3);
+      border-left: 2px solid rgba(0,255,187,0.4);
+      border-radius: 4px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* --- Goal Display --- */
+    .goal-display {
+      max-width: 750px;
+      margin: 60px auto;
+      padding: 40px;
+      background: rgba(0,255,187,0.05);
+      border: 2px solid rgba(0,255,187,0.3);
+      border-radius: 8px;
+    }
+
+    .goal-display-title {
+      font-size: 1.5rem;
+      color: #00ffbb;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .goal-category {
+      margin-bottom: 30px;
+    }
+
+    .goal-category-title {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .goal-list-item {
+      padding: 12px;
+      margin-bottom: 10px;
+      background: rgba(0,0,0,0.3);
+      border-left: 3px solid #00ffbb;
+      border-radius: 4px;
+      font-size: 0.95rem;
+    }
+
+    /* --- Checkboxes --- */
+    .checkbox-list {
+      margin-top: 15px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .checkbox-item:hover {
+      border-color: rgba(0,255,187,0.3);
+      background: rgba(0,255,187,0.05);
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      margin-right: 12px;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: #00ffbb;
+    }
+
+    .checkbox-label {
+      flex: 1;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
     }
 
     /* --- Buttons --- */
@@ -209,6 +617,7 @@
       border:1px solid rgba(255,255,255,0.35);
       color:white;
       transition:0.3s;
+      border-radius: 4px;
     }
 
     .btn:hover {
@@ -227,10 +636,44 @@
       background:#00e19a;
       color:black;
     }
+
+    /* --- Threshold Alert --- */
+    .threshold-alert {
+      margin-top: 15px;
+      padding: 15px;
+      background: rgba(255,100,100,0.1);
+      border-left: 3px solid #ff6464;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.8);
+      display: none;
+    }
+
+    .threshold-alert.active {
+      display: block;
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 1400px) {
+      .sticky-actions {
+        position: static;
+        width: 100%;
+        max-width: 750px;
+        margin: 0 auto 40px;
+        max-height: none;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <!-- Sticky Recommended Actions -->
+  <div class="sticky-actions" id="stickyActions">
+    <div class="sticky-title">📌 Recommended Actions</div>
+    <div id="stickyContent"></div>
+  </div>
+
   <div class="progress-bar-wrapper">
     <div class="progress-label">Progress</div>
     <div class="progress-line">
@@ -239,108 +682,639 @@
   </div>
 
   <div id="sectionContainer"></div>
+
   <script>
-    /* === Full JS Port with New Aesthetic === */
-
-    const sectionNames = [
-      "Reality Check",
-      "Vision + Direction",
-      "Identity Lock-In",
-      "Compounding System",
-      "Execution Map",
-      "Energy Architecture",
-      "Pre-Decisions"
-    ];
-
     const questions = [
-      // Part 1: Reality Check
+      // Ritual Opening
+      {
+        section: "Before You Begin",
+        sectionNumber: 0,
+        type: "ritual",
+        content: {
+          icon: "🕯️",
+          title: "BEFORE YOU BEGIN",
+          text: "Light a candle. Put on powerful music. Take 3 deep breaths.\n\nSay out loud:\n\"I am planning from my highest self.\nI am designing a week worthy of who I am becoming.\""
+        }
+      },
+
+      // Part 1: Reality Check - Last Week's Goals with Checkboxes
+      {
+        section: "Reality Check",
+        sectionNumber: 1,
+        subtitle: "What happened last week — and who was I being?",
+        questions: [
+          { label: "What were your work goals last week?", sublabel: "3-5 goals", type: "textarea", placeholder: "// One goal per line...", id: "lastWeekWorkGoals" },
+          { label: "What were your life goals last week?", sublabel: "3-5 goals", type: "textarea", placeholder: "// One goal per line...", id: "lastWeekLifeGoals" }
+        ]
+      },
+
+      {
+        section: "Reality Check",
+        sectionNumber: 1,
+        type: "goalCheckoff",
+        questions: [
+          { label: "Check off the goals you completed", sublabel: "Celebrate each one as you check it!", type: "dynamic-checkboxes", id: "completedGoals" }
+        ]
+      },
+
+      // Part 1: Reality Check - Celebration
       {
         section: "Reality Check",
         sectionNumber: 1,
         questions: [
-          { label: "What were your real wins from last week?", type: "textarea", placeholder: "// List 2-3 specific wins...", id: "wins" },
-          { label: "What felt off last week?", type: "textarea", placeholder: "// Be honest about what didn't feel right...", id: "feltOff" },
-          { label: "What pattern did you notice again?", type: "input", placeholder: "// Any recurring themes?", id: "pattern" }
+          { label: "What are 3-5 specific wins from last week?", sublabel: "Things you shipped, decisions you made, moments you're proud of", type: "textarea", placeholder: "// Shipped feature X\n// Had difficult conversation with Y\n// Maintained meditation streak", id: "proudWins" },
+          { label: "What patterns or behaviors gave you energy last week?", sublabel: "These become habits to repeat", type: "textarea", placeholder: "// Working from cafe mornings\n// Not checking phone first thing\n// Evening walks", id: "whatWorked" }
+        ],
+        pause: {
+          icon: "⏸️",
+          text: "Take a breath. You're allowed to celebrate yourself."
+        }
+      },
+
+      // Part 1: Reality Check - KPIs
+      {
+        section: "Reality Check",
+        sectionNumber: 1,
+        type: "kpis",
+        kpis: [
+          { label: "Weight", id: "kpiWeight", type: "text" },
+          { label: "GitHub Commits", id: "kpiGithub", type: "number" },
+          { label: "Days Meditated", id: "kpiMeditation", type: "number" },
+          { label: "Spending ($)", id: "kpiSpending", type: "number" },
+          { label: "Exciting Moments", id: "kpiExcitement", type: "number" },
+          { label: "Runway (weeks)", id: "kpiRunway", type: "number" }
         ]
       },
+
+      // Part 1: Reality Check - Patterns & Energy
       {
         section: "Reality Check",
         sectionNumber: 1,
         questions: [
-          { label: "What's your energy baseline right now?", type: "radio", options: ["Stable","Scattered","Creative","Low"], id: "energyBaseline" },
-          { label: "Momentum score from last week (0-10)", type: "slider", min: 0, max: 10, id: "momentumLast" }
+          { label: "What pattern keeps showing up?", type: "input", placeholder: "// What do you keep noticing?", id: "pattern" },
+          { label: "What drained your energy last week?", type: "input", placeholder: "// Activities, people, situations...", id: "whatDrained" },
+          { label: "Energy baseline", type: "radio", options: ["Stable","Scattered","Creative","Low"], id: "energyBaseline" },
+          { label: "Momentum score last week (0-10)", type: "slider", min: 0, max: 10, id: "momentumScore" }
         ]
       },
 
-      // Part 2: Vision + Direction
+      // Part 2: Breakthroughs + Intelligence
       {
-        section: "Vision + Direction",
+        section: "Breakthroughs + Intelligence",
         sectionNumber: 2,
+        subtitle: "What did I learn? What's shifting inside me?",
         questions: [
-          { label: "Rate your 5 Pillars (0-10)", type: "pillars", pillars: [
-            { name: "Mastery", id: "mastery" },
-            { name: "Money", id: "money" },
-            { name: "Love", id: "love" },
-            { name: "Social", id: "social" },
-            { name: "Body", id: "body" }
-          ] }
-        ]
-      },
-      {
-        section: "Vision + Direction",
-        sectionNumber: 2,
-        questions: [
-          { label: "If you're living your ideal life in 3 years, what does this week look like?", type: "textarea", placeholder: "// Paint it...", id: "visionWeek" },
-          { label: "What's your ONE direction this week?", type: "input", placeholder: "// Single focus...", id: "oneDirection" },
-          { label: "What's the ONE big move?", type: "input", placeholder: "// The thing that changes everything...", id: "bigMove" }
-        ]
+          { label: "What was your biggest emotional breakthrough or shift?", sublabel: "One sentence", type: "input", placeholder: "// I realized I don't need permission to...", id: "emotionalBreakthrough" },
+          { label: "What was the biggest learning or surprise?", type: "textarea", placeholder: "// What clicked? What became clear?", id: "biggestLearning" },
+          { label: "What's your biggest fear right now?", type: "input", placeholder: "// What are you most afraid of?", id: "biggestFear" },
+          { label: "Any fear or scarcity mindset to clear?", type: "input", placeholder: "// What limiting belief needs to go?", id: "fearMindset" },
+          { label: "Anything to release before next week?", type: "input", placeholder: "// What do you need to let go of?", id: "toRelease" }
+        ],
+        breathMoment: {
+          icon: "🌬️",
+          text: "Close your eyes. Take three deep breaths.\nFeel yourself releasing what no longer serves you.\nYou're making space for what's next."
+        }
       },
 
-      // Part 3: Identity Lock-In
+      // Part 3: Challenges + Corrections with Good/Bad toggles
       {
-        section: "Identity Lock-In",
+        section: "Challenges + Corrections",
         sectionNumber: 3,
+        subtitle: "Problems are not bad — they're data.",
         questions: [
-          { label: 'Complete this: "I am the version of me who..."', type: "input", placeholder: "// ships products, takes care of her body...", id: "identity" },
-          { label: "What evidence will you create this week?", type: "textarea", placeholder: "// 2-3 actions that prove identity...", id: "evidence" },
-          { label: "What are you releasing this week?", type: "input", placeholder: "// Old patterns...", id: "releasing" }
+          { label: "How was your eating last week?", type: "toggle", id: "challengeEating" },
+          { label: "How did your routines feel?", sublabel: "Morning, movement, sleep, deep work", type: "toggle", id: "challengeRoutines" },
+          { label: "How was income and spending?", type: "toggle", id: "challengeIncome" },
+          { label: "Did you abandon yourself at any moment?", sublabel: "Did you betray your own needs/boundaries?", type: "toggle", id: "challengeAbandon" }
+        ],
+        pause: {
+          icon: "⏸️",
+          text: "These challenges don't define you — they're just data. You're designing solutions right now."
+        }
+      },
+
+      // Part 4: Vision + Direction - Context Display
+      {
+        section: "Vision + Direction",
+        sectionNumber: 4,
+        subtitle: "What am I building next week? Who am I becoming?",
+        type: "contextDisplay",
+        questions: [
+          { label: "Vision: If you're living your ideal life in 3 years, what does this week look like?", type: "textarea", placeholder: "// Paint the picture...", id: "visionWeek" }
         ]
+      },
+
+      // Part 5: Execution - Set Goals
+      {
+        section: "Execution Map",
+        sectionNumber: 5,
+        subtitle: "Your strategy for winning the week.",
+        questions: [
+          { label: "The ONE big move", sublabel: "What is the one thing you can do such that by doing it, everything else will be easier or unnecessary?", type: "textarea", placeholder: "// The single highest-impact priority this week...", id: "oneBigMove" },
+          { label: "Work goals (3-5 max)", sublabel: "Toward your 6-week sprint milestone", type: "textarea", placeholder: "// One goal per line...", id: "workGoals" },
+          { label: "Life goals (3-5 max)", sublabel: "Include any auto-triggered goals from thresholds", type: "textarea", placeholder: "// One goal per line...", id: "lifeGoals" }
+        ]
+      },
+
+      // Part 5: Goal Validation on same page
+      {
+        section: "Execution Map",
+        sectionNumber: 5,
+        type: "goalValidation",
+        questions: [
+          { label: "For each goal, quickly check:", type: "info", content: "• Is this highest-leverage right now?\n• What's the biggest challenge?\n• Are you underestimating energy?\n• How does it compound last week?" },
+          { label: "Are these goals exciting and achievable?", type: "radio", options: ["Yes, let's go","Need to adjust"], id: "goalsCheck" }
+        ]
+      },
+
+      // Part 5: Goal Display + Aliveness Check
+      {
+        section: "Execution Map",
+        sectionNumber: 5,
+        type: "goalDisplay",
+        alivenessCheck: true
+      },
+
+      // Part 5: Execution - Body & Freedom Block
+      {
+        section: "Execution Map",
+        sectionNumber: 5,
+        questions: [
+          { label: "Movement days locked", type: "input", placeholder: "// Mon/Wed/Fri?", id: "movementDays" },
+          { label: "Type of movement", type: "input", placeholder: "// Gym, yoga, dance?", id: "movementType" },
+          { label: "90-Minute Freedom Block - Day/Time", type: "input", placeholder: "// Tuesday 2pm?", id: "freedomBlockTime" },
+          { label: "90-Minute Freedom Block - Mission", sublabel: "What are you conquering/expanding?", type: "input", placeholder: "// What scares you? What will shift you?", id: "freedomBlockMission" }
+        ]
+      },
+
+      // Part 5: Joy & Rest
+      {
+        section: "Execution Map",
+        sectionNumber: 5,
+        questions: [
+          { label: "Joy (pick 1-2)", type: "checkbox", options: [
+            "Motorcycle lesson",
+            "Short trip",
+            "Experience with friends",
+            "Make new friend",
+            "Date/intimacy",
+            "Other"
+          ], id: "joyActivities" },
+          { label: "Rest (pick 1-2)", type: "checkbox", options: [
+            "Dinner date",
+            "Massage",
+            "Movie night",
+            "Pure rest",
+            "Astrology fun",
+            "Other"
+          ], id: "restActivities" }
+        ]
+      },
+
+      // Part 5: Upleveling
+      {
+        section: "Execution Map",
+        sectionNumber: 5,
+        subtitle: "Select 2-4 active focuses this week",
+        questions: [
+          { label: "Long-term identity upleveling", type: "checkbox", options: [
+            "Badass builder (10 min)",
+            "Flexibility (10 min)",
+            "Dark feminine (10 min)",
+            "$2.5k/mo biz (5 min)",
+            "Social media fun (5 min)"
+          ], id: "uplevelingIdentity" },
+          { label: "Fun learning", type: "checkbox", options: [
+            "Physics (10 min)",
+            "Balinese (5 min)",
+            "English vocab (5 min)"
+          ], id: "uplevelingLearning" },
+          { label: "Mindset (affirmations always daily)", type: "checkbox", options: [
+            "Affirmations (daily)",
+            "Manifestation (5 min)"
+          ], id: "uplevelingMindset" }
+        ],
+        pause: {
+          icon: "⏸️",
+          text: "Read your goals and upleveling plan out loud. Do they light you up? If not, go back and make them bigger."
+        }
+      },
+
+      // Part 6: Identity + Anchors
+      {
+        section: "Identity + Routines",
+        sectionNumber: 6,
+        questions: [
+          { label: "Evidence I'll create this week", sublabel: "2-3 actions that prove who you're becoming", type: "textarea", placeholder: "// Ship X\n// Maintain Y streak\n// Have Z conversation", id: "evidence" },
+          { label: "My key routines this week", sublabel: "What are your non-negotiable rituals?", type: "textarea", placeholder: "// Morning: Wake → Meditate → Cafe\n// Evening: 9pm workspace reset\n// Movement: Mon/Wed/Fri", id: "routines" }
+        ]
+      },
+
+      // Part 6: Finish What You Started
+      {
+        section: "Identity + Routines",
+        sectionNumber: 6,
+        questions: [
+          { label: "Meditation streak", type: "input", placeholder: "// __/60", id: "meditationStreak" },
+          { label: "48 Laws of Power", type: "input", placeholder: "// page ___", id: "lawsProgress" },
+          { label: "Portfolio status", type: "input", placeholder: "// status ___", id: "portfolioStatus" }
+        ]
+      },
+
+      // Final: Integration
+      {
+        section: "Integration",
+        sectionNumber: 7,
+        type: "final",
+        questions: [
+          { label: "Excitement check: How excited am I for next week? (0-10)", type: "slider", min: 0, max: 10, id: "excitementCheck" }
+        ],
+        finalText: {
+          icon: "🔥",
+          title: "FINAL INTEGRATION",
+          prompt: "Read your One Big Move out loud.\n\nAsk yourself:\n\"Would the version of me living my dream life be proud of this week?\"\n\nIf yes → Visualize Sunday night feeling accomplished.\nIf no → Go back and make it bigger, more alive, more worthy of you."
+        }
       }
     ];
 
     let currentScreen = 0;
     let formData = {};
+    let recommendedActions = [];
+
+    // Load saved data
+    const savedData = localStorage.getItem('weeklyPlanData');
+    if (savedData) {
+      formData = JSON.parse(savedData);
+    }
 
     function updateProgressBar() {
       const progress = ((currentScreen + 1) / questions.length) * 100;
       document.getElementById("progressFill").style.width = progress + "%";
     }
 
+    function updateStickyActions() {
+      recommendedActions = [];
+
+      // From what worked
+      if (formData.whatWorked) {
+        recommendedActions.push({
+          label: "Continue Doing",
+          action: formData.whatWorked
+        });
+      }
+
+      // From challenges
+      const challenges = [
+        { key: 'challengeEating', label: 'Eating' },
+        { key: 'challengeRoutines', label: 'Routines' },
+        { key: 'challengeIncome', label: 'Income' },
+        { key: 'challengeAbandon', label: 'Self-Care' }
+      ];
+
+      challenges.forEach(c => {
+        if (formData[c.key] === 'bad' && formData[c.key + 'Action']) {
+          recommendedActions.push({
+            label: c.label + ' Fix',
+            action: formData[c.key + 'Action']
+          });
+        }
+      });
+
+      // Update sticky display
+      const stickyContent = document.getElementById('stickyContent');
+      if (recommendedActions.length > 0) {
+        document.getElementById('stickyActions').classList.add('visible');
+        stickyContent.innerHTML = recommendedActions.map(a => `
+          <div class="sticky-note">
+            <div class="sticky-note-label">${a.label}</div>
+            ${a.action}
+          </div>
+        `).join('');
+      }
+    }
+
+    function checkThresholds() {
+      const alerts = [];
+      
+      if (parseInt(formData.kpiGithub) < 3) {
+        alerts.push("⚠️ GitHub commits <3 → Add 'increase commits' to work goals");
+      }
+      
+      if (parseInt(formData.kpiMeditation) < 7) {
+        alerts.push("⚠️ Meditation <7 days → Add 'daily meditation' to life goals");
+      }
+      
+      if (parseFloat(formData.kpiSpending) > 200) {
+        alerts.push("⚠️ Spending >$200 → Add 'spending under $200' goal");
+      }
+      
+      if (parseInt(formData.kpiExcitement) === 0) {
+        alerts.push("⚠️ No excitement → Add 'create excitement' goal");
+      }
+
+      return alerts;
+    }
+
     function renderScreen(screenIndex) {
       const screen = questions[screenIndex];
       const container = document.getElementById("sectionContainer");
+      let html = '';
 
-      let html = `
+      // Ritual Opening
+      if (screen.type === 'ritual') {
+        html = `
+          <div class="ritual-card">
+            <div class="ritual-icon">${screen.content.icon}</div>
+            <div class="ritual-title">${screen.content.title}</div>
+            <div class="ritual-text">${screen.content.text}</div>
+            <button class="btn btn-primary" onclick="nextScreen()">Begin →</button>
+          </div>
+        `;
+        container.innerHTML = html;
+        updateProgressBar();
+        return;
+      }
+
+      // Section Header
+      html += `
         <div class="section-header">
           <div class="section-title">${screen.section}</div>
-          <div class="section-subtitle">Section ${screen.sectionNumber} of 7</div>
+          <div class="section-subtitle">Part ${screen.sectionNumber} of 7</div>
+          ${screen.subtitle ? `<div class="section-subtitle" style="margin-top:10px; font-style:italic;">${screen.subtitle}</div>` : ''}
         </div>
       `;
 
-      screen.questions.forEach((q, i) => {
-        html += `<div class="question-card" style="animation-delay:${i * 0.1}s">`;
-        html += `<div class="question-label">${q.label}</div>`;
+      // Goal Checkoff Special
+      if (screen.type === 'goalCheckoff') {
+        const workGoals = (formData.lastWeekWorkGoals || '').split('\n').filter(g => g.trim());
+        const lifeGoals = (formData.lastWeekLifeGoals || '').split('\n').filter(g => g.trim());
+        const allGoals = [...workGoals, ...lifeGoals];
+        const completedGoals = formData.completedGoals || [];
 
-        if (q.type === "input") {
-          html += `<input class="underline-input" id="${q.id}" placeholder="${q.placeholder}" value="${formData[q.id] || ''}">`;
+        html += `<div class="question-card">`;
+        html += `<div class="question-label">Check off the goals you completed</div>`;
+        html += `<div class="question-sublabel">Celebrate each one as you check it!</div>`;
+        html += `<div class="goal-checkbox-list">`;
+        
+        allGoals.forEach((goal, i) => {
+          const isCompleted = completedGoals.includes(goal);
+          html += `
+            <div class="goal-item ${isCompleted ? 'completed' : ''}" onclick="toggleGoalCompletion(${i})">
+              <input type="checkbox" class="goal-checkbox" ${isCompleted ? 'checked' : ''} onchange="event.stopPropagation()" />
+              <span class="goal-text">${goal}</span>
+            </div>
+          `;
+        });
+        
+        html += `</div></div>`;
 
-        } else if (q.type === "textarea") {
-          html += `<textarea class="underline-input" id="${q.id}" placeholder="${q.placeholder}">${formData[q.id] || ''}</textarea>`;
+      // Context Display
+      } else if (screen.type === 'contextDisplay') {
+        html += `<div class="context-display">`;
+        html += `<div class="context-section">`;
+        html += `<div class="context-title">📌 Key challenges from last week</div>`;
+        
+        const challenges = [
+          { key: 'challengeEating', label: 'Eating', action: 'challengeEatingAction' },
+          { key: 'challengeRoutines', label: 'Routines', action: 'challengeRoutinesAction' },
+          { key: 'challengeIncome', label: 'Income', action: 'challengeIncomeAction' },
+          { key: 'challengeAbandon', label: 'Self-abandonment', action: 'challengeAbandonAction' }
+        ];
 
-        } else if (q.type === "radio") {
+        challenges.forEach(c => {
+          if (formData[c.key] === 'bad' && formData[c.action]) {
+            html += `<div class="context-item"><strong>${c.label}:</strong> ${formData[c.action]}</div>`;
+          }
+        });
+        
+        html += `</div>`;
+        
+        // Show recommended actions
+        if (recommendedActions.length > 0) {
+          html += `<div class="context-section">`;
+          html += `<div class="context-title">✨ Recommended actions</div>`;
+          recommendedActions.forEach(a => {
+            html += `<div class="context-item"><strong>${a.label}:</strong> ${a.action}</div>`;
+          });
+          html += `</div>`;
+        }
+        
+        // Show uncompleted goals
+        const workGoals = (formData.lastWeekWorkGoals || '').split('\n').filter(g => g.trim());
+        const lifeGoals = (formData.lastWeekLifeGoals || '').split('\n').filter(g => g.trim());
+        const allGoals = [...workGoals, ...lifeGoals];
+        const completedGoals = formData.completedGoals || [];
+        const uncompletedGoals = allGoals.filter(g => !completedGoals.includes(g));
+        
+        if (uncompletedGoals.length > 0) {
+          html += `<div class="context-section">`;
+          html += `<div class="context-title">⚠️ Uncompleted goals to address</div>`;
+          uncompletedGoals.forEach(g => {
+            html += `<div class="context-item">${g}</div>`;
+          });
+          html += `</div>`;
+        }
+        
+        html += `</div>`;
+        
+        // Regular questions
+        screen.questions.forEach((q, i) => {
+          html += renderQuestion(q, i);
+        });
+
+      // Goal Display with Aliveness Check
+      } else if (screen.type === 'goalDisplay') {
+        const workGoals = (formData.workGoals || '').split('\n').filter(g => g.trim());
+        const lifeGoals = (formData.lifeGoals || '').split('\n').filter(g => g.trim());
+        
+        html += `<div class="goal-display">`;
+        html += `<div class="goal-display-title">🎯 Your Week at a Glance</div>`;
+        
+        html += `<div class="goal-category">`;
+        html += `<div class="goal-category-title">One Big Move:</div>`;
+        html += `<div class="goal-list-item">${formData.oneBigMove || 'Not set'}</div>`;
+        html += `</div>`;
+        
+        html += `<div class="goal-category">`;
+        html += `<div class="goal-category-title">Work Goals:</div>`;
+        workGoals.forEach(g => {
+          html += `<div class="goal-list-item">${g}</div>`;
+        });
+        html += `</div>`;
+        
+        html += `<div class="goal-category">`;
+        html += `<div class="goal-category-title">Life Goals:</div>`;
+        lifeGoals.forEach(g => {
+          html += `<div class="goal-list-item">${g}</div>`;
+        });
+        html += `</div>`;
+        
+        html += `</div>`;
+        
+        // Aliveness check
+        if (screen.alivenessCheck) {
+          html += `<div class="question-card">`;
+          html += `<div class="question-label">Is this week too safe? (Am I playing small?)</div>`;
+          html += `<div class="radio-row">`;
+          ['Yes','No'].forEach(option => {
+            const checked = formData.tooSafe === option ? 'checked' : '';
+            html += `
+              <label>
+                <input type="radio" name="tooSafe" value="${option}" ${checked} />
+                <span class="radio-pill">${option}</span>
+              </label>
+            `;
+          });
+          html += `</div></div>`;
+          
+          html += `<div class="question-card">`;
+          html += `<div class="question-label">Is this week too boring? (Where's the edge?)</div>`;
+          html += `<div class="radio-row">`;
+          ['Yes','No'].forEach(option => {
+            const checked = formData.tooBoring === option ? 'checked' : '';
+            html += `
+              <label>
+                <input type="radio" name="tooBoring" value="${option}" ${checked} />
+                <span class="radio-pill">${option}</span>
+              </label>
+            `;
+          });
+          html += `</div></div>`;
+          
+          html += `<div class="question-card">`;
+          html += `<div class="question-label">If yes to either: What makes this week 20% more ambitious?</div>`;
+          html += `<input class="underline-input" id="moreAmbitious" value="${formData.moreAmbitious || ''}" placeholder="// How can you dial it up?" />`;
+          html += `</div>`;
+          
+          html += `<div class="question-card">`;
+          html += `<div class="question-label">What injects aliveness into the week?</div>`;
+          html += `<input class="underline-input" id="injectAliveness" value="${formData.injectAliveness || ''}" placeholder="// What creates that electric feeling?" />`;
+          html += `</div>`;
+        }
+
+      // KPIs
+      } else if (screen.type === 'kpis') {
+        html += `<div class="kpi-grid">`;
+        screen.kpis.forEach(kpi => {
+          const value = formData[kpi.id] || '';
+          html += `
+            <div class="kpi-item">
+              <div class="kpi-label">${kpi.label}</div>
+              <input type="${kpi.type}" class="kpi-input" id="${kpi.id}" value="${value}" />
+            </div>
+          `;
+        });
+        html += `</div>`;
+        html += `<div id="thresholdAlerts"></div>`;
+
+      // Final screen
+      } else if (screen.type === 'final') {
+        screen.questions.forEach((q, i) => {
+          html += renderQuestion(q, i);
+        });
+        
+        html += `
+          <div class="ritual-card" style="margin-top: 60px;">
+            <div class="ritual-icon">${screen.finalText.icon}</div>
+            <div class="ritual-title">${screen.finalText.title}</div>
+            <div class="ritual-text">${screen.finalText.prompt}</div>
+          </div>
+        `;
+
+      // Regular questions
+      } else {
+        screen.questions.forEach((q, i) => {
+          html += renderQuestion(q, i);
+        });
+      }
+
+      // Breath moment
+      if (screen.breathMoment) {
+        html += `
+          <div class="breath-card">
+            <div class="breath-icon">${screen.breathMoment.icon}</div>
+            <div class="breath-text">${screen.breathMoment.text}</div>
+          </div>
+        `;
+      }
+
+      // Pause moment
+      if (screen.pause) {
+        html += `
+          <div class="pause-card">
+            <div class="pause-icon">${screen.pause.icon}</div>
+            <div class="pause-text">${screen.pause.text}</div>
+          </div>
+        `;
+      }
+
+      // Navigation
+      html += `
+        <div class="nav-row">
+          <button class="btn" onclick="previousScreen()" ${currentScreen === 0 ? 'style="opacity:0;pointer-events:none;"' : ''}>← Previous</button>
+          <button class="btn btn-primary" onclick="nextScreen()">${currentScreen === questions.length - 1 ? 'Generate Dashboard →' : 'Next →'}</button>
+        </div>
+      `;
+
+      container.innerHTML = html;
+      attachEventListeners();
+      
+      if (screen.type === 'kpis') {
+        setTimeout(() => {
+          const alerts = checkThresholds();
+          if (alerts.length > 0) {
+            const alertContainer = document.getElementById('thresholdAlerts');
+            alertContainer.innerHTML = alerts.map(alert => 
+              `<div class="threshold-alert active">${alert}</div>`
+            ).join('');
+          }
+        }, 500);
+      }
+
+      updateProgressBar();
+      window.scrollTo(0, 0);
+    }
+
+    function renderQuestion(q, index) {
+      let html = `<div class="question-card" style="animation-delay:${index * 0.1}s">`;
+      html += `<div class="question-label">${q.label}</div>`;
+      
+      if (q.sublabel) {
+        html += `<div class="question-sublabel">${q.sublabel}</div>`;
+      }
+
+      const value = formData[q.id] || '';
+
+      switch(q.type) {
+        case 'input':
+          html += `<input class="underline-input" id="${q.id}" placeholder="${q.placeholder || ''}" value="${value}" ${q.readonly ? 'readonly' : ''} />`;
+          break;
+
+        case 'textarea':
+          html += `<textarea class="underline-input" id="${q.id}" placeholder="${q.placeholder || ''}">${value}</textarea>`;
+          break;
+
+        case 'toggle':
+          const currentValue = formData[q.id] || 'good';
+          html += `<div class="toggle-group">`;
+          html += `<button class="toggle-btn good ${currentValue === 'good' ? 'active' : ''}" onclick="setToggle('${q.id}', 'good')">✓ Good</button>`;
+          html += `<button class="toggle-btn bad ${currentValue === 'bad' ? 'active' : ''}" onclick="setToggle('${q.id}', 'bad')">✗ Needs Work</button>`;
+          html += `</div>`;
+          
+          // Action input
+          const actionValue = formData[q.id + 'Action'] || '';
+          html += `
+            <div class="action-input-wrapper ${currentValue === 'bad' ? 'visible' : ''}" id="${q.id}ActionWrapper">
+              <div class="question-sublabel" style="margin-top: 15px;">→ What will you do about this?</div>
+              <input class="underline-input" id="${q.id}Action" placeholder="// Your action plan..." value="${actionValue}" />
+            </div>
+          `;
+          break;
+
+        case 'radio':
           html += `<div class="radio-row">`;
           q.options.forEach(option => {
-            const checked = formData[q.id] === option ? "checked" : "";
+            const checked = value === option ? 'checked' : '';
             html += `
               <label>
                 <input type="radio" name="${q.id}" value="${option}" ${checked} />
@@ -349,84 +1323,156 @@
             `;
           });
           html += `</div>`;
+          break;
 
-        } else if (q.type === "slider") {
-          const value = formData[q.id] || 5;
-          html += `
-            <div class="slider-row">
-              <input type="range" min="${q.min}" max="${q.max}" value="${value}" class="slider" id="${q.id}" />
-              <div class="slider-value" id="${q.id}-value">${value}</div>
-            </div>
-          `;
-
-        } else if (q.type === "pillars") {
-          q.pillars.forEach(p => {
-            const val = formData[p.id] || 5;
+        case 'checkbox':
+          html += `<div class="checkbox-list">`;
+          q.options.forEach(option => {
+            const savedOptions = formData[q.id] || [];
+            const checked = savedOptions.includes(option) ? 'checked' : '';
             html += `
-              <div class="question-card" style="margin-top:25px;">
-                <div class="question-label">${p.name}</div>
-                <input type="range" min="0" max="10" value="${val}" id="${p.id}" class="slider" />
-                <div class="slider-value" id="${p.id}-value">${val}</div>
+              <div class="checkbox-item">
+                <input type="checkbox" name="${q.id}" value="${option}" ${checked} />
+                <span class="checkbox-label">${option}</span>
               </div>
             `;
           });
-        }
+          html += `</div>`;
+          break;
 
-        html += `</div>`; // end question-card
+        case 'slider':
+          const sliderValue = value || 5;
+          html += `
+            <div class="slider-row">
+              <input type="range" min="${q.min}" max="${q.max}" value="${sliderValue}" class="slider" id="${q.id}" />
+              <div class="slider-value" id="${q.id}-value">${sliderValue}</div>
+            </div>
+          `;
+          break;
+
+        case 'info':
+          html += `<div class="question-sublabel" style="white-space: pre-line; margin-top: 10px; color: rgba(255,255,255,0.7);">${q.content}</div>`;
+          break;
+      }
+
+      html += `</div>`;
+      return html;
+    }
+
+    function setToggle(questionId, value) {
+      formData[questionId] = value;
+      
+      // Update UI
+      document.querySelectorAll(`[onclick*="${questionId}"]`).forEach(btn => {
+        btn.classList.remove('active');
       });
+      event.target.classList.add('active');
+      
+      // Show/hide action input
+      const actionWrapper = document.getElementById(questionId + 'ActionWrapper');
+      if (actionWrapper) {
+        if (value === 'bad') {
+          actionWrapper.classList.add('visible');
+        } else {
+          actionWrapper.classList.remove('visible');
+        }
+      }
+      
+      saveCurrentScreen();
+      updateStickyActions();
+    }
 
-      html += `
-        <div class="nav-row">
-          <button class="btn" onclick="previousScreen()" ${currentScreen === 0 ? 'style="opacity:0;pointer-events:none;"' : ''}>← Previous</button>
-          <button class="btn btn-primary" onclick="nextScreen()">${currentScreen === questions.length - 1 ? 'Generate →' : 'Next →'}</button>
-        </div>
-      `;
+    function toggleGoalCompletion(index) {
+      const workGoals = (formData.lastWeekWorkGoals || '').split('\n').filter(g => g.trim());
+      const lifeGoals = (formData.lastWeekLifeGoals || '').split('\n').filter(g => g.trim());
+      const allGoals = [...workGoals, ...lifeGoals];
+      const goal = allGoals[index];
+      
+      if (!formData.completedGoals) formData.completedGoals = [];
+      
+      const idx = formData.completedGoals.indexOf(goal);
+      if (idx > -1) {
+        formData.completedGoals.splice(idx, 1);
+      } else {
+        formData.completedGoals.push(goal);
+      }
+      
+      saveCurrentScreen();
+      renderScreen(currentScreen);
+    }
 
-      container.innerHTML = html;
-
-      // Slider listeners
+    function attachEventListeners() {
+      // Sliders
       document.querySelectorAll('.slider').forEach(slider => {
         slider.oninput = e => {
-          document.getElementById(e.target.id + "-value").innerHTML = e.target.value;
+          const valueDisplay = document.getElementById(e.target.id + "-value");
+          if (valueDisplay) {
+            valueDisplay.innerHTML = e.target.value;
+          }
         };
       });
 
-      updateProgressBar();
-    }
-
-    function saveScreen() {
-      const screen = questions[currentScreen];
-      screen.questions.forEach(q => {
-
-        if (q.type === "pillars") {
-          q.pillars.forEach(p => {
-            formData[p.id] = document.getElementById(p.id).value;
-          });
-
-        } else if (q.type === "radio") {
-          const checked = document.querySelector(`input[name="${q.id}"]:checked`);
-          if (checked) formData[q.id] = checked.value;
-
-        } else {
-          const el = document.getElementById(q.id);
-          if (el) formData[q.id] = el.value;
-        }
+      // Save on blur/change
+      document.querySelectorAll('input, textarea, select').forEach(el => {
+        el.addEventListener('blur', saveCurrentScreen);
+        el.addEventListener('change', saveCurrentScreen);
       });
     }
 
+    function saveCurrentScreen() {
+      const screen = questions[currentScreen];
+      
+      if (screen.type === 'ritual') return;
+
+      if (screen.type === 'kpis') {
+        screen.kpis.forEach(kpi => {
+          const el = document.getElementById(kpi.id);
+          if (el) formData[kpi.id] = el.value;
+        });
+      } else if (screen.questions) {
+        screen.questions.forEach(q => {
+          if (q.type === 'checkbox') {
+            const checkboxes = document.querySelectorAll(`input[name="${q.id}"]:checked`);
+            formData[q.id] = Array.from(checkboxes).map(cb => cb.value);
+          } else if (q.type === 'radio') {
+            const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+            if (checked) formData[q.id] = checked.value;
+          } else if (q.type === 'toggle') {
+            // Already saved in setToggle
+            const actionEl = document.getElementById(q.id + 'Action');
+            if (actionEl) formData[q.id + 'Action'] = actionEl.value;
+          } else if (q.id) {
+            const el = document.getElementById(q.id);
+            if (el) formData[q.id] = el.value;
+          }
+        });
+      }
+      
+      // Save goal display aliveness check
+      if (screen.type === 'goalDisplay' && screen.alivenessCheck) {
+        const moreAmbitious = document.getElementById('moreAmbitious');
+        const injectAliveness = document.getElementById('injectAliveness');
+        if (moreAmbitious) formData.moreAmbitious = moreAmbitious.value;
+        if (injectAliveness) formData.injectAliveness = injectAliveness.value;
+      }
+
+      localStorage.setItem('weeklyPlanData', JSON.stringify(formData));
+      updateStickyActions();
+    }
+
     function nextScreen() {
-      saveScreen();
+      saveCurrentScreen();
+      
       if (currentScreen < questions.length - 1) {
         currentScreen++;
         renderScreen(currentScreen);
       } else {
-        localStorage.setItem('weeklyPlanData', JSON.stringify(formData));
-        window.location.href = 'plan.html';
+        window.location.href = 'dashboard.html';
       }
     }
 
     function previousScreen() {
-      saveScreen();
+      saveCurrentScreen();
       if (currentScreen > 0) {
         currentScreen--;
         renderScreen(currentScreen);
