@@ -7,78 +7,666 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,400;1,600&family=JetBrains+Mono:wght@300;400&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+
+
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
     body {
-      background: #000000;
-      font-family: 'Inter', sans-serif;
-      color: white;
-      overflow-x: hidden;
+      background: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+      color: #000000;
+      overflow: hidden;
     }
 
-    /* Ritual Modal */
-    .ritual-modal {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.95); z-index: 10000;
-      display: flex; align-items: center; justify-content: center;
-      opacity: 1; transition: opacity 0.3s ease;
+    /* Bigger Picture Experience Container */
+    .bigger-picture-experience {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10000;
+      background: #ffffff;
     }
-    .ritual-modal.hidden { opacity: 0; pointer-events: none; }
-    
-    .ritual-content {
-      max-width: 500px; padding: 50px 40px; text-align: center;
-      animation: fadeUp 0.5s ease;
+
+    .bp-step {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
     }
-    .ritual-icon { font-size: 3rem; margin-bottom: 20px; }
-    .ritual-title {
-      font-family: 'JetBrains Mono', monospace; font-size: 1.8rem;
-      font-weight: 300; margin-bottom: 30px; letter-spacing: 2px;
+
+    .bp-step.active {
+      opacity: 1;
+      pointer-events: all;
     }
-    .ritual-steps { display: flex; flex-direction: column; gap: 15px; margin: 30px 0; }
-    .ritual-step {
-      display: flex; align-items: center; padding: 18px 20px;
-      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-      cursor: pointer; transition: all 0.3s; font-size: 0.95rem;
+
+    /* Step 1: Vision Splash - Cinematic Carousel */
+    /* Main Vision Container */
+.vision-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #000;
+  padding: 80px;
+}
+
+/* LEFT SIDE — Title + Date + Tracker */
+.vision-left {
+  max-width: 480px;
+  z-index: 5;
+}
+
+.vision-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 3.2rem;
+  font-weight: 300;
+  letter-spacing: -1px;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+/* Cursive word */
+
+.vision-word {
+  font-family: 'Dancing Script', cursive;
+  font-size: 3.8rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+/* Typewriter animations */
+.vision-line-1 {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 3px solid rgba(255,255,255,0.7);
+  animation: typing2 1.2s steps(10) 1.5s forwards, blink 0.8s step-end 1.5s infinite;
+
+}
+
+.vision-line-2 {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 3px solid rgba(255,255,255,0.7);
+  animation: typing2 1.2s steps(10) 1.5s forwards, blink 0.8s step-end 1.5s infinite;
+}
+
+
+@keyframes typing1 { from { width: 0; } to { width: 100%; } }
+@keyframes typing2 { from { width: 0; opacity: 1; } to { width: 100%; opacity: 1; } }
+@keyframes blink { 50% { border-color: transparent; } }
+
+/* Date */
+.vision-date-range {
+  margin-top: 20px;
+  color: #fff;
+  font-size: 0.95rem;
+  opacity: 0.85;
+  font-family: 'Inter', sans-serif;
+}
+
+/* 7-Day Tracker (same as index.html) */
+.week-tracker {
+  display: flex;
+  gap: 8px;
+  margin: 25px 0 35px 0;
+  align-items: center;
+}
+
+.week-day {
+  width: 10px;
+  height: 40px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.week-day::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(180deg, #00ff88, #00cc6a);
+  animation: fillUp 7s ease-in-out infinite;
+}
+
+@keyframes fillUp { 
+  0%,100% {height:0%;}
+  14%,86% {height:100%;}
+}
+
+.week-label {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+}
+
+/* Continue Button */
+.vision-continue-btn {
+  background: #fff;
+  color: #000;
+  border: none;
+  padding: 16px 48px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.vision-continue-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.9);
+}
+
+/* RIGHT SIDE — 4-Panel Offset Grid */
+.vision-blade-container {
+  position: relative;
+  width: 52%;
+  height: 80%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 24px;
+  align-self: center;
+}
+
+/* Each panel */
+.vision-blade {
+  border-radius: 32px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  animation: fadeBlade 1s ease forwards;
+}
+
+@keyframes fadeBlade {
+  from { opacity: 0; transform: scale(1.02); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* SUBTLE OFFSET pattern */
+.blade-tl { transform: translateY(-12px); }
+.blade-tr { transform: translateY(0px); }
+.blade-bl { transform: translateY(18px); }
+.blade-br { transform: translateY(6px); }
+
+.blade-tl { background-image: url('dark-fem-crown.jpg'); }
+.blade-tr { background-image: url('dark-feminine-energy-aesthetic.jpg'); }
+.blade-bl { background-image: url('build.webp'); }
+.blade-br { background-image: url('7ca041169e658df2aea8cc59dcac68ef.jpg'); }
+
+
+    /* Step 2: Yearly Milestones */
+    .milestones-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 60px;
+      height: 100%;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
     }
-    .ritual-step:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); }
-    .ritual-step.checked { background: rgba(0, 255, 136, 0.1); border-color: rgba(0, 255, 136, 0.3); }
-    .ritual-checkbox { width: 20px; height: 20px; margin-right: 15px; cursor: pointer; accent-color: #00ff88; }
-    .ritual-declaration {
-      font-size: 1rem; line-height: 1.8; color: rgba(255, 255, 255, 0.85);
-      margin: 30px 0; white-space: pre-line; font-style: italic;
+
+    .milestones-header {
+      text-align: center;
+      margin-bottom: 60px;
     }
-    .ritual-begin-btn {
-      background: #ffffff; color: #000000; border: none; padding: 16px 48px;
-      font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s;
-      letter-spacing: 1.5px; text-transform: uppercase; font-family: 'Inter', sans-serif;
-      margin-top: 20px;
+
+    .milestones-title {
+      font-size: 3rem;
+      font-weight: 300;
+      margin-bottom: 15px;
+      letter-spacing: -1.5px;
+      color: #000000;
     }
-    .ritual-begin-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-    .ritual-begin-btn:not(:disabled):hover {
-      background: rgba(255, 255, 255, 0.9); transform: translateY(-2px);
-      box-shadow: 0 10px 40px rgba(255, 255, 255, 0.3);
+
+    .milestones-subtitle {
+      font-size: 1.1rem;
+      color: rgba(0, 0, 0, 0.5);
+      font-weight: 400;
     }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .milestones-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 60px;
+    }
+
+    .milestone-item {
+      position: relative;
+      padding: 25px 30px;
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    .milestone-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.01));
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .milestone-item:hover {
+      border-color: rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .milestone-item:hover::before {
+      opacity: 1;
+    }
+
+    .milestone-item.completed {
+      border-color: rgba(0, 0, 0, 0.2);
+      background: #fafafa;
+    }
+
+    .milestone-item.completed::before {
+      opacity: 1;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.02));
+    }
+
+    .milestone-item.just-completed {
+      animation: milestoneComplete 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes milestoneComplete {
+      0% { transform: scale(1); }
+      50% { 
+        transform: scale(1.05); 
+        border-color: #000000; 
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2); 
+      }
+      100% { transform: scale(1); }
+    }
+
+    .milestone-checkbox-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .milestone-checkbox {
+      width: 24px;
+      height: 24px;
+      margin-right: 18px;
+      cursor: pointer;
+      accent-color: #000000;
+      flex-shrink: 0;
+    }
+
+    .milestone-text {
+      flex: 1;
+      font-size: 1.05rem;
+      color: #000000;
+      font-weight: 400;
+      position: relative;
+      z-index: 1;
+    }
+
+    .milestone-item.completed .milestone-text {
+      color: rgba(0, 0, 0, 0.4);
+      text-decoration: line-through;
+    }
+
+    .milestone-continue-btn {
+      background: #000000;
+      color: #ffffff;
+      border: none;
+      padding: 18px 50px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+      margin: 0 auto;
+      display: block;
+      border-radius: 4px;
+    }
+
+    .milestone-continue-btn:hover {
+      background: #1a1a1a;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Celebration Overlay */
+    .celebration-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.98);
+      z-index: 20000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .celebration-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .celebration-content {
+      position: relative;
+      text-align: center;
+      padding: 60px;
+      animation: celebrationPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes celebrationPop {
+      0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    .celebration-particles {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 400px;
+      height: 400px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .celebration-particles::before,
+    .celebration-particles::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid #000000;
+      opacity: 0;
+      animation: ripple 1.5s ease-out infinite;
+    }
+
+    .celebration-particles::after {
+      animation-delay: 0.5s;
+    }
+
+    @keyframes ripple {
+      0% { transform: scale(0); opacity: 1; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+
+    .celebration-icon {
+      font-size: 8rem;
+      margin-bottom: 30px;
+      animation: bounce 0.6s ease-in-out 3;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-30px); }
+    }
+
+    .celebration-message {
+      font-size: 3rem;
+      font-weight: 300;
+      color: #000000;
+      margin-bottom: 20px;
+      letter-spacing: -1px;
+    }
+
+    .celebration-quote {
+      font-size: 1.3rem;
+      color: rgba(0, 0, 0, 0.6);
+      font-style: italic;
+      line-height: 1.8;
+      max-width: 600px;
+      margin: 0 auto;
+      font-weight: 300;
+    }
+
+    /* Step 3: Sprint Focus */
+    .sprint-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px;
+      height: 100%;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+    }
+
+    .sprint-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .sprint-badge {
+      display: inline-block;
+      padding: 8px 20px;
+      background: #000000;
+      color: #ffffff;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+
+    .sprint-title {
+      font-size: 2.5rem;
+      font-weight: 300;
+      margin-bottom: 15px;
+      letter-spacing: -1px;
+      line-height: 1.3;
+      color: #000000;
+    }
+
+    .sprint-dates {
+      font-size: 0.95rem;
+      color: rgba(0, 0, 0, 0.4);
+      letter-spacing: 0.5px;
+    }
+
+    .sprint-body {
+      flex: 1;
+      margin-bottom: 40px;
+    }
+
+    .sprint-section {
+      margin-bottom: 50px;
+    }
+
+    .sprint-section-title {
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin-bottom: 25px;
+      color: #000000;
+    }
+
+    .sprint-milestones {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sprint-milestone {
+      display: flex;
+      align-items: flex-start;
+      padding: 20px 25px;
+      background: #fafafa;
+      border-left: 3px solid #000000;
+      transition: all 0.3s;
+      border-radius: 4px;
+    }
+
+    .sprint-milestone:hover {
+      background: #f5f5f5;
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .milestone-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #000000;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-right: 20px;
+      flex-shrink: 0;
+      font-size: 0.9rem;
+    }
+
+    .milestone-text {
+      flex: 1;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: rgba(0, 0, 0, 0.8);
+      padding-top: 8px;
+    }
+
+    .commitment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
+
+    .commitment-card {
+      padding: 25px;
+      background: #fafafa;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      transition: all 0.3s;
+      border-radius: 8px;
+    }
+
+    .commitment-card:hover {
+      background: #f5f5f5;
+      border-color: rgba(0, 0, 0, 0.15);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .commitment-icon {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    .commitment-title {
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 15px;
+      color: #000000;
+    }
+
+    .commitment-details {
+      font-size: 0.9rem;
+      color: rgba(0, 0, 0, 0.6);
+      line-height: 1.8;
+    }
+
+    .sprint-philosophy {
+      display: flex;
+      align-items: flex-start;
+      padding: 30px;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.01));
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    .philosophy-icon {
+      font-size: 2rem;
+      margin-right: 20px;
+      flex-shrink: 0;
+    }
+
+    .philosophy-text {
+      flex: 1;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: rgba(0, 0, 0, 0.7);
+      font-style: italic;
+    }
+
+    .sprint-begin-btn {
+      background: #000000;
+      color: #ffffff;
+      border: none;
+      padding: 20px 60px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+      margin: 0 auto;
+      display: block;
+      border-radius: 4px;
+    }
+
+    .sprint-begin-btn:hover {
+      background: #1a1a1a;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     /* Main Container */
     .main-container {
       max-width: 1400px; margin: 0 auto; padding: 40px 60px;
       min-height: 100vh; display: flex; flex-direction: column;
+      background: #ffffff;
     }
 
     /* Header */
     .header { margin-bottom: 60px; }
     .progress-bar { display: flex; gap: 8px; margin-bottom: 20px; }
     .progress-section {
-      flex: 1; height: 3px; background: rgba(255, 255, 255, 0.1); transition: all 0.3s;
+      flex: 1; height: 3px; background: rgba(0, 0, 0, 0.08); transition: all 0.3s;
     }
-    .progress-section.completed { background: linear-gradient(90deg, #00ff88, #00cc6a); }
-    .progress-section.current { background: rgba(0, 255, 136, 0.4); }
+    .progress-section.completed { background: #000000; }
+    .progress-section.current { background: rgba(0, 0, 0, 0.3); }
     .progress-label {
       display: flex; justify-content: space-between; font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.5); text-transform: uppercase;
+      color: rgba(0, 0, 0, 0.5); text-transform: uppercase;
       letter-spacing: 1.5px; font-weight: 500;
     }
 
@@ -91,31 +679,33 @@
     .sidebar { position: sticky; top: 40px; height: fit-content; }
     .section-nav { display: flex; flex-direction: column; gap: 8px; }
     .section-nav-item {
-      padding: 12px 20px; font-size: 0.85rem; color: rgba(255, 255, 255, 0.5);
+      padding: 12px 20px; font-size: 0.85rem; color: rgba(0, 0, 0, 0.5);
       cursor: pointer; transition: all 0.2s; border-left: 2px solid transparent;
     }
     .section-nav-item:hover {
-      color: rgba(255, 255, 255, 0.8); border-left-color: rgba(255, 255, 255, 0.3);
+      color: rgba(0, 0, 0, 0.8); border-left-color: rgba(0, 0, 0, 0.2);
     }
     .section-nav-item.active {
-      color: #00ff88; border-left-color: #00ff88; font-weight: 500;
+      color: #000000; border-left-color: #000000; font-weight: 500;
     }
-    .section-nav-item.completed { color: rgba(255, 255, 255, 0.7); }
+    .section-nav-item.completed { color: rgba(0, 0, 0, 0.6); }
 
     .recommended-actions {
       margin-top: 40px; padding: 20px;
-      background: rgba(0, 255, 136, 0.05); border: 1px solid rgba(0, 255, 136, 0.2);
+      background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 4px;
     }
     .recommended-title {
-      font-size: 0.75rem; color: #00ff88; text-transform: uppercase;
+      font-size: 0.75rem; color: #000000; text-transform: uppercase;
       letter-spacing: 1px; margin-bottom: 15px; font-weight: 600;
     }
     .recommended-item {
-      margin-bottom: 12px; padding: 10px; background: rgba(0, 0, 0, 0.3);
-      border-left: 2px solid #00ff88; font-size: 0.8rem; line-height: 1.4;
+      margin-bottom: 12px; padding: 10px; background: rgba(0, 0, 0, 0.02);
+      border-left: 2px solid rgba(0, 0, 0, 0.15); font-size: 0.8rem; line-height: 1.4;
+      border-radius: 2px;
     }
     .recommended-label {
-      color: rgba(255, 255, 255, 0.5); font-size: 0.7rem; margin-bottom: 4px;
+      color: rgba(0, 0, 0, 0.5); font-size: 0.7rem; margin-bottom: 4px;
     }
 
     /* Content Area */
@@ -125,33 +715,33 @@
     
     .section-header { margin-bottom: 40px; }
     .section-title {
-      font-family: 'JetBrains Mono', monospace; font-size: 2rem;
-      font-weight: 300; margin-bottom: 8px; letter-spacing: -0.5px;
+      font-size: 2rem; font-weight: 300; margin-bottom: 8px; letter-spacing: -1px;
+      color: #000000;
     }
     .section-subtitle {
-      font-size: 0.85rem; color: rgba(255, 255, 255, 0.5); font-weight: 300;
+      font-size: 0.85rem; color: rgba(0, 0, 0, 0.5); font-weight: 300;
     }
 
     /* Questions */
     .question-block { margin-bottom: 40px; }
     .question-label {
       font-size: 0.95rem; margin-bottom: 8px; font-weight: 500;
-      color: rgba(255, 255, 255, 0.95);
+      color: #000000;
     }
     .question-sublabel {
-      font-size: 0.8rem; color: rgba(255, 255, 255, 0.4);
+      font-size: 0.8rem; color: rgba(0, 0, 0, 0.4);
       margin-bottom: 12px; font-weight: 300;
     }
 
     /* Inputs */
     .input-field {
       width: 100%; background: transparent; border: none;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding: 12px 0;
-      font-size: 1rem; color: rgba(255, 255, 255, 0.9); transition: all 0.25s;
-      font-family: 'Inter', sans-serif; font-weight: 300;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12); padding: 12px 0;
+      font-size: 1rem; color: #000000; transition: all 0.25s;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif; font-weight: 400;
     }
     .input-field:focus {
-      outline: none; border-bottom-color: #00ff88; color: white;
+      outline: none; border-bottom-color: #000000;
     }
     textarea.input-field {
       min-height: 100px; line-height: 1.6; resize: vertical; padding-top: 8px;
@@ -160,33 +750,35 @@
     /* Celebration */
     .celebration-banner {
       padding: 20px 30px;
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 157, 0.15));
-      border: 1px solid rgba(255, 215, 0, 0.3); text-align: center;
-      font-size: 1.1rem; color: #ffd700; font-weight: 500;
+      background: #fafafa;
+      border: 1px solid rgba(0, 0, 0, 0.1); text-align: center;
+      font-size: 1.1rem; color: #000000; font-weight: 400;
       margin-bottom: 40px; letter-spacing: 0.5px;
+      border-radius: 4px;
     }
 
     /* Goals */
     .goal-list { margin-top: 15px; }
     .goal-item {
       display: flex; align-items: center; padding: 15px 20px; margin-bottom: 10px;
-      background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #fafafa; border: 1px solid rgba(0, 0, 0, 0.08);
       cursor: pointer; transition: all 0.3s;
+      border-radius: 4px;
     }
     .goal-item:hover {
-      background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.2);
+      background: #f5f5f5; border-color: rgba(0, 0, 0, 0.15);
     }
     .goal-item.completed {
-      background: rgba(255, 215, 0, 0.1); border-color: rgba(255, 215, 0, 0.3);
+      background: #f0f0f0; border-color: rgba(0, 0, 0, 0.2);
     }
     .goal-checkbox {
-      width: 20px; height: 20px; margin-right: 15px; cursor: pointer; accent-color: #ffd700;
+      width: 20px; height: 20px; margin-right: 15px; cursor: pointer; accent-color: #000000;
     }
     .goal-text {
-      flex: 1; font-size: 0.95rem; color: rgba(255, 255, 255, 0.85); font-weight: 300;
+      flex: 1; font-size: 0.95rem; color: #000000; font-weight: 400;
     }
     .goal-item.completed .goal-text {
-      color: #ffd700; text-decoration: line-through;
+      color: rgba(0, 0, 0, 0.4); text-decoration: line-through;
     }
     .goal-celebration {
       font-size: 1.2rem; opacity: 0; transition: opacity 0.3s;
@@ -203,16 +795,17 @@
     /* Toggles */
     .toggle-group { display: flex; gap: 12px; margin-top: 12px; }
     .toggle-btn {
-      flex: 1; padding: 14px 20px; border: 1px solid rgba(255, 255, 255, 0.15);
-      background: transparent; color: rgba(255, 255, 255, 0.6); cursor: pointer;
-      transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 0.9rem;
+      flex: 1; padding: 14px 20px; border: 1px solid rgba(0, 0, 0, 0.12);
+      background: transparent; color: rgba(0, 0, 0, 0.6); cursor: pointer;
+      transition: all 0.3s; font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif; 
+      font-size: 0.9rem; border-radius: 4px;
     }
-    .toggle-btn:hover { border-color: rgba(255, 255, 255, 0.3); }
+    .toggle-btn:hover { border-color: rgba(0, 0, 0, 0.25); }
     .toggle-btn.good.active {
-      border-color: #00ff88; background: rgba(0, 255, 136, 0.1); color: #00ff88;
+      border-color: #000000; background: rgba(0, 0, 0, 0.05); color: #000000;
     }
     .toggle-btn.bad.active {
-      border-color: #ff6464; background: rgba(255, 100, 100, 0.1); color: #ff6464;
+      border-color: #ff6464; background: rgba(255, 100, 100, 0.05); color: #ff6464;
     }
     .action-input-wrapper { margin-top: 15px; display: none; }
     .action-input-wrapper.visible { display: block; animation: fadeIn 0.3s; }
@@ -220,51 +813,52 @@
     /* Radio */
     .radio-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
     .radio-label {
-      padding: 10px 20px; border: 1px solid rgba(255, 255, 255, 0.15);
-      cursor: pointer; transition: all 0.3s; color: rgba(255, 255, 255, 0.6);
-      font-size: 0.9rem;
+      padding: 10px 20px; border: 1px solid rgba(0, 0, 0, 0.12);
+      cursor: pointer; transition: all 0.3s; color: rgba(0, 0, 0, 0.6);
+      font-size: 0.9rem; border-radius: 20px;
     }
     .radio-label:hover {
-      border-color: rgba(255, 255, 255, 0.3); color: rgba(255, 255, 255, 0.8);
+      border-color: rgba(0, 0, 0, 0.25); color: #000000;
     }
     input[type="radio"] { display: none; }
     input[type="radio"]:checked + .radio-label {
-      border-color: #00ff88; background: rgba(0, 255, 136, 0.1); color: #00ff88;
+      border-color: #000000; background: rgba(0, 0, 0, 0.05); color: #000000;
     }
 
     /* Checkboxes */
     .checkbox-group { margin-top: 12px; }
     .checkbox-item {
       display: flex; align-items: center; margin-bottom: 10px; padding: 12px 15px;
-      border: 1px solid rgba(255, 255, 255, 0.08); cursor: pointer; transition: all 0.3s;
+      border: 1px solid rgba(0, 0, 0, 0.08); cursor: pointer; transition: all 0.3s;
+      border-radius: 4px; background: #fafafa;
     }
     .checkbox-item:hover {
-      background: rgba(255, 255, 255, 0.03); border-color: rgba(255, 255, 255, 0.15);
+      background: #f5f5f5; border-color: rgba(0, 0, 0, 0.15);
     }
     .checkbox-item input[type="checkbox"] {
-      margin-right: 12px; width: 18px; height: 18px; cursor: pointer; accent-color: #00ff88;
+      margin-right: 12px; width: 18px; height: 18px; cursor: pointer; accent-color: #000000;
     }
     .checkbox-label {
-      flex: 1; font-size: 0.9rem; color: rgba(255, 255, 255, 0.8); font-weight: 300;
+      flex: 1; font-size: 0.9rem; color: #000000; font-weight: 400;
     }
 
     /* Slider */
     .slider-wrapper { margin-top: 20px; }
     .slider {
-      width: 100%; -webkit-appearance: none; background: rgba(255, 255, 255, 0.1);
-      height: 4px; outline: none;
+      width: 100%; -webkit-appearance: none; background: rgba(0, 0, 0, 0.1);
+      height: 4px; outline: none; border-radius: 2px;
     }
     .slider::-webkit-slider-thumb {
       -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%;
-      background: #00ff88; cursor: pointer; transition: 0.2s;
+      background: #000000; cursor: pointer; transition: 0.2s;
     }
     .slider::-moz-range-thumb {
-      height: 18px; width: 18px; border-radius: 50%; background: #00ff88;
+      height: 18px; width: 18px; border-radius: 50%; background: #000000;
       cursor: pointer; border: none;
     }
     .slider-value {
       text-align: center; margin-top: 12px; font-size: 1.8rem;
-      color: #00ff88; font-weight: 300;
+      color: #000000; font-weight: 300;
     }
 
     /* KPIs */
@@ -273,93 +867,104 @@
       gap: 20px; margin-top: 20px;
     }
     .kpi-item {
-      padding: 20px; background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 20px; background: #fafafa;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 4px;
     }
     .kpi-label {
-      font-size: 0.75rem; color: rgba(255, 255, 255, 0.5); margin-bottom: 10px;
+      font-size: 0.75rem; color: rgba(0, 0, 0, 0.5); margin-bottom: 10px;
       text-transform: uppercase; letter-spacing: 1px; font-weight: 500;
     }
     .kpi-input {
       width: 100%; background: transparent; border: none;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding: 8px 0;
-      font-size: 1.4rem; color: #00ff88; font-family: 'JetBrains Mono', monospace;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.15); padding: 8px 0;
+      font-size: 1.4rem; color: #000000;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
       font-weight: 300;
     }
     .kpi-input:focus {
-      outline: none; border-bottom-color: #00ff88;
+      outline: none; border-bottom-color: #000000;
     }
 
     /* Context */
     .context-box {
-      padding: 25px; background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 40px;
+      padding: 25px; background: #fafafa;
+      border: 1px solid rgba(0, 0, 0, 0.08); margin-bottom: 40px;
+      border-radius: 4px;
     }
     .context-section { margin-bottom: 25px; }
     .context-section:last-child { margin-bottom: 0; }
     .context-title {
-      font-size: 0.75rem; color: #00ff88; text-transform: uppercase;
+      font-size: 0.75rem; color: #000000; text-transform: uppercase;
       letter-spacing: 1px; margin-bottom: 12px; font-weight: 600;
     }
     .context-item {
-      padding: 12px 15px; margin-bottom: 8px; background: rgba(0, 0, 0, 0.3);
-      border-left: 2px solid rgba(0, 255, 136, 0.4); font-size: 0.9rem;
-      line-height: 1.5; color: rgba(255, 255, 255, 0.85);
+      padding: 12px 15px; margin-bottom: 8px; background: #ffffff;
+      border-left: 2px solid rgba(0, 0, 0, 0.2); font-size: 0.9rem;
+      line-height: 1.5; color: rgba(0, 0, 0, 0.8);
+      border-radius: 2px;
     }
 
     /* Goal Summary */
     .goal-summary {
-      padding: 40px; background: rgba(0, 255, 136, 0.03);
-      border: 1px solid rgba(0, 255, 136, 0.2); margin-bottom: 40px;
+      padding: 40px; background: #fafafa;
+      border: 1px solid rgba(0, 0, 0, 0.1); margin-bottom: 40px;
+      border-radius: 8px;
     }
     .goal-summary-title {
-      font-size: 1.5rem; color: #00ff88; margin-bottom: 30px;
-      text-align: center; font-weight: 300; letter-spacing: 1px;
+      font-size: 1.5rem; color: #000000; margin-bottom: 30px;
+      text-align: center; font-weight: 300; letter-spacing: -0.5px;
     }
     .goal-category { margin-bottom: 25px; }
     .goal-category-title {
-      font-size: 0.85rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 12px;
+      font-size: 0.85rem; color: rgba(0, 0, 0, 0.6); margin-bottom: 12px;
       font-weight: 500; text-transform: uppercase; letter-spacing: 1px;
     }
     .goal-display-item {
-      padding: 12px 15px; margin-bottom: 8px; background: rgba(0, 0, 0, 0.3);
-      border-left: 2px solid #00ff88; font-size: 0.95rem;
-      color: rgba(255, 255, 255, 0.9); font-weight: 300;
+      padding: 12px 15px; margin-bottom: 8px; background: #ffffff;
+      border-left: 2px solid #000000; font-size: 0.95rem;
+      color: #000000; font-weight: 400;
+      border-radius: 2px;
     }
 
     /* Pause */
     .pause-card {
-      padding: 25px 30px; background: rgba(255, 255, 255, 0.02);
-      border-left: 3px solid #00ff88; margin: 40px 0; font-style: italic;
-      color: rgba(255, 255, 255, 0.7); line-height: 1.6;
+      padding: 25px 30px; background: #fafafa;
+      border-left: 3px solid #000000; margin: 40px 0; font-style: italic;
+      color: rgba(0, 0, 0, 0.7); line-height: 1.6;
+      border-radius: 2px;
     }
 
     /* Threshold Alerts */
     .threshold-alert {
-      margin-top: 15px; padding: 15px 20px; background: rgba(255, 100, 100, 0.08);
-      border-left: 3px solid #ff6464; font-size: 0.9rem; color: rgba(255, 255, 255, 0.8);
+      margin-top: 15px; padding: 15px 20px; background: rgba(255, 100, 100, 0.05);
+      border-left: 3px solid #ff6464; font-size: 0.9rem; color: rgba(0, 0, 0, 0.8);
+      border-radius: 2px;
     }
 
     /* Navigation */
     .nav-footer {
       display: flex; justify-content: flex-end; gap: 15px; margin-top: 60px;
-      padding-top: 40px; border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 40px; border-top: 1px solid rgba(0, 0, 0, 0.08);
     }
     .nav-btn {
       padding: 14px 32px; font-size: 0.85rem; cursor: pointer;
-      background: transparent; border: 1px solid rgba(255, 255, 255, 0.2);
-      color: rgba(255, 255, 255, 0.7); transition: all 0.2s;
-      letter-spacing: 1px; text-transform: uppercase; font-family: 'Inter', sans-serif;
+      background: transparent; border: 1px solid rgba(0, 0, 0, 0.15);
+      color: rgba(0, 0, 0, 0.7); transition: all 0.2s;
+      letter-spacing: 1px; text-transform: uppercase; 
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+      border-radius: 4px;
     }
     .nav-btn:hover {
-      border-color: rgba(255, 255, 255, 0.4); color: white;
+      border-color: rgba(0, 0, 0, 0.3); color: #000000;
     }
     .nav-btn-primary {
-      background: #ffffff; color: #000000; border: none;
+      background: #000000; color: #ffffff; border: none;
     }
     .nav-btn-primary:hover {
-      background: rgba(255, 255, 255, 0.9); transform: translateY(-2px);
-      box-shadow: 0 10px 40px rgba(255, 255, 255, 0.3);
+      background: #1a1a1a;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     }
 
     /* Responsive */
@@ -368,39 +973,184 @@
       .sidebar { position: static; }
       .section-nav { flex-direction: row; flex-wrap: wrap; }
       .recommended-actions { margin-top: 20px; }
+      .milestones-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+      .commitment-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 768px) {
       .main-container { padding: 30px 20px; }
       .kpi-grid { grid-template-columns: 1fr; }
+      .vision-title { font-size: 2.5rem; }
+      .vision-subtitle { font-size: 1.1rem; }
+      .vision-image-container {
+        width: 90vw;
+        height: 90vw;
+        max-width: 500px;
+        max-height: 500px;
+      }
+      .vision-content { padding: 40px 30px; }
+      .milestones-container { padding: 60px 30px; }
+      .milestones-title { font-size: 2rem; }
+      .milestones-grid { grid-template-columns: 1fr; }
+      .sprint-container { padding: 40px 30px; }
+      .sprint-title { font-size: 1.8rem; }
+      .celebration-icon { font-size: 5rem; }
+      .celebration-message { font-size: 2rem; }
+      .celebration-quote { font-size: 1.1rem; }
     }
   </style>
 </head>
 
 <body>
-  <!-- Ritual Modal -->
-  <div class="ritual-modal" id="ritualModal">
-    <div class="ritual-content">
-      <div class="ritual-icon">🕯️</div>
-      <div class="ritual-title">SET THE SPACE</div>
-      <div class="ritual-steps">
-        <div class="ritual-step" onclick="toggleRitualStep(0)">
-          <input type="checkbox" class="ritual-checkbox" id="ritual0" />
-          <span>Light a candle or set your lighting</span>
-        </div>
-        <div class="ritual-step" onclick="toggleRitualStep(1)">
-          <input type="checkbox" class="ritual-checkbox" id="ritual1" />
-          <span>Put on powerful music</span>
-        </div>
-        <div class="ritual-step" onclick="toggleRitualStep(2)">
-          <input type="checkbox" class="ritual-checkbox" id="ritual2" />
-          <span>Take 3 deep breaths</span>
-        </div>
+  <!-- The Bigger Picture - Multi-Step Experience -->
+  <div class="bigger-picture-experience" id="biggerPictureExp">
+    
+<!-- STEP 1 — Vision Splash -->
+<div class="bp-step active" id="step-vision">
+  <div class="vision-container">
+
+    <!-- LEFT SIDE -->
+    <div class="vision-left">
+      <h1 class="vision-title">
+        <span class="vision-line-1">Remember Your</span>
+        <span class="vision-line-2"><span class="vision-word">Vision</span></span>
+      </h1>
+
+      <p class="vision-date-range" id="visionDateRange">Loading…</p>
+
+      <div class="week-tracker">
+        <div class="week-day"></div>
+        <div class="week-day"></div>
+        <div class="week-day"></div>
+        <div class="week-day"></div>
+        <div class="week-day"></div>
+        <div class="week-day"></div>
+        <div class="week-day"></div>
+        <span class="week-label">7 Days</span>
       </div>
-      
-      <div class="ritual-declaration">Say out loud:
-"I am planning from my highest self.
-I am designing a week worthy of who I am becoming."</div>
-      <button class="ritual-begin-btn" id="ritualBeginBtn" disabled onclick="closeRitual()">Begin Planning</button>
+
+      <button class="vision-continue-btn" onclick="nextBPStep()">Continue →</button>
+    </div>
+
+    <!-- RIGHT SIDE — OFFSET GRID -->
+    <div class="vision-blade-container">
+      <div class="vision-blade blade-tl"></div>
+      <div class="vision-blade blade-tr"></div>
+      <div class="vision-blade blade-bl"></div>
+      <div class="vision-blade blade-br"></div>
+    </div>
+  </div>
+</div>
+
+
+    <!-- Step 2: Yearly Milestones -->
+    <div class="bp-step" id="step-milestones">
+      <div class="milestones-container">
+        <div class="milestones-header">
+          <h2 class="milestones-title">2025 Yearly Milestones</h2>
+          <p class="milestones-subtitle">Honor what you've achieved. Commit to what's next.</p>
+        </div>
+        
+        <div class="milestones-grid" id="milestonesGrid"></div>
+        
+        <button class="milestone-continue-btn" onclick="nextBPStep()">Continue to Sprint →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: 6-Week Sprint Focus -->
+    <div class="bp-step" id="step-sprint">
+      <div class="sprint-container">
+        <div class="sprint-header">
+          <div class="sprint-badge">CURRENT SPRINT</div>
+          <h2 class="sprint-title">Develop a Source of Income<br/>That is Aligned with Living a Life You Enjoy</h2>
+          <div class="sprint-dates">Nov 16 - Dec 28, 2025 • 6 Weeks</div>
+        </div>
+
+        <div class="sprint-body">
+          <!-- Key Milestones -->
+          <div class="sprint-section">
+            <div class="sprint-section-title">🎯 Key Milestones</div>
+            <div class="sprint-milestones">
+              <div class="sprint-milestone">
+                <div class="milestone-number">1</div>
+                <div class="milestone-text">Build useful automations and products for yourself</div>
+              </div>
+              <div class="sprint-milestone">
+                <div class="milestone-number">2</div>
+                <div class="milestone-text">Document learnings and process as your v1 offering to businesses</div>
+              </div>
+              <div class="sprint-milestone">
+                <div class="milestone-number">3</div>
+                <div class="milestone-text">Package automations into simple landing page and social media</div>
+              </div>
+              <div class="sprint-milestone">
+                <div class="milestone-number">4</div>
+                <div class="milestone-text">Start outreach for design partnerships (money-back guarantee)</div>
+              </div>
+              <div class="sprint-milestone">
+                <div class="milestone-number">5</div>
+                <div class="milestone-text">Ship and impress initial customers to get testimonials and referrals</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Weekly Commitments -->
+          <div class="sprint-section">
+            <div class="sprint-section-title">💎 Weekly Commitments</div>
+            <div class="commitment-grid">
+              <div class="commitment-card">
+                <div class="commitment-icon">🏦</div>
+                <div class="commitment-title">Spend &lt;$150</div>
+                <div class="commitment-details">
+                  <div>• Groceries & meal prep</div>
+                  <div>• Cafe spend &lt;$10</div>
+                  <div>• Dinner out 1x/week</div>
+                </div>
+              </div>
+              <div class="commitment-card">
+                <div class="commitment-icon">🌳</div>
+                <div class="commitment-title">Healthy Routines</div>
+                <div class="commitment-details">
+                  <div>• Move body 2-3x/week</div>
+                  <div>• Morning routine daily</div>
+                  <div>• Sunday planning ritual</div>
+                </div>
+              </div>
+              <div class="commitment-card">
+                <div class="commitment-icon">🌸</div>
+                <div class="commitment-title">Trust the Process</div>
+                <div class="commitment-details">
+                  <div>• One step at a time</div>
+                  <div>• Enjoy the journey</div>
+                  <div>• Reflect weekly</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sprint Philosophy -->
+          <div class="sprint-section">
+            <div class="sprint-philosophy">
+              <div class="philosophy-icon">✨</div>
+              <div class="philosophy-text">
+                Take your time, like your Bali sabbatical but with work. Trust your intuition to go one step at a time. Focus on enjoying the process, gaining conviction in yourself and your offering. Small actions add up.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="sprint-begin-btn" onclick="closeBiggerPicture()">Begin Weekly Planning →</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Milestone Celebration Overlay -->
+  <div class="celebration-overlay" id="celebrationOverlay">
+    <div class="celebration-content">
+      <div class="celebration-particles"></div>
+      <div class="celebration-icon">🎉</div>
+      <div class="celebration-message" id="celebrationMessage">Milestone Achieved!</div>
+      <div class="celebration-quote" id="celebrationQuote"></div>
     </div>
   </div>
 
@@ -432,6 +1182,66 @@ I am designing a week worthy of who I am becoming."</div>
   </div>
 
   <script>
+
+    function getNextWeekDates() {
+  const today = new Date();
+  
+  // Start = next Monday
+  const day = today.getDay();
+  const diff = today.getDate() + (1 + 7 - day) % 7;
+  const nextMonday = new Date(today.setDate(diff));
+  
+  // End = following Sunday
+  const nextSunday = new Date(nextMonday);
+  nextSunday.setDate(nextMonday.getDate() + 6);
+
+  const options = { month: "short", day: "numeric" };
+  return `${nextMonday.toLocaleDateString("en-US", options)} — ${nextSunday.toLocaleDateString("en-US", options)}`;
+}
+
+// Inject date range when page loads
+document.addEventListener("DOMContentLoaded", () => {
+  const el = document.getElementById("visionDateRange");
+  if (el) {
+    el.textContent = `Planning for: ${getNextWeekDates()}`;
+  }
+});
+
+    // Yearly goals data
+    const yearlyGoals = [
+      { name: "Move to New York City", completed: true },
+      { name: "Survive Break Up", completed: true },
+      { name: "Wind Down the Business", completed: true },
+      { name: "Pay Off Credit Card Debt", completed: true },
+      { name: "Design Dream Identity", completed: true },
+      { name: "Lose 10 Pounds", completed: true },
+      { name: "Get New Job", completed: true },
+      { name: "Set Up Personal Space", completed: true },
+      { name: "Design Dream Life", completed: false },
+      { name: "Develop Daily Routines", completed: false },
+      { name: "Go to Bali", completed: false },
+      { name: "Learn How to Code", completed: false },
+      { name: "Make Mocktail Balls", completed: false },
+      { name: "Learn How to DJ", completed: false },
+      { name: "Personal Website", completed: false },
+      { name: "Post Daily on Socials", completed: false }
+    ];
+
+    // Celebration quotes for milestones
+    const celebrationQuotes = [
+      "You didn't just complete a goal. You became the person who could.",
+      "This moment. This milestone. You earned every bit of it.",
+      "Look how far you've come. Look who you've become.",
+      "Every victory starts with the decision to try. You did more than try.",
+      "This is what happens when you refuse to give up on yourself.",
+      "You're not the same person who set this goal. You're better.",
+      "Remember when this felt impossible? Look at you now.",
+      "This is evidence. Evidence that you can do hard things."
+    ];
+
+    let currentBPStep = 0;
+    const bpSteps = ['step-vision', 'step-milestones', 'step-sprint'];
+
     // Data structures
     const sections = [
       { id: 'reality', name: "Reality Check" },
@@ -528,6 +1338,17 @@ I am designing a week worthy of who I am becoming."</div>
       formData = parsed.formData || parsed;
     }
 
+    // Load yearly goals completion state
+    const savedYearlyGoals = localStorage.getItem('yearlyGoalsCompletion');
+    if (savedYearlyGoals) {
+      const completedGoals = JSON.parse(savedYearlyGoals);
+      yearlyGoals.forEach(goal => {
+        if (completedGoals.includes(goal.name)) {
+          goal.completed = true;
+        }
+      });
+    }
+
     // Load last week's goals
     const lastWeekData = localStorage.getItem('lastWeekGoals');
     if (lastWeekData) {
@@ -536,22 +1357,90 @@ I am designing a week worthy of who I am becoming."</div>
       formData.lastWeekLifeGoals = parsed.lifeGoals || '';
     }
 
-    // Ritual functions
-    function toggleRitualStep(index) {
-      const checkbox = document.getElementById(`ritual${index}`);
-      const step = checkbox.parentElement;
-      checkbox.checked = !checkbox.checked;
-      step.classList.toggle('checked', checkbox.checked);
-      
-      const allChecked = [0, 1, 2].every(i => document.getElementById(`ritual${i}`).checked);
-      document.getElementById('ritualBeginBtn').disabled = !allChecked;
+    // Bigger Picture step navigation
+    function nextBPStep() {
+      if (currentBPStep < bpSteps.length - 1) {
+        document.getElementById(bpSteps[currentBPStep]).classList.remove('active');
+        currentBPStep++;
+        document.getElementById(bpSteps[currentBPStep]).classList.add('active');
+        
+        // Render milestones when reaching that step
+        if (currentBPStep === 1) {
+          renderMilestones();
+        }
+      }
     }
 
-    function closeRitual() {
-      document.getElementById('ritualModal').classList.add('hidden');
+    function closeBiggerPicture() {
+      document.getElementById('biggerPictureExp').style.display = 'none';
+      document.body.style.overflow = 'auto';
       renderAll();
     }
 
+    // Render yearly milestones
+    function renderMilestones() {
+      const grid = document.getElementById('milestonesGrid');
+      grid.innerHTML = yearlyGoals.map((goal, index) => `
+        <div class="milestone-item ${goal.completed ? 'completed' : ''}" onclick="toggleMilestone(${index})">
+          <div class="milestone-checkbox-wrapper">
+            <input type="checkbox" class="milestone-checkbox" ${goal.completed ? 'checked' : ''} onchange="event.stopPropagation()" />
+            <span class="milestone-text">${goal.name}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleMilestone(index) {
+      const wasCompleted = yearlyGoals[index].completed;
+      yearlyGoals[index].completed = !yearlyGoals[index].completed;
+      
+      // Save to localStorage
+      const completedGoals = yearlyGoals.filter(g => g.completed).map(g => g.name);
+      localStorage.setItem('yearlyGoalsCompletion', JSON.stringify(completedGoals));
+      
+      // If newly completed, show celebration
+      if (!wasCompleted && yearlyGoals[index].completed) {
+        showCelebration(yearlyGoals[index].name);
+      }
+      
+      renderMilestones();
+    }
+
+    function showCelebration(goalName) {
+      const overlay = document.getElementById('celebrationOverlay');
+      const message = document.getElementById('celebrationMessage');
+      const quote = document.getElementById('celebrationQuote');
+      
+      message.textContent = goalName + ' ✓';
+      quote.textContent = celebrationQuotes[Math.floor(Math.random() * celebrationQuotes.length)];
+      
+      overlay.classList.add('active');
+      
+      // Add "just-completed" animation to the milestone
+      setTimeout(() => {
+        const milestoneItems = document.querySelectorAll('.milestone-item');
+        const index = yearlyGoals.findIndex(g => g.name === goalName);
+        if (milestoneItems[index]) {
+          milestoneItems[index].classList.add('just-completed');
+        }
+      }, 100);
+      
+      // Auto-hide after 3 seconds
+      setTimeout(() => {
+        overlay.classList.remove('active');
+      }, 3000);
+      
+      // Remove just-completed class after animation
+      setTimeout(() => {
+        const milestoneItems = document.querySelectorAll('.milestone-item');
+        milestoneItems.forEach(item => item.classList.remove('just-completed'));
+      }, 4000);
+    }
+
+    // Initialize bigger picture experience
+    renderMilestones();
+
+    
     // Main render function
     function renderAll() {
       renderProgressBar();
@@ -1048,5 +1937,9 @@ I am designing a week worthy of who I am becoming."</div>
 
     // Don't auto-render on load - wait for ritual
   </script>
+  
+
+
+
 </body>
 </html>
