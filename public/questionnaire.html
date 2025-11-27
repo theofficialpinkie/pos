@@ -6,780 +6,472 @@
   <title>Weekly Planning – Your Operating System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
     body {
-      background: #000;
-      font-family: 'JetBrains Mono', monospace;
+      background: #000000;
+      font-family: 'Inter', sans-serif;
       color: white;
-      padding: 40px 20px;
       overflow-x: hidden;
-      font-weight: 400;
-      letter-spacing: -0.25px;
-      position: relative;
     }
 
-    /* --- Progress Bar --- */
-    .progress-bar-wrapper {
-      width: 100%;
-      max-width: 900px;
-      margin: 0 auto 40px auto;
+    /* Ritual Modal */
+    .ritual-modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.95); z-index: 10000;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 1; transition: opacity 0.3s ease;
     }
-
-    .progress-label {
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.5);
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
+    .ritual-modal.hidden { opacity: 0; pointer-events: none; }
+    
+    .ritual-content {
+      max-width: 500px; padding: 50px 40px; text-align: center;
+      animation: fadeUp 0.5s ease;
     }
-
-    .progress-line {
-      width: 100%;
-      height: 4px;
-      background: rgba(255,255,255,0.1);
-      position: relative;
-      overflow: hidden;
-      border-radius: 20px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #00ffbb, #00e19a);
-      box-shadow: 0 0 12px rgba(0,255,180,0.6);
-      transition: width 0.45s ease;
-    }
-
-    /* --- Sticky Recommended Actions --- */
-    .sticky-actions {
-      position: fixed;
-      right: 30px;
-      top: 120px;
-      width: 280px;
-      max-height: 70vh;
-      overflow-y: auto;
-      padding: 20px;
-      background: rgba(0,255,187,0.08);
-      border: 1px solid rgba(0,255,187,0.3);
-      border-radius: 8px;
-      box-shadow: 0 0 20px rgba(0,255,187,0.2);
-      z-index: 1000;
-      display: none;
-    }
-
-    .sticky-actions.visible {
-      display: block;
-      animation: slideInRight 0.5s ease;
-    }
-
-    @keyframes slideInRight {
-      from { transform: translateX(100px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-
-    .sticky-title {
-      font-size: 0.9rem;
-      color: #00ffbb;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 15px;
-      font-weight: 600;
-    }
-
-    .sticky-note {
-      margin-bottom: 12px;
-      padding: 10px;
-      background: rgba(0,0,0,0.4);
-      border-left: 2px solid #00ffbb;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      line-height: 1.4;
-    }
-
-    .sticky-note-label {
-      color: rgba(255,255,255,0.5);
-      font-size: 0.7rem;
-      margin-bottom: 4px;
-    }
-
-    /* --- Ritual Opening --- */
-    .ritual-card {
-      max-width: 750px;
-      margin: 60px auto;
-      padding: 40px;
-      background: rgba(0,255,187,0.05);
-      border: 1px solid rgba(0,255,187,0.2);
-      border-radius: 8px;
-      text-align: center;
-      animation: fadeUp 0.7s ease forwards;
-    }
-
-    .ritual-icon {
-      font-size: 3rem;
-      margin-bottom: 20px;
-    }
-
+    .ritual-icon { font-size: 3rem; margin-bottom: 20px; }
     .ritual-title {
-      font-size: 1.5rem;
-      color: #00ffbb;
-      margin-bottom: 20px;
-      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace; font-size: 1.8rem;
+      font-weight: 300; margin-bottom: 30px; letter-spacing: 2px;
+    }
+    .ritual-steps { display: flex; flex-direction: column; gap: 15px; margin: 30px 0; }
+    .ritual-step {
+      display: flex; align-items: center; padding: 18px 20px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer; transition: all 0.3s; font-size: 0.95rem;
+    }
+    .ritual-step:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); }
+    .ritual-step.checked { background: rgba(0, 255, 136, 0.1); border-color: rgba(0, 255, 136, 0.3); }
+    .ritual-checkbox { width: 20px; height: 20px; margin-right: 15px; cursor: pointer; accent-color: #00ff88; }
+    .ritual-declaration {
+      font-size: 1rem; line-height: 1.8; color: rgba(255, 255, 255, 0.85);
+      margin: 30px 0; white-space: pre-line; font-style: italic;
+    }
+    .ritual-begin-btn {
+      background: #ffffff; color: #000000; border: none; padding: 16px 48px;
+      font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s;
+      letter-spacing: 1.5px; text-transform: uppercase; font-family: 'Inter', sans-serif;
+      margin-top: 20px;
+    }
+    .ritual-begin-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .ritual-begin-btn:not(:disabled):hover {
+      background: rgba(255, 255, 255, 0.9); transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(255, 255, 255, 0.3);
+    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Main Container */
+    .main-container {
+      max-width: 1400px; margin: 0 auto; padding: 40px 60px;
+      min-height: 100vh; display: flex; flex-direction: column;
     }
 
-    .ritual-text {
-      font-size: 1.1rem;
-      line-height: 1.8;
-      color: rgba(255,255,255,0.85);
-      margin-bottom: 30px;
-      white-space: pre-line;
+    /* Header */
+    .header { margin-bottom: 60px; }
+    .progress-bar { display: flex; gap: 8px; margin-bottom: 20px; }
+    .progress-section {
+      flex: 1; height: 3px; background: rgba(255, 255, 255, 0.1); transition: all 0.3s;
+    }
+    .progress-section.completed { background: linear-gradient(90deg, #00ff88, #00cc6a); }
+    .progress-section.current { background: rgba(0, 255, 136, 0.4); }
+    .progress-label {
+      display: flex; justify-content: space-between; font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5); text-transform: uppercase;
+      letter-spacing: 1.5px; font-weight: 500;
     }
 
-    /* --- Section Header --- */
-    .section-header {
-      margin: 0 auto 50px;
-      max-width: 750px;
-      padding: 10px;
-      transform: translateY(20px);
-      opacity: 0;
-      animation: riseIn 0.7s forwards;
+    /* Two Column */
+    .content-wrapper {
+      display: grid; grid-template-columns: 280px 1fr; gap: 60px; flex: 1;
     }
 
-    @keyframes riseIn {
-      to { opacity:1; transform: translateY(0); }
+    /* Sidebar */
+    .sidebar { position: sticky; top: 40px; height: fit-content; }
+    .section-nav { display: flex; flex-direction: column; gap: 8px; }
+    .section-nav-item {
+      padding: 12px 20px; font-size: 0.85rem; color: rgba(255, 255, 255, 0.5);
+      cursor: pointer; transition: all 0.2s; border-left: 2px solid transparent;
+    }
+    .section-nav-item:hover {
+      color: rgba(255, 255, 255, 0.8); border-left-color: rgba(255, 255, 255, 0.3);
+    }
+    .section-nav-item.active {
+      color: #00ff88; border-left-color: #00ff88; font-weight: 500;
+    }
+    .section-nav-item.completed { color: rgba(255, 255, 255, 0.7); }
+
+    .recommended-actions {
+      margin-top: 40px; padding: 20px;
+      background: rgba(0, 255, 136, 0.05); border: 1px solid rgba(0, 255, 136, 0.2);
+    }
+    .recommended-title {
+      font-size: 0.75rem; color: #00ff88; text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 15px; font-weight: 600;
+    }
+    .recommended-item {
+      margin-bottom: 12px; padding: 10px; background: rgba(0, 0, 0, 0.3);
+      border-left: 2px solid #00ff88; font-size: 0.8rem; line-height: 1.4;
+    }
+    .recommended-label {
+      color: rgba(255, 255, 255, 0.5); font-size: 0.7rem; margin-bottom: 4px;
     }
 
+    /* Content Area */
+    .content-area { max-width: 800px; }
+    .section { margin-bottom: 80px; animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    
+    .section-header { margin-bottom: 40px; }
     .section-title {
-      font-size: 2rem;
-      font-weight: 600;
-      color: #00ffbb;
-      margin-bottom: 8px;
+      font-family: 'JetBrains Mono', monospace; font-size: 2rem;
+      font-weight: 300; margin-bottom: 8px; letter-spacing: -0.5px;
     }
-
     .section-subtitle {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.4);
-      letter-spacing: 2px;
-      text-transform: uppercase;
+      font-size: 0.85rem; color: rgba(255, 255, 255, 0.5); font-weight: 300;
     }
 
-    /* --- Pause Moments --- */
-    .pause-card {
-      max-width: 750px;
-      margin: 60px auto;
-      padding: 30px;
-      background: rgba(255,255,255,0.03);
-      border-left: 3px solid #00ffbb;
-      animation: fadeUp 0.7s ease forwards;
-    }
-
-    .pause-icon {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-    }
-
-    .pause-text {
-      font-size: 1rem;
-      color: rgba(255,255,255,0.7);
-      font-style: italic;
-      line-height: 1.6;
-    }
-
-    /* --- Breath Moment --- */
-    .breath-card {
-      max-width: 750px;
-      margin: 60px auto;
-      padding: 40px;
-      background: rgba(0,255,187,0.05);
-      border: 2px solid rgba(0,255,187,0.3);
-      border-radius: 8px;
-      text-align: center;
-      animation: fadeUp 0.7s ease forwards;
-    }
-
-    .breath-icon {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 0.8; }
-      50% { transform: scale(1.1); opacity: 1; }
-    }
-
-    .breath-text {
-      font-size: 1.2rem;
-      color: rgba(255,255,255,0.85);
-      line-height: 1.8;
-    }
-
-    /* --- Question Cards --- */
-    .question-card {
-      max-width: 750px;
-      margin: 0 auto 45px;
-      padding: 0px;
-      animation: fadeUp 0.7s ease forwards;
-      opacity: 0;
-      transform: translateY(25px);
-      background: transparent;
-      border: none;
-    }
-
-    @keyframes fadeUp {
-      to { opacity:1; transform: translateY(0); }
-    }
-
+    /* Questions */
+    .question-block { margin-bottom: 40px; }
     .question-label {
-      font-size: 1.1rem;
-      margin-bottom: 12px;
-      font-weight: 500;
-      color: white;
+      font-size: 0.95rem; margin-bottom: 8px; font-weight: 500;
+      color: rgba(255, 255, 255, 0.95);
     }
-
     .question-sublabel {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.5);
-      margin-bottom: 12px;
-      font-style: italic;
+      font-size: 0.8rem; color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 12px; font-weight: 300;
     }
 
-    /* --- Goal Checkbox List --- */
-    .goal-checkbox-list {
-      margin-top: 20px;
+    /* Inputs */
+    .input-field {
+      width: 100%; background: transparent; border: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding: 12px 0;
+      font-size: 1rem; color: rgba(255, 255, 255, 0.9); transition: all 0.25s;
+      font-family: 'Inter', sans-serif; font-weight: 300;
+    }
+    .input-field:focus {
+      outline: none; border-bottom-color: #00ff88; color: white;
+    }
+    textarea.input-field {
+      min-height: 100px; line-height: 1.6; resize: vertical; padding-top: 8px;
     }
 
+    /* Celebration */
+    .celebration-banner {
+      padding: 20px 30px;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 107, 157, 0.15));
+      border: 1px solid rgba(255, 215, 0, 0.3); text-align: center;
+      font-size: 1.1rem; color: #ffd700; font-weight: 500;
+      margin-bottom: 40px; letter-spacing: 0.5px;
+    }
+
+    /* Goals */
+    .goal-list { margin-top: 15px; }
     .goal-item {
-      display: flex;
-      align-items: center;
-      padding: 15px;
-      margin-bottom: 12px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.3s;
-      position: relative;
-      overflow: hidden;
+      display: flex; align-items: center; padding: 15px 20px; margin-bottom: 10px;
+      background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer; transition: all 0.3s;
     }
-
     .goal-item:hover {
-      border-color: rgba(0,255,187,0.4);
-      background: rgba(0,255,187,0.05);
+      background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.2);
     }
-
     .goal-item.completed {
-      border-color: rgba(0,255,187,0.6);
-      background: rgba(0,255,187,0.1);
+      background: rgba(255, 215, 0, 0.1); border-color: rgba(255, 215, 0, 0.3);
     }
-
-    .goal-item.completed::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 100%;
-      background: linear-gradient(90deg, transparent, rgba(0,255,187,0.2), transparent);
-      animation: shine 0.8s;
-    }
-
-    @keyframes shine {
-      from { transform: translateX(-100%); }
-      to { transform: translateX(100%); }
-    }
-
     .goal-checkbox {
-      width: 24px;
-      height: 24px;
-      margin-right: 15px;
-      cursor: pointer;
-      accent-color: #00ffbb;
+      width: 20px; height: 20px; margin-right: 15px; cursor: pointer; accent-color: #ffd700;
     }
-
     .goal-text {
-      flex: 1;
-      font-size: 0.95rem;
-      color: rgba(255,255,255,0.85);
-      transition: all 0.3s;
+      flex: 1; font-size: 0.95rem; color: rgba(255, 255, 255, 0.85); font-weight: 300;
     }
-
     .goal-item.completed .goal-text {
-      color: #00ffbb;
-      text-decoration: line-through;
+      color: #ffd700; text-decoration: line-through;
+    }
+    .goal-celebration {
+      font-size: 1.2rem; opacity: 0; transition: opacity 0.3s;
+    }
+    .goal-item.completed .goal-celebration {
+      opacity: 1; animation: celebrate 0.6s ease;
+    }
+    @keyframes celebrate {
+      0% { transform: scale(0) rotate(0deg); }
+      50% { transform: scale(1.3) rotate(180deg); }
+      100% { transform: scale(1) rotate(360deg); }
     }
 
-    /* --- Inputs --- */
-    .underline-input {
-      width: 100%;
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid rgba(255,255,255,0.18);
-      padding: 6px 0;
-      font-size: 1.05rem;
-      color: rgba(255,255,255,0.85);
-      transition: all 0.25s;
-      font-family: 'JetBrains Mono', monospace;
-      letter-spacing: -0.3px;
-    }
-
-    .underline-input:focus {
-      outline: none;
-      border-bottom: 1px solid #00ffbb;
-      box-shadow: none;
-      color: white;
-    }
-
-    textarea.underline-input {
-      min-height: 120px;
-      line-height: 1.5;
-      resize: vertical;
-    }
-
-    /* --- Good/Bad Toggle --- */
-    .toggle-group {
-      display: flex;
-      gap: 12px;
-      margin-top: 10px;
-    }
-
+    /* Toggles */
+    .toggle-group { display: flex; gap: 12px; margin-top: 12px; }
     .toggle-btn {
-      flex: 1;
-      padding: 12px 20px;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: transparent;
-      color: rgba(255,255,255,0.7);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.9rem;
+      flex: 1; padding: 14px 20px; border: 1px solid rgba(255, 255, 255, 0.15);
+      background: transparent; color: rgba(255, 255, 255, 0.6); cursor: pointer;
+      transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 0.9rem;
     }
-
-    .toggle-btn:hover {
-      border-color: rgba(255,255,255,0.4);
-    }
-
+    .toggle-btn:hover { border-color: rgba(255, 255, 255, 0.3); }
     .toggle-btn.good.active {
-      border-color: #00ffbb;
-      background: rgba(0,255,187,0.15);
-      color: #00ffbb;
-      box-shadow: 0 0 15px rgba(0,255,187,0.3);
+      border-color: #00ff88; background: rgba(0, 255, 136, 0.1); color: #00ff88;
     }
-
     .toggle-btn.bad.active {
-      border-color: #ff6464;
-      background: rgba(255,100,100,0.15);
-      color: #ff6464;
-      box-shadow: 0 0 15px rgba(255,100,100,0.3);
+      border-color: #ff6464; background: rgba(255, 100, 100, 0.1); color: #ff6464;
     }
+    .action-input-wrapper { margin-top: 15px; display: none; }
+    .action-input-wrapper.visible { display: block; animation: fadeIn 0.3s; }
 
-    .action-input-wrapper {
-      margin-top: 15px;
-      display: none;
-      animation: fadeUp 0.5s ease forwards;
-    }
-
-    .action-input-wrapper.visible {
-      display: block;
-    }
-
-    /* --- Radio Options --- */
-    .radio-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-
-    .radio-pill {
-      padding: 10px 18px;
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 20px;
-      cursor: pointer;
-      transition: 0.3s;
-      color: rgba(255,255,255,0.75);
+    /* Radio */
+    .radio-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    .radio-label {
+      padding: 10px 20px; border: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: pointer; transition: all 0.3s; color: rgba(255, 255, 255, 0.6);
       font-size: 0.9rem;
     }
-
-    .radio-pill:hover {
-      border-color: #00ffbb;
-      color: white;
-      box-shadow: 0 0 12px rgba(0,255,180,0.3);
+    .radio-label:hover {
+      border-color: rgba(255, 255, 255, 0.3); color: rgba(255, 255, 255, 0.8);
+    }
+    input[type="radio"] { display: none; }
+    input[type="radio"]:checked + .radio-label {
+      border-color: #00ff88; background: rgba(0, 255, 136, 0.1); color: #00ff88;
     }
 
-    input[type="radio"] { display:none; }
-
-    input[type="radio"]:checked + .radio-pill {
-      border-color: #00ffbb;
-      background: rgba(0,255,180,0.15);
-      color: white;
-      box-shadow: 0 0 15px rgba(0,255,180,0.45);
-    }
-
-    /* --- Slider --- */
-    .slider-row { margin-top: 18px; }
-
-    .slider {
-      width: 100%;
-      -webkit-appearance: none;
-      background: rgba(255,255,255,0.15);
-      height: 6px;
-      border-radius: 20px;
-      outline: none;
-    }
-
-    .slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      height: 20px;
-      width: 20px;
-      border-radius: 50%;
-      background: #00ffbb;
-      box-shadow: 0 0 15px rgba(0,255,180,0.7);
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .slider::-moz-range-thumb {
-      height: 20px;
-      width: 20px;
-      border-radius: 50%;
-      background: #00ffbb;
-      box-shadow: 0 0 15px rgba(0,255,180,0.7);
-      cursor: pointer;
-      border: none;
-    }
-
-    .slider-value {
-      text-align:center;
-      margin-top:10px;
-      font-size:1.6rem;
-      color:#00ffbb;
-    }
-
-    /* --- KPI Grid --- */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
-
-    .kpi-item {
-      padding: 15px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 4px;
-    }
-
-    .kpi-label {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.6);
-      margin-bottom: 8px;
-    }
-
-    .kpi-input {
-      width: 100%;
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-      padding: 4px 0;
-      font-size: 1.2rem;
-      color: #00ffbb;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .kpi-input:focus {
-      outline: none;
-      border-bottom-color: #00ffbb;
-    }
-
-    /* --- Context Display --- */
-    .context-display {
-      max-width: 750px;
-      margin: 0 auto 40px;
-      padding: 25px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 8px;
-    }
-
-    .context-section {
-      margin-bottom: 20px;
-    }
-
-    .context-title {
-      font-size: 0.9rem;
-      color: #00ffbb;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 10px;
-    }
-
-    .context-item {
-      padding: 10px;
-      margin-bottom: 8px;
-      background: rgba(0,0,0,0.3);
-      border-left: 2px solid rgba(0,255,187,0.4);
-      border-radius: 4px;
-      font-size: 0.9rem;
-      line-height: 1.5;
-    }
-
-    /* --- Goal Display --- */
-    .goal-display {
-      max-width: 750px;
-      margin: 60px auto;
-      padding: 40px;
-      background: rgba(0,255,187,0.05);
-      border: 2px solid rgba(0,255,187,0.3);
-      border-radius: 8px;
-    }
-
-    .goal-display-title {
-      font-size: 1.5rem;
-      color: #00ffbb;
-      margin-bottom: 30px;
-      text-align: center;
-    }
-
-    .goal-category {
-      margin-bottom: 30px;
-    }
-
-    .goal-category-title {
-      font-size: 1.1rem;
-      color: rgba(255,255,255,0.8);
-      margin-bottom: 15px;
-      font-weight: 600;
-    }
-
-    .goal-list-item {
-      padding: 12px;
-      margin-bottom: 10px;
-      background: rgba(0,0,0,0.3);
-      border-left: 3px solid #00ffbb;
-      border-radius: 4px;
-      font-size: 0.95rem;
-    }
-
-    /* --- Checkboxes --- */
-    .checkbox-list {
-      margin-top: 15px;
-    }
-
+    /* Checkboxes */
+    .checkbox-group { margin-top: 12px; }
     .checkbox-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 12px;
-      padding: 12px;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 4px;
-      cursor: pointer;
-      transition: 0.3s;
+      display: flex; align-items: center; margin-bottom: 10px; padding: 12px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.08); cursor: pointer; transition: all 0.3s;
     }
-
     .checkbox-item:hover {
-      border-color: rgba(0,255,187,0.3);
-      background: rgba(0,255,187,0.05);
+      background: rgba(255, 255, 255, 0.03); border-color: rgba(255, 255, 255, 0.15);
     }
-
     .checkbox-item input[type="checkbox"] {
-      margin-right: 12px;
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-      accent-color: #00ffbb;
+      margin-right: 12px; width: 18px; height: 18px; cursor: pointer; accent-color: #00ff88;
     }
-
     .checkbox-label {
-      flex: 1;
-      font-size: 0.95rem;
-      color: rgba(255,255,255,0.85);
+      flex: 1; font-size: 0.9rem; color: rgba(255, 255, 255, 0.8); font-weight: 300;
     }
 
-    /* --- Buttons --- */
-    .nav-row {
-      display:flex;
-      justify-content: space-between;
-      max-width:750px;
-      margin:60px auto 0;
+    /* Slider */
+    .slider-wrapper { margin-top: 20px; }
+    .slider {
+      width: 100%; -webkit-appearance: none; background: rgba(255, 255, 255, 0.1);
+      height: 4px; outline: none;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%;
+      background: #00ff88; cursor: pointer; transition: 0.2s;
+    }
+    .slider::-moz-range-thumb {
+      height: 18px; width: 18px; border-radius: 50%; background: #00ff88;
+      cursor: pointer; border: none;
+    }
+    .slider-value {
+      text-align: center; margin-top: 12px; font-size: 1.8rem;
+      color: #00ff88; font-weight: 300;
     }
 
-    .btn {
-      padding:14px 28px;
-      text-transform:uppercase;
-      letter-spacing:2px;
-      font-size:0.8rem;
-      cursor:pointer;
-      background:transparent;
-      border:1px solid rgba(255,255,255,0.35);
-      color:white;
-      transition:0.3s;
-      border-radius: 4px;
+    /* KPIs */
+    .kpi-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px; margin-top: 20px;
+    }
+    .kpi-item {
+      padding: 20px; background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .kpi-label {
+      font-size: 0.75rem; color: rgba(255, 255, 255, 0.5); margin-bottom: 10px;
+      text-transform: uppercase; letter-spacing: 1px; font-weight: 500;
+    }
+    .kpi-input {
+      width: 100%; background: transparent; border: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding: 8px 0;
+      font-size: 1.4rem; color: #00ff88; font-family: 'JetBrains Mono', monospace;
+      font-weight: 300;
+    }
+    .kpi-input:focus {
+      outline: none; border-bottom-color: #00ff88;
     }
 
-    .btn:hover {
-      border-color:#00ffbb;
-      color:#00ffbb;
-      box-shadow:0 0 10px rgba(0,255,180,0.2);
+    /* Context */
+    .context-box {
+      padding: 25px; background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 40px;
+    }
+    .context-section { margin-bottom: 25px; }
+    .context-section:last-child { margin-bottom: 0; }
+    .context-title {
+      font-size: 0.75rem; color: #00ff88; text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 12px; font-weight: 600;
+    }
+    .context-item {
+      padding: 12px 15px; margin-bottom: 8px; background: rgba(0, 0, 0, 0.3);
+      border-left: 2px solid rgba(0, 255, 136, 0.4); font-size: 0.9rem;
+      line-height: 1.5; color: rgba(255, 255, 255, 0.85);
     }
 
-    .btn-primary {
-      border-color:#00ffbb;
-      background:#00ffbb;
-      color:black;
+    /* Goal Summary */
+    .goal-summary {
+      padding: 40px; background: rgba(0, 255, 136, 0.03);
+      border: 1px solid rgba(0, 255, 136, 0.2); margin-bottom: 40px;
+    }
+    .goal-summary-title {
+      font-size: 1.5rem; color: #00ff88; margin-bottom: 30px;
+      text-align: center; font-weight: 300; letter-spacing: 1px;
+    }
+    .goal-category { margin-bottom: 25px; }
+    .goal-category-title {
+      font-size: 0.85rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 12px;
+      font-weight: 500; text-transform: uppercase; letter-spacing: 1px;
+    }
+    .goal-display-item {
+      padding: 12px 15px; margin-bottom: 8px; background: rgba(0, 0, 0, 0.3);
+      border-left: 2px solid #00ff88; font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.9); font-weight: 300;
     }
 
-    .btn-primary:hover {
-      background:#00e19a;
-      color:black;
+    /* Pause */
+    .pause-card {
+      padding: 25px 30px; background: rgba(255, 255, 255, 0.02);
+      border-left: 3px solid #00ff88; margin: 40px 0; font-style: italic;
+      color: rgba(255, 255, 255, 0.7); line-height: 1.6;
     }
 
-    /* --- Threshold Alert --- */
+    /* Threshold Alerts */
     .threshold-alert {
-      margin-top: 15px;
-      padding: 15px;
-      background: rgba(255,100,100,0.1);
-      border-left: 3px solid #ff6464;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.8);
-      display: none;
+      margin-top: 15px; padding: 15px 20px; background: rgba(255, 100, 100, 0.08);
+      border-left: 3px solid #ff6464; font-size: 0.9rem; color: rgba(255, 255, 255, 0.8);
     }
 
-    .threshold-alert.active {
-      display: block;
-      animation: fadeUp 0.5s ease forwards;
+    /* Navigation */
+    .nav-footer {
+      display: flex; justify-content: flex-end; gap: 15px; margin-top: 60px;
+      padding-top: 40px; border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .nav-btn {
+      padding: 14px 32px; font-size: 0.85rem; cursor: pointer;
+      background: transparent; border: 1px solid rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.7); transition: all 0.2s;
+      letter-spacing: 1px; text-transform: uppercase; font-family: 'Inter', sans-serif;
+    }
+    .nav-btn:hover {
+      border-color: rgba(255, 255, 255, 0.4); color: white;
+    }
+    .nav-btn-primary {
+      background: #ffffff; color: #000000; border: none;
+    }
+    .nav-btn-primary:hover {
+      background: rgba(255, 255, 255, 0.9); transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(255, 255, 255, 0.3);
     }
 
-    /* --- Responsive --- */
-    @media (max-width: 1400px) {
-      .sticky-actions {
-        position: static;
-        width: 100%;
-        max-width: 750px;
-        margin: 0 auto 40px;
-        max-height: none;
-      }
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .content-wrapper { grid-template-columns: 1fr; gap: 40px; }
+      .sidebar { position: static; }
+      .section-nav { flex-direction: row; flex-wrap: wrap; }
+      .recommended-actions { margin-top: 20px; }
+    }
+    @media (max-width: 768px) {
+      .main-container { padding: 30px 20px; }
+      .kpi-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 
 <body>
-  <!-- Sticky Recommended Actions -->
-  <div class="sticky-actions" id="stickyActions">
-    <div class="sticky-title">📌 Recommended Actions</div>
-    <div id="stickyContent"></div>
-  </div>
-
-  <div class="progress-bar-wrapper">
-    <div class="progress-label">Progress</div>
-    <div class="progress-line">
-      <div class="progress-fill" id="progressFill"></div>
+  <!-- Ritual Modal -->
+  <div class="ritual-modal" id="ritualModal">
+    <div class="ritual-content">
+      <div class="ritual-icon">🕯️</div>
+      <div class="ritual-title">SET THE SPACE</div>
+      <div class="ritual-steps">
+        <div class="ritual-step" onclick="toggleRitualStep(0)">
+          <input type="checkbox" class="ritual-checkbox" id="ritual0" />
+          <span>Light a candle or set your lighting</span>
+        </div>
+        <div class="ritual-step" onclick="toggleRitualStep(1)">
+          <input type="checkbox" class="ritual-checkbox" id="ritual1" />
+          <span>Put on powerful music</span>
+        </div>
+        <div class="ritual-step" onclick="toggleRitualStep(2)">
+          <input type="checkbox" class="ritual-checkbox" id="ritual2" />
+          <span>Take 3 deep breaths</span>
+        </div>
+      </div>
+      
+      <div class="ritual-declaration">Say out loud:
+"I am planning from my highest self.
+I am designing a week worthy of who I am becoming."</div>
+      <button class="ritual-begin-btn" id="ritualBeginBtn" disabled onclick="closeRitual()">Begin Planning</button>
     </div>
   </div>
 
-  <div id="sectionContainer"></div>
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Header -->
+    <div class="header">
+      <div class="progress-bar" id="progressBar"></div>
+      <div class="progress-label">
+        <span id="progressText">Part 1 of 6</span>
+        <span id="sectionName">Reality Check</span>
+      </div>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="content-wrapper">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="section-nav" id="sectionNav"></div>
+        <div class="recommended-actions" id="recommendedActions" style="display: none;">
+          <div class="recommended-title">📌 Recommended</div>
+          <div id="recommendedContent"></div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="content-area" id="contentArea"></div>
+    </div>
+  </div>
 
   <script>
-    const questions = [
-      // Ritual Opening
-      {
-        section: "Before You Begin",
-        sectionNumber: 0,
-        type: "ritual",
-        content: {
-          icon: "🕯️",
-          title: "BEFORE YOU BEGIN",
-          text: "Light a candle. Put on powerful music. Take 3 deep breaths.\n\nSay out loud:\n\"I am planning from my highest self.\nI am designing a week worthy of who I am becoming.\""
-        }
-      },
+    // Data structures
+    const sections = [
+      { id: 'reality', name: "Reality Check" },
+      { id: 'breakthroughs', name: "Breakthroughs" },
+      { id: 'challenges', name: "Challenges" },
+      { id: 'vision', name: "Vision" },
+      { id: 'execution', name: "Execution" },
+      { id: 'integration', name: "Integration" }
+    ];
 
-      // Part 1: Reality Check - Last Week's Goals with Checkboxes
-      {
-        section: "Reality Check",
-        sectionNumber: 1,
+    const sectionContent = {
+      reality: {
+        title: "Reality Check",
         subtitle: "What happened last week — and who was I being?",
         questions: [
-          { label: "What were your work goals last week?", sublabel: "3-5 goals", type: "textarea", placeholder: "// One goal per line...", id: "lastWeekWorkGoals" },
-          { label: "What were your life goals last week?", sublabel: "3-5 goals", type: "textarea", placeholder: "// One goal per line...", id: "lastWeekLifeGoals" }
-        ]
-      },
-
-      {
-        section: "Reality Check",
-        sectionNumber: 1,
-        type: "goalCheckoff",
-        questions: [
-          { label: "Check off the goals you completed", sublabel: "Celebrate each one as you check it!", type: "dynamic-checkboxes", id: "completedGoals" }
-        ]
-      },
-
-      // Part 1: Reality Check - Celebration
-      {
-        section: "Reality Check",
-        sectionNumber: 1,
-        questions: [
-          { label: "What are 3-5 specific wins from last week?", sublabel: "Things you shipped, decisions you made, moments you're proud of", type: "textarea", placeholder: "// Shipped feature X\n// Had difficult conversation with Y\n// Maintained meditation streak", id: "proudWins" },
-          { label: "What patterns or behaviors gave you energy last week?", sublabel: "These become habits to repeat", type: "textarea", placeholder: "// Working from cafe mornings\n// Not checking phone first thing\n// Evening walks", id: "whatWorked" }
-        ],
-        pause: {
-          icon: "⏸️",
-          text: "Take a breath. You're allowed to celebrate yourself."
-        }
-      },
-
-      // Part 1: Reality Check - KPIs
-      {
-        section: "Reality Check",
-        sectionNumber: 1,
-        type: "kpis",
-        kpis: [
-          { label: "Weight", id: "kpiWeight", type: "text" },
-          { label: "GitHub Commits", id: "kpiGithub", type: "number" },
-          { label: "Days Meditated", id: "kpiMeditation", type: "number" },
-          { label: "Spending ($)", id: "kpiSpending", type: "number" },
-          { label: "Exciting Moments", id: "kpiExcitement", type: "number" },
-          { label: "Runway (weeks)", id: "kpiRunway", type: "number" }
-        ]
-      },
-
-      // Part 1: Reality Check - Patterns & Energy
-      {
-        section: "Reality Check",
-        sectionNumber: 1,
-        questions: [
-          { label: "What pattern keeps showing up?", type: "input", placeholder: "// What do you keep noticing?", id: "pattern" },
-          { label: "What drained your energy last week?", type: "input", placeholder: "// Activities, people, situations...", id: "whatDrained" },
+          { type: 'goalsCheckoff' },
+          { type: 'celebrationBanner' },
+          { label: "What are 3-5 specific wins from last week?", sublabel: "Things you shipped, decisions you made, moments you're proud of", type: "textarea", placeholder: "Shipped feature X\nHad difficult conversation with Y\nMaintained meditation streak", id: "proudWins" },
+          { label: "What patterns or behaviors gave you energy last week?", sublabel: "These become habits to repeat", type: "textarea", placeholder: "Working from cafe mornings\nNot checking phone first thing\nEvening walks", id: "whatWorked" },
+          { type: 'kpis' },
+          { label: "What pattern keeps showing up?", type: "input", placeholder: "What do you keep noticing?", id: "pattern" },
+          { label: "What drained your energy last week?", type: "input", placeholder: "Activities, people, situations...", id: "whatDrained" },
           { label: "Energy baseline", type: "radio", options: ["Stable","Scattered","Creative","Low"], id: "energyBaseline" },
           { label: "Momentum score last week (0-10)", type: "slider", min: 0, max: 10, id: "momentumScore" }
         ]
       },
-
-      // Part 2: Breakthroughs + Intelligence
-      {
-        section: "Breakthroughs + Intelligence",
-        sectionNumber: 2,
+      breakthroughs: {
+        title: "Breakthroughs + Intelligence",
         subtitle: "What did I learn? What's shifting inside me?",
         questions: [
-          { label: "What was your biggest emotional breakthrough or shift?", sublabel: "One sentence", type: "input", placeholder: "// I realized I don't need permission to...", id: "emotionalBreakthrough" },
-          { label: "What was the biggest learning or surprise?", type: "textarea", placeholder: "// What clicked? What became clear?", id: "biggestLearning" },
-          { label: "What's your biggest fear right now?", type: "input", placeholder: "// What are you most afraid of?", id: "biggestFear" },
-          { label: "Any fear or scarcity mindset to clear?", type: "input", placeholder: "// What limiting belief needs to go?", id: "fearMindset" },
-          { label: "Anything to release before next week?", type: "input", placeholder: "// What do you need to let go of?", id: "toRelease" }
+          { label: "What was your biggest emotional breakthrough or shift?", sublabel: "One sentence", type: "input", placeholder: "I realized I don't need permission to...", id: "emotionalBreakthrough" },
+          { label: "What was the biggest learning or surprise?", type: "textarea", placeholder: "What clicked? What became clear?", id: "biggestLearning" },
+          { label: "What's your biggest fear right now?", type: "input", placeholder: "What are you most afraid of?", id: "biggestFear" },
+          { label: "Any fear or scarcity mindset to clear?", type: "input", placeholder: "What limiting belief needs to go?", id: "fearMindset" },
+          { label: "Anything to release before next week?", type: "input", placeholder: "What do you need to let go of?", id: "toRelease" }
         ],
-        breathMoment: {
-          icon: "🌬️",
-          text: "Close your eyes. Take three deep breaths.\nFeel yourself releasing what no longer serves you.\nYou're making space for what's next."
-        }
+        pause: "⏸️ Close your eyes. Take three deep breaths. Feel yourself releasing what no longer serves you. You're making space for what's next."
       },
-
-      // Part 3: Challenges + Corrections with Good/Bad toggles
-      {
-        section: "Challenges + Corrections",
-        sectionNumber: 3,
+      challenges: {
+        title: "Challenges + Corrections",
         subtitle: "Problems are not bad — they're data.",
         questions: [
           { label: "How was your eating last week?", type: "toggle", id: "challengeEating" },
@@ -787,571 +479,244 @@
           { label: "How was income and spending?", type: "toggle", id: "challengeIncome" },
           { label: "Did you abandon yourself at any moment?", sublabel: "Did you betray your own needs/boundaries?", type: "toggle", id: "challengeAbandon" }
         ],
-        pause: {
-          icon: "⏸️",
-          text: "These challenges don't define you — they're just data. You're designing solutions right now."
-        }
+        pause: "⏸️ These challenges don't define you — they're just data. You're designing solutions right now."
       },
-
-      // Part 4: Vision + Direction - Context Display
-      {
-        section: "Vision + Direction",
-        sectionNumber: 4,
+      vision: {
+        title: "Vision + Direction",
         subtitle: "What am I building next week? Who am I becoming?",
-        type: "contextDisplay",
         questions: [
-          { label: "Vision: If you're living your ideal life in 3 years, what does this week look like?", type: "textarea", placeholder: "// Paint the picture...", id: "visionWeek" }
+          { type: 'contextDisplay' },
+          { label: "Vision: If you're living your ideal life in 3 years, what does this week look like?", type: "textarea", placeholder: "Paint the picture...", id: "visionWeek" }
         ]
       },
-
-      // Part 5: Execution - Set Goals
-      {
-        section: "Execution Map",
-        sectionNumber: 5,
+      execution: {
+        title: "Execution Map",
         subtitle: "Your strategy for winning the week.",
         questions: [
-          { label: "The ONE big move", sublabel: "What is the one thing you can do such that by doing it, everything else will be easier or unnecessary?", type: "textarea", placeholder: "// The single highest-impact priority this week...", id: "oneBigMove" },
-          { label: "Work goals (3-5 max)", sublabel: "Toward your 6-week sprint milestone", type: "textarea", placeholder: "// One goal per line...", id: "workGoals" },
-          { label: "Life goals (3-5 max)", sublabel: "Include any auto-triggered goals from thresholds", type: "textarea", placeholder: "// One goal per line...", id: "lifeGoals" }
-        ]
-      },
-
-      // Part 5: Goal Validation on same page
-      {
-        section: "Execution Map",
-        sectionNumber: 5,
-        type: "goalValidation",
-        questions: [
-          { label: "For each goal, quickly check:", type: "info", content: "• Is this highest-leverage right now?\n• What's the biggest challenge?\n• Are you underestimating energy?\n• How does it compound last week?" },
-          { label: "Are these goals exciting and achievable?", type: "radio", options: ["Yes, let's go","Need to adjust"], id: "goalsCheck" }
-        ]
-      },
-
-      // Part 5: Goal Display + Aliveness Check
-      {
-        section: "Execution Map",
-        sectionNumber: 5,
-        type: "goalDisplay",
-        alivenessCheck: true
-      },
-
-      // Part 5: Execution - Body & Freedom Block
-      {
-        section: "Execution Map",
-        sectionNumber: 5,
-        questions: [
-          { label: "Movement days locked", type: "input", placeholder: "// Mon/Wed/Fri?", id: "movementDays" },
-          { label: "Type of movement", type: "input", placeholder: "// Gym, yoga, dance?", id: "movementType" },
-          { label: "90-Minute Freedom Block - Day/Time", type: "input", placeholder: "// Tuesday 2pm?", id: "freedomBlockTime" },
-          { label: "90-Minute Freedom Block - Mission", sublabel: "What are you conquering/expanding?", type: "input", placeholder: "// What scares you? What will shift you?", id: "freedomBlockMission" }
-        ]
-      },
-
-      // Part 5: Joy & Rest
-      {
-        section: "Execution Map",
-        sectionNumber: 5,
-        questions: [
-          { label: "Joy (pick 1-2)", type: "checkbox", options: [
-            "Motorcycle lesson",
-            "Short trip",
-            "Experience with friends",
-            "Make new friend",
-            "Date/intimacy",
-            "Other"
-          ], id: "joyActivities" },
-          { label: "Rest (pick 1-2)", type: "checkbox", options: [
-            "Dinner date",
-            "Massage",
-            "Movie night",
-            "Pure rest",
-            "Astrology fun",
-            "Other"
-          ], id: "restActivities" }
-        ]
-      },
-
-      // Part 5: Upleveling
-      {
-        section: "Execution Map",
-        sectionNumber: 5,
-        subtitle: "Select 2-4 active focuses this week",
-        questions: [
-          { label: "Long-term identity upleveling", type: "checkbox", options: [
-            "Badass builder (10 min)",
-            "Flexibility (10 min)",
-            "Dark feminine (10 min)",
-            "$2.5k/mo biz (5 min)",
-            "Social media fun (5 min)"
-          ], id: "uplevelingIdentity" },
-          { label: "Fun learning", type: "checkbox", options: [
-            "Physics (10 min)",
-            "Balinese (5 min)",
-            "English vocab (5 min)"
-          ], id: "uplevelingLearning" },
-          { label: "Mindset (affirmations always daily)", type: "checkbox", options: [
-            "Affirmations (daily)",
-            "Manifestation (5 min)"
-          ], id: "uplevelingMindset" }
+          { label: "The ONE big move", sublabel: "What is the one thing you can do such that by doing it, everything else will be easier or unnecessary?", type: "textarea", placeholder: "The single highest-impact priority this week...", id: "oneBigMove" },
+          { label: "Work goals (3-5 max)", sublabel: "Toward your 6-week sprint milestone", type: "textarea", placeholder: "One goal per line...", id: "workGoals" },
+          { label: "Life goals (3-5 max)", sublabel: "Include any auto-triggered goals from thresholds", type: "textarea", placeholder: "One goal per line...", id: "lifeGoals" },
+          { type: 'goalDisplay' },
+          { label: "Evidence I'll create this week", sublabel: "2-3 actions that prove who you're becoming", type: "textarea", placeholder: "Ship X\nMaintain Y streak\nHave Z conversation", id: "evidence" },
+          { label: "My key routines this week", sublabel: "What are your non-negotiable rituals?", type: "textarea", placeholder: "Morning: Wake → Meditate → Cafe\nEvening: 9pm workspace reset\nMovement: Mon/Wed/Fri", id: "routines" },
+          { label: "Long-term identity upleveling", type: "checkbox", options: ["Badass builder (10 min)","Flexibility (10 min)","Dark feminine (10 min)","$2.5k/mo biz (5 min)","Social media fun (5 min)"], id: "uplevelingIdentity" },
+          { label: "Fun learning", type: "checkbox", options: ["Physics (10 min)","Balinese (5 min)","English vocab (5 min)"], id: "uplevelingLearning" },
+          { label: "Meditation streak", type: "input", placeholder: "__/60", id: "meditationStreak" },
+          { label: "48 Laws of Power", type: "input", placeholder: "page ___", id: "lawsProgress" },
+          { label: "Portfolio status", type: "input", placeholder: "status ___", id: "portfolioStatus" }
         ],
-        pause: {
-          icon: "⏸️",
-          text: "Read your goals and upleveling plan out loud. Do they light you up? If not, go back and make them bigger."
-        }
+        pause: "⏸️ Read your goals and upleveling plan out loud. Do they light you up? If not, go back and make them bigger."
       },
-
-      // Part 6: Identity + Anchors
-      {
-        section: "Identity + Routines",
-        sectionNumber: 6,
-        questions: [
-          { label: "Evidence I'll create this week", sublabel: "2-3 actions that prove who you're becoming", type: "textarea", placeholder: "// Ship X\n// Maintain Y streak\n// Have Z conversation", id: "evidence" },
-          { label: "My key routines this week", sublabel: "What are your non-negotiable rituals?", type: "textarea", placeholder: "// Morning: Wake → Meditate → Cafe\n// Evening: 9pm workspace reset\n// Movement: Mon/Wed/Fri", id: "routines" }
-        ]
-      },
-
-      // Part 6: Finish What You Started
-      {
-        section: "Identity + Routines",
-        sectionNumber: 6,
-        questions: [
-          { label: "Meditation streak", type: "input", placeholder: "// __/60", id: "meditationStreak" },
-          { label: "48 Laws of Power", type: "input", placeholder: "// page ___", id: "lawsProgress" },
-          { label: "Portfolio status", type: "input", placeholder: "// status ___", id: "portfolioStatus" }
-        ]
-      },
-
-      // Final: Integration
-      {
-        section: "Integration",
-        sectionNumber: 7,
-        type: "final",
+      integration: {
+        title: "Integration",
+        subtitle: "Final check before you launch into your week.",
         questions: [
           { label: "Excitement check: How excited am I for next week? (0-10)", type: "slider", min: 0, max: 10, id: "excitementCheck" }
         ],
-        finalText: {
-          icon: "🔥",
-          title: "FINAL INTEGRATION",
-          prompt: "Read your One Big Move out loud.\n\nAsk yourself:\n\"Would the version of me living my dream life be proud of this week?\"\n\nIf yes → Visualize Sunday night feeling accomplished.\nIf no → Go back and make it bigger, more alive, more worthy of you."
-        }
+        finalText: "🔥 Read your One Big Move out loud.\n\nAsk yourself:\n\"Would the version of me living my dream life be proud of this week?\"\n\nIf yes → Visualize Sunday night feeling accomplished.\nIf no → Go back and make it bigger, more alive, more worthy of you."
       }
-    ];
+    };
 
-    let currentScreen = 0;
+    let currentSection = 'reality';
     let formData = {};
     let recommendedActions = [];
 
     // Load saved data
     const savedData = localStorage.getItem('weeklyPlanData');
     if (savedData) {
-      formData = JSON.parse(savedData);
+      const parsed = JSON.parse(savedData);
+      formData = parsed.formData || parsed;
     }
 
-    function updateProgressBar() {
-      const progress = ((currentScreen + 1) / questions.length) * 100;
-      document.getElementById("progressFill").style.width = progress + "%";
+    // Load last week's goals
+    const lastWeekData = localStorage.getItem('lastWeekGoals');
+    if (lastWeekData) {
+      const parsed = JSON.parse(lastWeekData);
+      formData.lastWeekWorkGoals = parsed.workGoals || '';
+      formData.lastWeekLifeGoals = parsed.lifeGoals || '';
     }
 
-    function updateStickyActions() {
-      recommendedActions = [];
-
-      // From what worked
-      if (formData.whatWorked) {
-        recommendedActions.push({
-          label: "Continue Doing",
-          action: formData.whatWorked
-        });
-      }
-
-      // From challenges
-      const challenges = [
-        { key: 'challengeEating', label: 'Eating' },
-        { key: 'challengeRoutines', label: 'Routines' },
-        { key: 'challengeIncome', label: 'Income' },
-        { key: 'challengeAbandon', label: 'Self-Care' }
-      ];
-
-      challenges.forEach(c => {
-        if (formData[c.key] === 'bad' && formData[c.key + 'Action']) {
-          recommendedActions.push({
-            label: c.label + ' Fix',
-            action: formData[c.key + 'Action']
-          });
-        }
-      });
-
-      // Update sticky display
-      const stickyContent = document.getElementById('stickyContent');
-      if (recommendedActions.length > 0) {
-        document.getElementById('stickyActions').classList.add('visible');
-        stickyContent.innerHTML = recommendedActions.map(a => `
-          <div class="sticky-note">
-            <div class="sticky-note-label">${a.label}</div>
-            ${a.action}
-          </div>
-        `).join('');
-      }
+    // Ritual functions
+    function toggleRitualStep(index) {
+      const checkbox = document.getElementById(`ritual${index}`);
+      const step = checkbox.parentElement;
+      checkbox.checked = !checkbox.checked;
+      step.classList.toggle('checked', checkbox.checked);
+      
+      const allChecked = [0, 1, 2].every(i => document.getElementById(`ritual${i}`).checked);
+      document.getElementById('ritualBeginBtn').disabled = !allChecked;
     }
 
-    function checkThresholds() {
-      const alerts = [];
-      
-      if (parseInt(formData.kpiGithub) < 3) {
-        alerts.push("⚠️ GitHub commits <3 → Add 'increase commits' to work goals");
-      }
-      
-      if (parseInt(formData.kpiMeditation) < 7) {
-        alerts.push("⚠️ Meditation <7 days → Add 'daily meditation' to life goals");
-      }
-      
-      if (parseFloat(formData.kpiSpending) > 200) {
-        alerts.push("⚠️ Spending >$200 → Add 'spending under $200' goal");
-      }
-      
-      if (parseInt(formData.kpiExcitement) === 0) {
-        alerts.push("⚠️ No excitement → Add 'create excitement' goal");
-      }
-
-      return alerts;
+    function closeRitual() {
+      document.getElementById('ritualModal').classList.add('hidden');
+      renderAll();
     }
 
-    function renderScreen(screenIndex) {
-      const screen = questions[screenIndex];
-      const container = document.getElementById("sectionContainer");
-      let html = '';
+    // Main render function
+    function renderAll() {
+      renderProgressBar();
+      renderSidebarNav();
+      renderCurrentSection();
+      updateRecommendedActions();
+    }
 
-      // Ritual Opening
-      if (screen.type === 'ritual') {
-        html = `
-          <div class="ritual-card">
-            <div class="ritual-icon">${screen.content.icon}</div>
-            <div class="ritual-title">${screen.content.title}</div>
-            <div class="ritual-text">${screen.content.text}</div>
-            <button class="btn btn-primary" onclick="nextScreen()">Begin →</button>
-          </div>
-        `;
-        container.innerHTML = html;
-        updateProgressBar();
-        return;
-      }
-
-      // Section Header
-      html += `
-        <div class="section-header">
-          <div class="section-title">${screen.section}</div>
-          <div class="section-subtitle">Part ${screen.sectionNumber} of 7</div>
-          ${screen.subtitle ? `<div class="section-subtitle" style="margin-top:10px; font-style:italic;">${screen.subtitle}</div>` : ''}
-        </div>
-      `;
-
-      // Goal Checkoff Special
-      if (screen.type === 'goalCheckoff') {
-        const workGoals = (formData.lastWeekWorkGoals || '').split('\n').filter(g => g.trim());
-        const lifeGoals = (formData.lastWeekLifeGoals || '').split('\n').filter(g => g.trim());
-        const allGoals = [...workGoals, ...lifeGoals];
-        const completedGoals = formData.completedGoals || [];
-
-        html += `<div class="question-card">`;
-        html += `<div class="question-label">Check off the goals you completed</div>`;
-        html += `<div class="question-sublabel">Celebrate each one as you check it!</div>`;
-        html += `<div class="goal-checkbox-list">`;
-        
-        allGoals.forEach((goal, i) => {
-          const isCompleted = completedGoals.includes(goal);
-          html += `
-            <div class="goal-item ${isCompleted ? 'completed' : ''}" onclick="toggleGoalCompletion(${i})">
-              <input type="checkbox" class="goal-checkbox" ${isCompleted ? 'checked' : ''} onchange="event.stopPropagation()" />
-              <span class="goal-text">${goal}</span>
-            </div>
-          `;
-        });
-        
-        html += `</div></div>`;
-
-      // Context Display
-      } else if (screen.type === 'contextDisplay') {
-        html += `<div class="context-display">`;
-        html += `<div class="context-section">`;
-        html += `<div class="context-title">📌 Key challenges from last week</div>`;
-        
-        const challenges = [
-          { key: 'challengeEating', label: 'Eating', action: 'challengeEatingAction' },
-          { key: 'challengeRoutines', label: 'Routines', action: 'challengeRoutinesAction' },
-          { key: 'challengeIncome', label: 'Income', action: 'challengeIncomeAction' },
-          { key: 'challengeAbandon', label: 'Self-abandonment', action: 'challengeAbandonAction' }
-        ];
-
-        challenges.forEach(c => {
-          if (formData[c.key] === 'bad' && formData[c.action]) {
-            html += `<div class="context-item"><strong>${c.label}:</strong> ${formData[c.action]}</div>`;
-          }
-        });
-        
-        html += `</div>`;
-        
-        // Show recommended actions
-        if (recommendedActions.length > 0) {
-          html += `<div class="context-section">`;
-          html += `<div class="context-title">✨ Recommended actions</div>`;
-          recommendedActions.forEach(a => {
-            html += `<div class="context-item"><strong>${a.label}:</strong> ${a.action}</div>`;
-          });
-          html += `</div>`;
-        }
-        
-        // Show uncompleted goals
-        const workGoals = (formData.lastWeekWorkGoals || '').split('\n').filter(g => g.trim());
-        const lifeGoals = (formData.lastWeekLifeGoals || '').split('\n').filter(g => g.trim());
-        const allGoals = [...workGoals, ...lifeGoals];
-        const completedGoals = formData.completedGoals || [];
-        const uncompletedGoals = allGoals.filter(g => !completedGoals.includes(g));
-        
-        if (uncompletedGoals.length > 0) {
-          html += `<div class="context-section">`;
-          html += `<div class="context-title">⚠️ Uncompleted goals to address</div>`;
-          uncompletedGoals.forEach(g => {
-            html += `<div class="context-item">${g}</div>`;
-          });
-          html += `</div>`;
-        }
-        
-        html += `</div>`;
-        
-        // Regular questions
-        screen.questions.forEach((q, i) => {
-          html += renderQuestion(q, i);
-        });
-
-      // Goal Display with Aliveness Check
-      } else if (screen.type === 'goalDisplay') {
-        const workGoals = (formData.workGoals || '').split('\n').filter(g => g.trim());
-        const lifeGoals = (formData.lifeGoals || '').split('\n').filter(g => g.trim());
-        
-        html += `<div class="goal-display">`;
-        html += `<div class="goal-display-title">🎯 Your Week at a Glance</div>`;
-        
-        html += `<div class="goal-category">`;
-        html += `<div class="goal-category-title">One Big Move:</div>`;
-        html += `<div class="goal-list-item">${formData.oneBigMove || 'Not set'}</div>`;
-        html += `</div>`;
-        
-        html += `<div class="goal-category">`;
-        html += `<div class="goal-category-title">Work Goals:</div>`;
-        workGoals.forEach(g => {
-          html += `<div class="goal-list-item">${g}</div>`;
-        });
-        html += `</div>`;
-        
-        html += `<div class="goal-category">`;
-        html += `<div class="goal-category-title">Life Goals:</div>`;
-        lifeGoals.forEach(g => {
-          html += `<div class="goal-list-item">${g}</div>`;
-        });
-        html += `</div>`;
-        
-        html += `</div>`;
-        
-        // Aliveness check
-        if (screen.alivenessCheck) {
-          html += `<div class="question-card">`;
-          html += `<div class="question-label">Is this week too safe? (Am I playing small?)</div>`;
-          html += `<div class="radio-row">`;
-          ['Yes','No'].forEach(option => {
-            const checked = formData.tooSafe === option ? 'checked' : '';
-            html += `
-              <label>
-                <input type="radio" name="tooSafe" value="${option}" ${checked} />
-                <span class="radio-pill">${option}</span>
-              </label>
-            `;
-          });
-          html += `</div></div>`;
-          
-          html += `<div class="question-card">`;
-          html += `<div class="question-label">Is this week too boring? (Where's the edge?)</div>`;
-          html += `<div class="radio-row">`;
-          ['Yes','No'].forEach(option => {
-            const checked = formData.tooBoring === option ? 'checked' : '';
-            html += `
-              <label>
-                <input type="radio" name="tooBoring" value="${option}" ${checked} />
-                <span class="radio-pill">${option}</span>
-              </label>
-            `;
-          });
-          html += `</div></div>`;
-          
-          html += `<div class="question-card">`;
-          html += `<div class="question-label">If yes to either: What makes this week 20% more ambitious?</div>`;
-          html += `<input class="underline-input" id="moreAmbitious" value="${formData.moreAmbitious || ''}" placeholder="// How can you dial it up?" />`;
-          html += `</div>`;
-          
-          html += `<div class="question-card">`;
-          html += `<div class="question-label">What injects aliveness into the week?</div>`;
-          html += `<input class="underline-input" id="injectAliveness" value="${formData.injectAliveness || ''}" placeholder="// What creates that electric feeling?" />`;
-          html += `</div>`;
-        }
-
-      // KPIs
-      } else if (screen.type === 'kpis') {
-        html += `<div class="kpi-grid">`;
-        screen.kpis.forEach(kpi => {
-          const value = formData[kpi.id] || '';
-          html += `
-            <div class="kpi-item">
-              <div class="kpi-label">${kpi.label}</div>
-              <input type="${kpi.type}" class="kpi-input" id="${kpi.id}" value="${value}" />
-            </div>
-          `;
-        });
-        html += `</div>`;
-        html += `<div id="thresholdAlerts"></div>`;
-
-      // Final screen
-      } else if (screen.type === 'final') {
-        screen.questions.forEach((q, i) => {
-          html += renderQuestion(q, i);
-        });
-        
-        html += `
-          <div class="ritual-card" style="margin-top: 60px;">
-            <div class="ritual-icon">${screen.finalText.icon}</div>
-            <div class="ritual-title">${screen.finalText.title}</div>
-            <div class="ritual-text">${screen.finalText.prompt}</div>
-          </div>
-        `;
-
-      // Regular questions
-      } else {
-        screen.questions.forEach((q, i) => {
-          html += renderQuestion(q, i);
-        });
-      }
-
-      // Breath moment
-      if (screen.breathMoment) {
-        html += `
-          <div class="breath-card">
-            <div class="breath-icon">${screen.breathMoment.icon}</div>
-            <div class="breath-text">${screen.breathMoment.text}</div>
-          </div>
-        `;
-      }
-
-      // Pause moment
-      if (screen.pause) {
-        html += `
-          <div class="pause-card">
-            <div class="pause-icon">${screen.pause.icon}</div>
-            <div class="pause-text">${screen.pause.text}</div>
-          </div>
-        `;
-      }
-
-      // Navigation
-      html += `
-        <div class="nav-row">
-          <button class="btn" onclick="previousScreen()" ${currentScreen === 0 ? 'style="opacity:0;pointer-events:none;"' : ''}>← Previous</button>
-          <button class="btn btn-primary" onclick="nextScreen()">${currentScreen === questions.length - 1 ? 'Generate Dashboard →' : 'Next →'}</button>
-        </div>
-      `;
-
-      container.innerHTML = html;
-      attachEventListeners();
+    function renderProgressBar() {
+      const currentIndex = sections.findIndex(s => s.id === currentSection);
+      const progressBar = document.getElementById('progressBar');
+      progressBar.innerHTML = sections.map((section, i) => {
+        let className = 'progress-section';
+        if (i < currentIndex) className += ' completed';
+        if (i === currentIndex) className += ' current';
+        return `<div class="${className}"></div>`;
+      }).join('');
       
-      if (screen.type === 'kpis') {
-        setTimeout(() => {
-          const alerts = checkThresholds();
-          if (alerts.length > 0) {
-            const alertContainer = document.getElementById('thresholdAlerts');
-            alertContainer.innerHTML = alerts.map(alert => 
-              `<div class="threshold-alert active">${alert}</div>`
-            ).join('');
-          }
-        }, 500);
-      }
+      document.getElementById('progressText').textContent = `Part ${currentIndex + 1} of ${sections.length}`;
+      document.getElementById('sectionName').textContent = sections[currentIndex].name;
+    }
 
-      updateProgressBar();
+    function renderSidebarNav() {
+      const currentIndex = sections.findIndex(s => s.id === currentSection);
+      const nav = document.getElementById('sectionNav');
+      nav.innerHTML = sections.map((section, i) => {
+        let className = 'section-nav-item';
+        if (i < currentIndex) className += ' completed';
+        if (section.id === currentSection) className += ' active';
+        return `<div class="${className}" onclick="navigateToSection('${section.id}')">${section.name}</div>`;
+      }).join('');
+    }
+
+    function navigateToSection(sectionId) {
+      saveFormData();
+      currentSection = sectionId;
+      renderAll();
       window.scrollTo(0, 0);
     }
 
-    function renderQuestion(q, index) {
-      let html = `<div class="question-card" style="animation-delay:${index * 0.1}s">`;
-      html += `<div class="question-label">${q.label}</div>`;
-      
-      if (q.sublabel) {
-        html += `<div class="question-sublabel">${q.sublabel}</div>`;
+    function renderCurrentSection() {
+      const content = sectionContent[currentSection];
+      const contentArea = document.getElementById('contentArea');
+      let html = '';
+
+      // Section header
+      html += `
+        <div class="section-header">
+          <div class="section-title">${content.title}</div>
+          ${content.subtitle ? `<div class="section-subtitle">${content.subtitle}</div>` : ''}
+        </div>
+      `;
+
+      // Questions
+      content.questions.forEach(q => {
+        html += renderQuestion(q);
+      });
+
+      // Pause card
+      if (content.pause) {
+        html += `<div class="pause-card">${content.pause}</div>`;
       }
+
+      // Final text
+      if (content.finalText) {
+        html += `<div class="pause-card" style="white-space: pre-line;">${content.finalText}</div>`;
+      }
+
+      // Navigation
+      const currentIndex = sections.findIndex(s => s.id === currentSection);
+      html += `
+        <div class="nav-footer">
+          ${currentIndex > 0 ? `<button class="nav-btn" onclick="navigatePrevious()">← Previous</button>` : ''}
+          ${currentIndex < sections.length - 1 ? 
+            `<button class="nav-btn nav-btn-primary" onclick="navigateNext()">Next →</button>` :
+            `<button class="nav-btn nav-btn-primary" onclick="generateDashboard()">Generate Dashboard →</button>`
+          }
+        </div>
+      `;
+
+      contentArea.innerHTML = html;
+      attachEventListeners();
+    }
+
+    function renderQuestion(q) {
+      let html = '';
+
+      // Special types
+      if (q.type === 'goalsCheckoff') {
+        return renderGoalsCheckoff();
+      }
+      if (q.type === 'celebrationBanner') {
+        return `<div class="celebration-banner">⏸️ Take a breath. You're allowed to celebrate yourself.</div>`;
+      }
+      if (q.type === 'kpis') {
+        return renderKPIs();
+      }
+      if (q.type === 'contextDisplay') {
+        return renderContextDisplay();
+      }
+      if (q.type === 'goalDisplay') {
+        return renderGoalDisplay();
+      }
+
+      html += `<div class="question-block">`;
+      html += `<div class="question-label">${q.label}</div>`;
+      if (q.sublabel) html += `<div class="question-sublabel">${q.sublabel}</div>`;
 
       const value = formData[q.id] || '';
 
-      switch(q.type) {
+      switch (q.type) {
         case 'input':
-          html += `<input class="underline-input" id="${q.id}" placeholder="${q.placeholder || ''}" value="${value}" ${q.readonly ? 'readonly' : ''} />`;
+          html += `<input class="input-field" id="${q.id}" placeholder="${q.placeholder || ''}" value="${value}" />`;
           break;
-
         case 'textarea':
-          html += `<textarea class="underline-input" id="${q.id}" placeholder="${q.placeholder || ''}">${value}</textarea>`;
+          html += `<textarea class="input-field" id="${q.id}" placeholder="${q.placeholder || ''}">${value}</textarea>`;
           break;
-
         case 'toggle':
           const currentValue = formData[q.id] || 'good';
-          html += `<div class="toggle-group">`;
-          html += `<button class="toggle-btn good ${currentValue === 'good' ? 'active' : ''}" onclick="setToggle('${q.id}', 'good')">✓ Good</button>`;
-          html += `<button class="toggle-btn bad ${currentValue === 'bad' ? 'active' : ''}" onclick="setToggle('${q.id}', 'bad')">✗ Needs Work</button>`;
-          html += `</div>`;
-          
-          // Action input
-          const actionValue = formData[q.id + 'Action'] || '';
           html += `
+            <div class="toggle-group">
+              <button class="toggle-btn good ${currentValue === 'good' ? 'active' : ''}" onclick="setToggle('${q.id}', 'good')">✓ Good</button>
+              <button class="toggle-btn bad ${currentValue === 'bad' ? 'active' : ''}" onclick="setToggle('${q.id}', 'bad')">✗ Needs Work</button>
+            </div>
             <div class="action-input-wrapper ${currentValue === 'bad' ? 'visible' : ''}" id="${q.id}ActionWrapper">
               <div class="question-sublabel" style="margin-top: 15px;">→ What will you do about this?</div>
-              <input class="underline-input" id="${q.id}Action" placeholder="// Your action plan..." value="${actionValue}" />
+              <input class="input-field" id="${q.id}Action" placeholder="Your action plan..." value="${formData[q.id + 'Action'] || ''}" />
             </div>
           `;
           break;
-
         case 'radio':
-          html += `<div class="radio-row">`;
-          q.options.forEach(option => {
-            const checked = value === option ? 'checked' : '';
+          html += `<div class="radio-group">`;
+          q.options.forEach(opt => {
+            const checked = value === opt ? 'checked' : '';
             html += `
               <label>
-                <input type="radio" name="${q.id}" value="${option}" ${checked} />
-                <span class="radio-pill">${option}</span>
+                <input type="radio" name="${q.id}" value="${opt}" ${checked} />
+                <span class="radio-label">${opt}</span>
               </label>
             `;
           });
           html += `</div>`;
           break;
-
         case 'checkbox':
-          html += `<div class="checkbox-list">`;
-          q.options.forEach(option => {
-            const savedOptions = formData[q.id] || [];
-            const checked = savedOptions.includes(option) ? 'checked' : '';
+          html += `<div class="checkbox-group">`;
+          q.options.forEach(opt => {
+            const saved = formData[q.id] || [];
+            const checked = saved.includes(opt) ? 'checked' : '';
             html += `
               <div class="checkbox-item">
-                <input type="checkbox" name="${q.id}" value="${option}" ${checked} />
-                <span class="checkbox-label">${option}</span>
+                <input type="checkbox" name="${q.id}" value="${opt}" ${checked} />
+                <span class="checkbox-label">${opt}</span>
               </div>
             `;
           });
           html += `</div>`;
           break;
-
         case 'slider':
           const sliderValue = value || 5;
           html += `
-            <div class="slider-row">
+            <div class="slider-wrapper">
               <input type="range" min="${q.min}" max="${q.max}" value="${sliderValue}" class="slider" id="${q.id}" />
               <div class="slider-value" id="${q.id}-value">${sliderValue}</div>
             </div>
           `;
-          break;
-
-        case 'info':
-          html += `<div class="question-sublabel" style="white-space: pre-line; margin-top: 10px; color: rgba(255,255,255,0.7);">${q.content}</div>`;
           break;
       }
 
@@ -1359,27 +724,223 @@
       return html;
     }
 
-    function setToggle(questionId, value) {
-      formData[questionId] = value;
+    function renderGoalsCheckoff() {
+      const workGoals = (formData.lastWeekWorkGoals || '').split('\n').filter(g => g.trim());
+      const lifeGoals = (formData.lastWeekLifeGoals || '').split('\n').filter(g => g.trim());
+      const allGoals = [...workGoals, ...lifeGoals];
+      const completedGoals = formData.completedGoals || [];
+
+      if (allGoals.length === 0) {
+        return `
+          <div class="question-block">
+            <div class="question-label">What were your work goals last week?</div>
+            <div class="question-sublabel">3-5 goals</div>
+            <textarea class="input-field" id="lastWeekWorkGoals" placeholder="One goal per line...">${formData.lastWeekWorkGoals || ''}</textarea>
+          </div>
+          <div class="question-block">
+            <div class="question-label">What were your life goals last week?</div>
+            <div class="question-sublabel">3-5 goals</div>
+            <textarea class="input-field" id="lastWeekLifeGoals" placeholder="One goal per line...">${formData.lastWeekLifeGoals || ''}</textarea>
+          </div>
+        `;
+      }
+
+      let html = `
+        <div class="question-block">
+          <div class="question-label">Check off the goals you completed</div>
+          <div class="question-sublabel">Celebrate each one as you check it! 🎉</div>
+          <div class="goal-list">
+      `;
       
-      // Update UI
-      document.querySelectorAll(`[onclick*="${questionId}"]`).forEach(btn => {
-        btn.classList.remove('active');
+      allGoals.forEach((goal, i) => {
+        const isCompleted = completedGoals.includes(goal);
+        html += `
+          <div class="goal-item ${isCompleted ? 'completed' : ''}" onclick="toggleGoalCompletion(${i})">
+            <input type="checkbox" class="goal-checkbox" ${isCompleted ? 'checked' : ''} onchange="event.stopPropagation()" />
+            <span class="goal-text">${goal}</span>
+            <span class="goal-celebration">🎉</span>
+          </div>
+        `;
       });
-      event.target.classList.add('active');
       
-      // Show/hide action input
-      const actionWrapper = document.getElementById(questionId + 'ActionWrapper');
-      if (actionWrapper) {
-        if (value === 'bad') {
-          actionWrapper.classList.add('visible');
-        } else {
-          actionWrapper.classList.remove('visible');
+      html += `</div></div>`;
+      return html;
+    }
+
+    function renderKPIs() {
+      const kpis = [
+        { label: "Weight", id: "kpiWeight", type: "text" },
+        { label: "GitHub Commits", id: "kpiGithub", type: "number" },
+        { label: "Days Meditated", id: "kpiMeditation", type: "number" },
+        { label: "Spending ($)", id: "kpiSpending", type: "number" },
+        { label: "Exciting Moments", id: "kpiExcitement", type: "number" },
+        { label: "Runway (weeks)", id: "kpiRunway", type: "number" }
+      ];
+
+      let html = `
+        <div class="question-block">
+          <div class="question-label">Last Week's Key Metrics</div>
+          <div class="kpi-grid">
+      `;
+      
+      kpis.forEach(kpi => {
+        const value = formData[kpi.id] || '';
+        html += `
+          <div class="kpi-item">
+            <div class="kpi-label">${kpi.label}</div>
+            <input type="${kpi.type}" class="kpi-input" id="${kpi.id}" value="${value}" />
+          </div>
+        `;
+      });
+      
+      html += `</div><div id="thresholdAlerts"></div></div>`;
+      
+      setTimeout(() => {
+        const alerts = checkThresholds();
+        if (alerts.length > 0) {
+          document.getElementById('thresholdAlerts').innerHTML = 
+            alerts.map(a => `<div class="threshold-alert">${a}</div>`).join('');
         }
+      }, 100);
+      
+      return html;
+    }
+
+    function renderContextDisplay() {
+      let html = `<div class="context-box">`;
+      
+      // Challenges
+      html += `<div class="context-section"><div class="context-title">📌 Key challenges from last week</div>`;
+      const challenges = [
+        { key: 'challengeEating', label: 'Eating', action: 'challengeEatingAction' },
+        { key: 'challengeRoutines', label: 'Routines', action: 'challengeRoutinesAction' },
+        { key: 'challengeIncome', label: 'Income', action: 'challengeIncomeAction' },
+        { key: 'challengeAbandon', label: 'Self-abandonment', action: 'challengeAbandonAction' }
+      ];
+      challenges.forEach(c => {
+        if (formData[c.key] === 'bad' && formData[c.action]) {
+          html += `<div class="context-item"><strong>${c.label}:</strong> ${formData[c.action]}</div>`;
+        }
+      });
+      html += `</div>`;
+      
+      // Recommended actions
+      if (recommendedActions.length > 0) {
+        html += `<div class="context-section"><div class="context-title">✨ Recommended actions</div>`;
+        recommendedActions.forEach(a => {
+          html += `<div class="context-item"><strong>${a.label}:</strong> ${a.action}</div>`;
+        });
+        html += `</div>`;
       }
       
-      saveCurrentScreen();
-      updateStickyActions();
+      // Uncompleted goals
+      const workGoals = (formData.lastWeekWorkGoals || '').split('\n').filter(g => g.trim());
+      const lifeGoals = (formData.lastWeekLifeGoals || '').split('\n').filter(g => g.trim());
+      const allGoals = [...workGoals, ...lifeGoals];
+      const completedGoals = formData.completedGoals || [];
+      const uncompletedGoals = allGoals.filter(g => !completedGoals.includes(g));
+      
+      if (uncompletedGoals.length > 0) {
+        html += `<div class="context-section"><div class="context-title">⚠️ Uncompleted goals to address</div>`;
+        uncompletedGoals.forEach(g => {
+          html += `<div class="context-item">${g}</div>`;
+        });
+        html += `</div>`;
+      }
+      
+      html += `</div>`;
+      return html;
+    }
+
+    function renderGoalDisplay() {
+      const workGoals = (formData.workGoals || '').split('\n').filter(g => g.trim());
+      const lifeGoals = (formData.lifeGoals || '').split('\n').filter(g => g.trim());
+      
+      let html = `
+        <div class="goal-summary">
+          <div class="goal-summary-title">🎯 Your Week at a Glance</div>
+          <div class="goal-category">
+            <div class="goal-category-title">One Big Move:</div>
+            <div class="goal-display-item">${formData.oneBigMove || 'Not set'}</div>
+          </div>
+      `;
+      
+      if (workGoals.length > 0) {
+        html += `<div class="goal-category"><div class="goal-category-title">Work Goals:</div>`;
+        workGoals.forEach(g => html += `<div class="goal-display-item">${g}</div>`);
+        html += `</div>`;
+      }
+      
+      if (lifeGoals.length > 0) {
+        html += `<div class="goal-category"><div class="goal-category-title">Life Goals:</div>`;
+        lifeGoals.forEach(g => html += `<div class="goal-display-item">${g}</div>`);
+        html += `</div>`;
+      }
+      
+      html += `</div>`;
+      return html;
+    }
+
+    function checkThresholds() {
+      const alerts = [];
+      if (parseInt(formData.kpiGithub) < 3) alerts.push("⚠️ GitHub commits <3 → Add 'increase commits' to work goals");
+      if (parseInt(formData.kpiMeditation) < 7) alerts.push("⚠️ Meditation <7 days → Add 'daily meditation' to life goals");
+      if (parseFloat(formData.kpiSpending) > 200) alerts.push("⚠️ Spending >$200 → Add 'spending under $200' goal");
+      if (parseInt(formData.kpiExcitement) === 0) alerts.push("⚠️ No excitement → Add 'create excitement' goal");
+      return alerts;
+    }
+
+    function updateRecommendedActions() {
+      recommendedActions = [];
+      
+      // From what worked
+      if (formData.whatWorked) {
+        formData.whatWorked.split('\n').filter(l => l.trim()).forEach(line => {
+          recommendedActions.push({ label: "Continue Doing", action: line });
+        });
+      }
+      
+      // From challenges
+      const challenges = [
+        { key: 'challengeEating', label: 'Eating' },
+        { key: 'challengeRoutines', label: 'Routines' },
+        { key: 'challengeIncome', label: 'Income' },
+        { key: 'challengeAbandon', label: 'Self-Care' }
+      ];
+      challenges.forEach(c => {
+        if (formData[c.key] === 'bad' && formData[c.key + 'Action']) {
+          recommendedActions.push({ label: c.label + ' Fix', action: formData[c.key + 'Action'] });
+        }
+      });
+      
+      // From uncompleted goals
+      const workGoals = (formData.lastWeekWorkGoals || '').split('\n').filter(g => g.trim());
+      const lifeGoals = (formData.lastWeekLifeGoals || '').split('\n').filter(g => g.trim());
+      const allGoals = [...workGoals, ...lifeGoals];
+      const completedGoals = formData.completedGoals || [];
+      allGoals.filter(g => !completedGoals.includes(g)).forEach(goal => {
+        recommendedActions.push({ label: "Carry Forward", action: goal });
+      });
+      
+      // From thresholds
+      checkThresholds().forEach(alert => {
+        recommendedActions.push({ label: "Threshold Alert", action: alert.replace('⚠️', '').trim() });
+      });
+      
+      // Show recommended actions after challenges section
+      const currentIndex = sections.findIndex(s => s.id === currentSection);
+      if (currentIndex >= 2 && recommendedActions.length > 0) {
+        const container = document.getElementById('recommendedActions');
+        container.style.display = 'block';
+        document.getElementById('recommendedContent').innerHTML = recommendedActions.map(a => `
+          <div class="recommended-item">
+            <div class="recommended-label">${a.label}</div>
+            ${a.action}
+          </div>
+        `).join('');
+      } else {
+        document.getElementById('recommendedActions').style.display = 'none';
+      }
     }
 
     function toggleGoalCompletion(index) {
@@ -1389,7 +950,6 @@
       const goal = allGoals[index];
       
       if (!formData.completedGoals) formData.completedGoals = [];
-      
       const idx = formData.completedGoals.indexOf(goal);
       if (idx > -1) {
         formData.completedGoals.splice(idx, 1);
@@ -1397,8 +957,14 @@
         formData.completedGoals.push(goal);
       }
       
-      saveCurrentScreen();
-      renderScreen(currentScreen);
+      saveFormData();
+      renderAll();
+    }
+
+    function setToggle(id, value) {
+      formData[id] = value;
+      saveFormData();
+      renderAll();
     }
 
     function attachEventListeners() {
@@ -1406,80 +972,81 @@
       document.querySelectorAll('.slider').forEach(slider => {
         slider.oninput = e => {
           const valueDisplay = document.getElementById(e.target.id + "-value");
-          if (valueDisplay) {
-            valueDisplay.innerHTML = e.target.value;
-          }
+          if (valueDisplay) valueDisplay.textContent = e.target.value;
         };
       });
 
-      // Save on blur/change
+      // All inputs
       document.querySelectorAll('input, textarea, select').forEach(el => {
-        el.addEventListener('blur', saveCurrentScreen);
-        el.addEventListener('change', saveCurrentScreen);
+        el.addEventListener('blur', saveFormData);
+        el.addEventListener('change', saveFormData);
       });
     }
 
-    function saveCurrentScreen() {
-      const screen = questions[currentScreen];
+    function saveFormData() {
+      // Save all inputs
+      document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => {
+        if (el.id) formData[el.id] = el.value;
+      });
       
-      if (screen.type === 'ritual') return;
-
-      if (screen.type === 'kpis') {
-        screen.kpis.forEach(kpi => {
-          const el = document.getElementById(kpi.id);
-          if (el) formData[kpi.id] = el.value;
-        });
-      } else if (screen.questions) {
-        screen.questions.forEach(q => {
-          if (q.type === 'checkbox') {
-            const checkboxes = document.querySelectorAll(`input[name="${q.id}"]:checked`);
-            formData[q.id] = Array.from(checkboxes).map(cb => cb.value);
-          } else if (q.type === 'radio') {
-            const checked = document.querySelector(`input[name="${q.id}"]:checked`);
-            if (checked) formData[q.id] = checked.value;
-          } else if (q.type === 'toggle') {
-            // Already saved in setToggle
-            const actionEl = document.getElementById(q.id + 'Action');
-            if (actionEl) formData[q.id + 'Action'] = actionEl.value;
-          } else if (q.id) {
-            const el = document.getElementById(q.id);
-            if (el) formData[q.id] = el.value;
-          }
-        });
-      }
+      // Save radios
+      document.querySelectorAll('input[type="radio"]:checked').forEach(el => {
+        formData[el.name] = el.value;
+      });
       
-      // Save goal display aliveness check
-      if (screen.type === 'goalDisplay' && screen.alivenessCheck) {
-        const moreAmbitious = document.getElementById('moreAmbitious');
-        const injectAliveness = document.getElementById('injectAliveness');
-        if (moreAmbitious) formData.moreAmbitious = moreAmbitious.value;
-        if (injectAliveness) formData.injectAliveness = injectAliveness.value;
-      }
-
-      localStorage.setItem('weeklyPlanData', JSON.stringify(formData));
-      updateStickyActions();
-    }
-
-    function nextScreen() {
-      saveCurrentScreen();
+      // Save checkboxes
+      const checkboxGroups = {};
+      document.querySelectorAll('input[type="checkbox"][name]').forEach(el => {
+        if (!checkboxGroups[el.name]) checkboxGroups[el.name] = [];
+        if (el.checked) checkboxGroups[el.name].push(el.value);
+      });
+      Object.keys(checkboxGroups).forEach(name => {
+        formData[name] = checkboxGroups[name];
+      });
       
-      if (currentScreen < questions.length - 1) {
-        currentScreen++;
-        renderScreen(currentScreen);
-      } else {
-        window.location.href = 'dashboard.html';
+      // Save sliders
+      document.querySelectorAll('.slider').forEach(el => {
+        if (el.id) formData[el.id] = el.value;
+      });
+      
+      // Save to localStorage
+      localStorage.setItem('weeklyPlanData', JSON.stringify({ formData }));
+      
+      // Save current goals for next week
+      if (formData.workGoals || formData.lifeGoals) {
+        localStorage.setItem('lastWeekGoals', JSON.stringify({
+          workGoals: formData.workGoals,
+          lifeGoals: formData.lifeGoals
+        }));
       }
     }
 
-    function previousScreen() {
-      saveCurrentScreen();
-      if (currentScreen > 0) {
-        currentScreen--;
-        renderScreen(currentScreen);
+    function navigateNext() {
+      const currentIndex = sections.findIndex(s => s.id === currentSection);
+      if (currentIndex < sections.length - 1) {
+        saveFormData();
+        currentSection = sections[currentIndex + 1].id;
+        renderAll();
+        window.scrollTo(0, 0);
       }
     }
 
-    renderScreen(0);
+    function navigatePrevious() {
+      const currentIndex = sections.findIndex(s => s.id === currentSection);
+      if (currentIndex > 0) {
+        saveFormData();
+        currentSection = sections[currentIndex - 1].id;
+        renderAll();
+        window.scrollTo(0, 0);
+      }
+    }
+
+    function generateDashboard() {
+      saveFormData();
+      window.location.href = 'dashboard.html';
+    }
+
+    // Don't auto-render on load - wait for ritual
   </script>
 </body>
 </html>
