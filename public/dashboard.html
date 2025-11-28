@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Dashboard - Your Operating System</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      background: #000000;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Arial', sans-serif;
+      color: #ffffff;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Top Navigation */
+    .dashboard-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.9);
+      padding: 12px 24px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.5px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+      border-radius: 4px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .week-range {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      letter-spacing: 0.5px;
+    }
+
+    /* Dashboard Container */
+    .dashboard-container {
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    /* Dashboard Header */
+    .dashboard-header {
+      margin-bottom: 60px;
+      text-align: center;
+    }
+
+    .one-big-move-card {
+      background: linear-gradient(135deg, rgba(255, 20, 147, 0.1), rgba(255, 20, 147, 0.05));
+      border: 1px solid rgba(255, 20, 147, 0.2);
+      border-radius: 12px;
+      padding: 30px 40px;
+      margin-bottom: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .one-big-move-card::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255, 20, 147, 0.15), transparent);
+      filter: blur(40px);
+      pointer-events: none;
+    }
+
+    .one-big-move-label {
+      font-size: 0.75rem;
+      color: rgba(255, 20, 147, 0.8);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .one-big-move-text {
+      font-size: 1.8rem;
+      font-weight: 300;
+      letter-spacing: -0.5px;
+      line-height: 1.4;
+      position: relative;
+      z-index: 1;
+    }
+
+    .progress-overview {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 20px;
+    }
+
+    .progress-stat {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: 0.5px;
+    }
+
+    .progress-stat span {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
+      margin-left: 8px;
+    }
+
+    /* Visual Goals Section */
+    .visual-goals-section {
+      margin-bottom: 60px;
+    }
+
+    .goals-row {
+      margin-bottom: 40px;
+    }
+
+    .goals-label {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .goal-cards-grid {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .goal-card {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      border-radius: 12px;
+      background-size: cover;
+      background-position: center;
+      background-color: #1a1a1a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: all 0.3s;
+      animation: gentleFloat 6s ease-in-out infinite;
+      overflow: hidden;
+    }
+
+    .goal-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 60px rgba(255, 20, 147, 0.3);
+    }
+
+    .goal-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 40%, transparent 100%);
+      z-index: 1;
+    }
+
+    .goal-card-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px;
+      z-index: 2;
+    }
+
+    .goal-card-name {
+      font-size: 0.95rem;
+      font-weight: 500;
+      line-height: 1.3;
+      margin-bottom: 8px;
+      color: #ffffff;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    }
+
+    .goal-card-progress {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 400;
+    }
+
+    .goal-card-no-image {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background: #1a1a1a;
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+    }
+
+    .goal-card-no-image .goal-card-content {
+      position: static;
+      text-align: center;
+    }
+
+    .goal-card-placeholder {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      opacity: 0.3;
+    }
+
+    @keyframes gentleFloat {
+      0%, 100% { 
+        transform: translateY(0) scale(1);
+      }
+      25% { 
+        transform: translateY(-8px) scale(1.01);
+      }
+      50% { 
+        transform: translateY(-5px) scale(0.99);
+      }
+      75% { 
+        transform: translateY(-10px) scale(1.01);
+      }
+    }
+
+    .add-goal-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.6);
+      padding: 12px 24px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.5px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+      border-radius: 6px;
+    }
+
+    .add-goal-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Planning Area */
+    .planning-area {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 40px;
+      margin-bottom: 60px;
+    }
+
+    /* Block Palette */
+    .block-palette {
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+    }
+
+    .palette-title {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .palette-section {
+      margin-bottom: 30px;
+    }
+
+    .palette-section-label {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.4);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .palette-item {
+      background: #1a1a1a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 12px 15px;
+      margin-bottom: 8px;
+      cursor: grab;
+      transition: all 0.3s;
+      font-size: 0.9rem;
+      user-select: none;
+    }
+
+    .palette-item:hover {
+      background: #252525;
+      border-color: rgba(255, 20, 147, 0.3);
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(255, 20, 147, 0.2);
+    }
+
+    .palette-item:active {
+      cursor: grabbing;
+    }
+
+    .palette-item.goal-block {
+      border-left: 3px solid rgba(255, 20, 147, 0.5);
+    }
+
+    /* Week Grid */
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 15px;
+    }
+
+    .day-column {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 20px 15px;
+      min-height: 500px;
+      transition: all 0.3s;
+    }
+
+    .day-column.drag-over {
+      background: rgba(255, 20, 147, 0.05);
+      border-color: rgba(255, 20, 147, 0.3);
+    }
+
+    .day-header {
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      color: rgba(255, 255, 255, 0.6);
+      text-align: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .day-blocks {
+      min-height: 400px;
+    }
+
+    /* Block Cards */
+    .block-card {
+      background: #0a0a0a;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 12px;
+      cursor: move;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .block-card:hover {
+      background: #1a1a1a;
+      border-color: rgba(255, 20, 147, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .block-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .block-card-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .block-card-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .block-action-btn {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 4px;
+      transition: all 0.2s;
+    }
+
+    .block-action-btn:hover {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .block-goal-link {
+      font-size: 0.75rem;
+      color: rgba(255, 20, 147, 0.7);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .block-tasks {
+      margin-top: 10px;
+    }
+
+    .block-task {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.7);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .block-task:last-child {
+      border-bottom: none;
+    }
+
+    .block-task input[type="checkbox"] {
+      margin-top: 2px;
+      cursor: pointer;
+      accent-color: rgba(255, 20, 147, 0.8);
+    }
+
+    .block-task.completed {
+      opacity: 0.5;
+      text-decoration: line-through;
+    }
+
+    .add-task-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      padding: 8px 0;
+      font-size: 0.85rem;
+      margin-top: 10px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+    }
+
+    .add-task-input:focus {
+      outline: none;
+      border-bottom-color: rgba(255, 20, 147, 0.5);
+    }
+
+    .add-task-input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .nested-blocks {
+      margin-top: 12px;
+      padding-left: 15px;
+      border-left: 2px solid rgba(255, 20, 147, 0.2);
+    }
+
+    /* Reality Check Panel */
+    .reality-check {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 40px;
+    }
+
+    .reality-check-title {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .reality-alert {
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .reality-alert.success {
+      background: rgba(144, 238, 144, 0.05);
+      border-left: 3px solid rgba(144, 238, 144, 0.5);
+      color: rgba(144, 238, 144, 0.9);
+    }
+
+    .reality-alert.warning {
+      background: rgba(255, 193, 7, 0.05);
+      border-left: 3px solid rgba(255, 193, 7, 0.5);
+      color: rgba(255, 193, 7, 0.9);
+    }
+
+    .reality-alert.info {
+      background: rgba(255, 255, 255, 0.03);
+      border-left: 3px solid rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-content {
+      background: #0a0a0a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      transform: scale(0.9);
+      transition: transform 0.3s;
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      font-size: 1.5rem;
+      font-weight: 300;
+      margin-bottom: 30px;
+      letter-spacing: -0.5px;
+    }
+
+    .modal-field {
+      margin-bottom: 25px;
+    }
+
+    .modal-label {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 10px;
+      display: block;
+      letter-spacing: 0.5px;
+    }
+
+    .modal-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 12px 15px;
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+      transition: all 0.3s;
+    }
+
+    .modal-input:focus {
+      outline: none;
+      border-color: rgba(255, 20, 147, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .image-upload-area {
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .image-upload-area:hover {
+      border-color: rgba(255, 20, 147, 0.5);
+      background: rgba(255, 20, 147, 0.05);
+    }
+
+    .image-upload-area.has-image {
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+    }
+
+    .image-preview {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .upload-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      opacity: 0.3;
+    }
+
+    .upload-text {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .upload-subtext {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.8rem;
+    }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .image-grid-item {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .image-grid-item:hover {
+      border-color: rgba(255, 20, 147, 0.5);
+      transform: scale(1.05);
+    }
+
+    .image-grid-item.selected {
+      border-color: rgba(255, 20, 147, 0.8);
+      box-shadow: 0 0 20px rgba(255, 20, 147, 0.4);
+    }
+
+    .checkbox-field {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+    }
+
+    .checkbox-field input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: rgba(255, 20, 147, 0.8);
+    }
+
+    .checkbox-field label {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .modal-btn {
+      padding: 12px 28px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+      letter-spacing: 0.5px;
+    }
+
+    .modal-btn-cancel {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .modal-btn-cancel:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .modal-btn-primary {
+      background: rgba(255, 20, 147, 0.2);
+      border: 1px solid rgba(255, 20, 147, 0.4);
+      color: #ffffff;
+    }
+
+    .modal-btn-primary:hover {
+      background: rgba(255, 20, 147, 0.3);
+      border-color: rgba(255, 20, 147, 0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 20, 147, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+      .week-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 968px) {
+      .planning-area {
+        grid-template-columns: 1fr;
+      }
+
+      .block-palette {
+        position: static;
+        display: flex;
+        gap: 20px;
+        overflow-x: auto;
+      }
+
+      .week-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .goal-cards-grid {
+        justify-content: center;
+      }
+    }
+
+    /* Confetti Animation */
+    @keyframes confetti {
+      0% { 
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% { 
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: rgba(255, 20, 147, 0.8);
+      animation: confetti 1s ease-out forwards;
+      pointer-events: none;
+      z-index: 9999;
+    }
+  </style>
+</head>
+
+<body>
+  
+  <!-- Top Navigation -->
+  <div class="dashboard-nav">
+    <a href="questionnaire.html" class="nav-btn">← Back to Weekly Planner</a>
+    <div class="week-range" id="weekRange">Loading...</div>
+    <div style="display: flex; gap: 10px;">
+      <button class="nav-btn" onclick="resetDashboard()" style="opacity: 0.6; font-size: 0.75rem;">Reset Dashboard</button>
+      <button class="nav-btn" onclick="startNewWeek()">Start New Week →</button>
+    </div>
+  </div>
+
+  <!-- Dashboard Container -->
+  <div class="dashboard-container">
+
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <div class="one-big-move-card">
+        <div class="one-big-move-label">ONE BIG MOVE THIS WEEK</div>
+        <div class="one-big-move-text" id="oneBigMoveText">Loading...</div>
+      </div>
+      <div class="progress-overview">
+        <div class="progress-stat">Week Progress: <span id="weekProgress">0%</span></div>
+        <div class="progress-stat">Completed Tasks: <span id="completedTasks">0/0</span></div>
+      </div>
+    </div>
+
+    <!-- Visual Goals Section -->
+    <div class="visual-goals-section">
+      
+      <!-- Work Goals -->
+      <div class="goals-row">
+        <div class="goals-label">Work Goals</div>
+        <div class="goal-cards-grid" id="workGoalsGrid">
+          <!-- Populated by JavaScript -->
+        </div>
+        <button class="add-goal-btn" onclick="showAddGoalModal('work')">+ Add Work Goal</button>
+      </div>
+
+      <!-- Life Goals -->
+      <div class="goals-row">
+        <div class="goals-label">Life Goals</div>
+        <div class="goal-cards-grid" id="lifeGoalsGrid">
+          <!-- Populated by JavaScript -->
+        </div>
+        <button class="add-goal-btn" onclick="showAddGoalModal('life')">+ Add Life Goal</button>
+      </div>
+
+    </div>
+
+    <!-- Planning Area -->
+    <div class="planning-area">
+      
+      <!-- Block Palette (Left) -->
+      <div class="block-palette">
+        <div class="palette-title">Blocks</div>
+        
+        <!-- Work Goal Blocks -->
+        <div class="palette-section">
+          <div class="palette-section-label">Work Goals</div>
+          <div id="workGoalBlocksPalette"></div>
+        </div>
+
+        <!-- Life Goal Blocks -->
+        <div class="palette-section">
+          <div class="palette-section-label">Life Goals</div>
+          <div id="lifeGoalBlocksPalette"></div>
+        </div>
+
+        <!-- Generic Blocks -->
+        <div class="palette-section">
+          <div class="palette-section-label">Other</div>
+          <div class="palette-item" draggable="true" data-type="routine" data-name="Routine">Routine</div>
+          <div class="palette-item" draggable="true" data-type="joy" data-name="Joy">Joy</div>
+          <div class="palette-item" draggable="true" data-type="rest" data-name="Rest">Rest</div>
+          <div class="palette-item" draggable="true" data-type="adventure" data-name="Adventure">Adventure</div>
+        </div>
+
+        <!-- Upleveling Blocks -->
+        <div class="palette-section" id="uplevelingSection" style="display: none;">
+          <div class="palette-section-label">Upleveling</div>
+          <div id="uplevelingBlocksPalette"></div>
+        </div>
+
+      </div>
+
+      <!-- Week Grid (Right) -->
+      <div class="week-grid">
+        
+        <div class="day-column" data-day="monday">
+          <div class="day-header">Monday</div>
+          <div class="day-blocks" id="blocks-monday"></div>
+        </div>
+
+        <div class="day-column" data-day="tuesday">
+          <div class="day-header">Tuesday</div>
+          <div class="day-blocks" id="blocks-tuesday"></div>
+        </div>
+
+        <div class="day-column" data-day="wednesday">
+          <div class="day-header">Wednesday</div>
+          <div class="day-blocks" id="blocks-wednesday"></div>
+        </div>
+
+        <div class="day-column" data-day="thursday">
+          <div class="day-header">Thursday</div>
+          <div class="day-blocks" id="blocks-thursday"></div>
+        </div>
+
+        <div class="day-column" data-day="friday">
+          <div class="day-header">Friday</div>
+          <div class="day-blocks" id="blocks-friday"></div>
+        </div>
+
+        <div class="day-column" data-day="saturday">
+          <div class="day-header">Saturday</div>
+          <div class="day-blocks" id="blocks-saturday"></div>
+        </div>
+
+        <div class="day-column" data-day="sunday">
+          <div class="day-header">Sunday</div>
+          <div class="day-blocks" id="blocks-sunday"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Reality Check Panel -->
+    <div class="reality-check">
+      <div class="reality-check-title">Reality Check</div>
+      <div id="realityCheckContent">
+        <div class="reality-alert info">Start adding blocks to your week to see insights...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Add/Edit Goal Modal -->
+  <div class="modal-overlay" id="goalModal">
+    <div class="modal-content">
+      <div class="modal-header" id="goalModalTitle">Add Work Goal</div>
+      
+      <div class="modal-field">
+        <label class="modal-label">Goal Name</label>
+        <input type="text" class="modal-input" id="goalNameInput" placeholder="What's the goal?" />
+      </div>
+
+      <div class="modal-field">
+        <label class="modal-label">Goal Image</label>
+        
+        <!-- Image Upload Area -->
+        <div class="image-upload-area" id="imageUploadArea" onclick="document.getElementById('imageUploadInput').click()">
+          <div id="uploadPlaceholder">
+            <div class="upload-icon">+</div>
+            <div class="upload-text">Click to upload image</div>
+            <div class="upload-subtext">or choose from vision board below</div>
+          </div>
+          <img id="imagePreview" class="image-preview" style="display: none;" />
+        </div>
+        <input type="file" id="imageUploadInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)" />
+
+        <!-- Vision Board Images -->
+        <div class="modal-label" style="margin-top: 25px;">Or choose from your vision board:</div>
+        <div class="image-grid" id="visionBoardGrid"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" onclick="closeGoalModal()">Cancel</button>
+        <button class="modal-btn modal-btn-primary" onclick="saveGoal()">Save Goal</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Vision board image pool
+    const visionImages = [
+      "badass.jpg",
+      "b.jpg",
+      "stick-to-your-plan.jpg",
+      "powerfulenergy.jpg",
+      "goddess.jpg",
+      "gold-flow.jpg",
+      "goodthings.jpg",
+      "pexels-photo-15448063.webp",
+      "spirit.jpg"
+    ];
+
+    // Load questionnaire data
+    const savedData = JSON.parse(localStorage.getItem('weeklyPlanData') || '{}');
+    // Handle both formats: direct object or nested formData
+    const questionnaireData = savedData.formData || savedData;
+    console.log('📋 Questionnaire Data:', questionnaireData);
+    
+    // Load or initialize dashboard state
+    let dashboardState = JSON.parse(localStorage.getItem('dashboardState') || 'null');
+    console.log('💾 Dashboard State:', dashboardState);
+
+    // Check if we need to re-import goals from questionnaire
+    const shouldReimport = checkIfShouldReimportGoals();
+    if (shouldReimport) {
+      console.log('🔄 Questionnaire data changed - re-importing goals...');
+      dashboardState = null; // Force re-initialization
+    }
+
+    function checkIfShouldReimportGoals() {
+      if (!dashboardState) {
+        return false; // Will initialize fresh anyway
+      }
+
+      // Get current goals from questionnaire
+      const currentWorkGoals = (questionnaireData.workGoals || '').trim();
+      const currentLifeGoals = (questionnaireData.lifeGoals || '').trim();
+      
+      // Get stored goals from dashboard
+      const storedWorkGoals = dashboardState.workGoals?.map(g => g.name).join('\n') || '';
+      const storedLifeGoals = dashboardState.lifeGoals?.map(g => g.name).join('\n') || '';
+      
+      // Compare - if different, re-import
+      const workGoalsChanged = currentWorkGoals !== storedWorkGoals;
+      const lifeGoalsChanged = currentLifeGoals !== storedLifeGoals;
+      
+      if (workGoalsChanged || lifeGoalsChanged) {
+        console.log('📝 Goals changed:');
+        console.log('  Work goals changed:', workGoalsChanged);
+        console.log('  Life goals changed:', lifeGoalsChanged);
+        return true;
+      }
+      
+      return false;
+    }
+    
+    // Modal state
+    let currentGoalType = null;
+    let currentGoalId = null;
+    let selectedImage = null;
+
+    // Drag state
+    let draggedElement = null;
+    let draggedBlockData = null;
+
+    // Initialize dashboard
+    function initializeDashboard() {
+      if (!dashboardState) {
+        console.log('🆕 First time initialization - creating dashboard state');
+        
+        // First time: Convert questionnaire text goals to visual goals
+        dashboardState = {
+          workGoals: parseGoalsFromQuestionnaire(questionnaireData.workGoals),
+          lifeGoals: parseGoalsFromQuestionnaire(questionnaireData.lifeGoals),
+          weeklyBlocks: {
+            monday: [],
+            tuesday: [],
+            wednesday: [],
+            thursday: [],
+            friday: [],
+            saturday: [],
+            sunday: []
+          },
+          uplevelingBlocks: questionnaireData.uplevelingIdentity || [],
+          learningBlocks: questionnaireData.uplevelingLearning || []
+        };
+        
+        console.log('✓ Created dashboard state:', dashboardState);
+        saveDashboard();
+      } else {
+        console.log('✓ Loaded existing dashboard state');
+      }
+
+      renderDashboard();
+    }
+
+    function parseGoalsFromQuestionnaire(goalsText) {
+      console.log('🎯 Parsing goals from:', goalsText);
+      
+      if (!goalsText) {
+        console.log('⚠️ No goals text provided');
+        return [];
+      }
+      
+      // Handle if goalsText is already an array
+      if (Array.isArray(goalsText)) {
+        console.log('✓ Goals already in array format');
+        return goalsText.map(g => ({
+          id: generateId(),
+          name: typeof g === 'string' ? g : g.name || 'Untitled Goal',
+          image: (typeof g === 'object' && g.image) || null,
+          progress: 0,
+          blocks: []
+        }));
+      }
+      
+      // Handle string format (newline separated)
+      const goals = goalsText.split('\n')
+        .filter(g => g.trim())
+        .map(name => ({
+          id: generateId(),
+          name: name.trim(),
+          image: null,
+          progress: 0,
+          blocks: []
+        }));
+      
+      console.log('✓ Parsed goals:', goals);
+      return goals;
+    }
+
+    function generateId() {
+      return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    // Render dashboard
+    function renderDashboard() {
+      renderHeader();
+      renderGoals();
+      renderPalette();
+      renderWeekGrid();
+      updateRealityCheck();
+      updateProgress();
+    }
+
+    function renderHeader() {
+      // Week range
+      const weekRange = getNextWeekDates();
+      document.getElementById('weekRange').textContent = weekRange;
+
+      // One Big Move
+      const oneBigMove = questionnaireData.oneBigMove || 'No big move set - go back to planner';
+      document.getElementById('oneBigMoveText').textContent = oneBigMove;
+    }
+
+    function getNextWeekDates() {
+      const today = new Date();
+      const day = today.getDay();
+      const diff = today.getDate() + (1 + 7 - day) % 7;
+      const nextMonday = new Date(today.setDate(diff));
+      const nextSunday = new Date(nextMonday);
+      nextSunday.setDate(nextMonday.getDate() + 6);
+
+      const options = { month: "short", day: "numeric" };
+      return `${nextMonday.toLocaleDateString("en-US", options)} — ${nextSunday.toLocaleDateString("en-US", options)}`;
+    }
+
+    function renderGoals() {
+      renderGoalCards('work', dashboardState.workGoals, 'workGoalsGrid');
+      renderGoalCards('life', dashboardState.lifeGoals, 'lifeGoalsGrid');
+    }
+
+    function renderGoalCards(type, goals, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+
+      goals.forEach(goal => {
+        const card = document.createElement('div');
+        card.className = 'goal-card' + (goal.image ? '' : ' goal-card-no-image');
+        if (goal.image) {
+          card.style.backgroundImage = `url('${goal.image}')`;
+        }
+        card.onclick = () => editGoal(type, goal.id);
+
+        const content = document.createElement('div');
+        content.className = 'goal-card-content';
+        content.innerHTML = `
+          ${!goal.image ? '<div class="goal-card-placeholder">+</div>' : ''}
+          <div class="goal-card-name">${goal.name}</div>
+          <div class="goal-card-progress">${goal.progress}% complete</div>
+        `;
+
+        card.appendChild(content);
+        container.appendChild(card);
+      });
+    }
+
+    function renderPalette() {
+      // Work goal blocks - ALL work goals become draggable blocks
+      const workPalette = document.getElementById('workGoalBlocksPalette');
+      workPalette.innerHTML = '';
+      
+      dashboardState.workGoals.forEach(goal => {
+        const item = document.createElement('div');
+        item.className = 'palette-item goal-block';
+        item.draggable = true;
+        item.dataset.type = 'work';
+        item.dataset.name = goal.name;
+        item.dataset.goalId = goal.id;
+        item.textContent = goal.name;
+        workPalette.appendChild(item);
+      });
+
+      // Life goal blocks - ALL life goals become draggable blocks
+      const lifePalette = document.getElementById('lifeGoalBlocksPalette');
+      lifePalette.innerHTML = '';
+      
+      dashboardState.lifeGoals.forEach(goal => {
+        const item = document.createElement('div');
+        item.className = 'palette-item goal-block';
+        item.draggable = true;
+        item.dataset.type = 'life';
+        item.dataset.name = goal.name;
+        item.dataset.goalId = goal.id;
+        item.textContent = goal.name;
+        lifePalette.appendChild(item);
+      });
+
+      // Upleveling blocks
+      const uplevelingBlocks = [
+        ...dashboardState.uplevelingBlocks.map(b => ({ name: b, type: 'upleveling' })),
+        ...dashboardState.learningBlocks.map(b => ({ name: b, type: 'learning' }))
+      ];
+
+      if (uplevelingBlocks.length > 0) {
+        document.getElementById('uplevelingSection').style.display = 'block';
+        const palette = document.getElementById('uplevelingBlocksPalette');
+        palette.innerHTML = '';
+        
+        uplevelingBlocks.forEach(block => {
+          const item = document.createElement('div');
+          item.className = 'palette-item';
+          item.draggable = true;
+          item.dataset.type = block.type;
+          item.dataset.name = block.name;
+          item.textContent = block.name;
+          palette.appendChild(item);
+        });
+      }
+
+      // Attach drag listeners to all palette items
+      attachPaletteDragListeners();
+    }
+
+    function renderWeekGrid() {
+      const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+      days.forEach(day => {
+        renderDayBlocks(day);
+      });
+      attachDropListeners();
+    }
+
+    function renderDayBlocks(day) {
+      const container = document.getElementById(`blocks-${day}`);
+      container.innerHTML = '';
+
+      const blocks = dashboardState.weeklyBlocks[day] || [];
+      blocks.forEach(block => {
+        const blockEl = createBlockElement(block, day);
+        container.appendChild(blockEl);
+      });
+    }
+
+    function createBlockElement(block, day) {
+      const el = document.createElement('div');
+      el.className = 'block-card';
+      el.draggable = true;
+      el.dataset.blockId = block.id;
+      el.dataset.day = day;
+      
+      let html = `
+        <div class="block-card-header">
+          <div class="block-card-title">${block.name}</div>
+          <div class="block-card-actions">
+            <button class="block-action-btn" onclick="event.stopPropagation(); deleteBlock('${day}', '${block.id}')">×</button>
+          </div>
+        </div>
+      `;
+
+      if (block.goalId) {
+        const goal = findGoalById(block.goalId);
+        if (goal) {
+          html += `<div class="block-goal-link">${goal.name}</div>`;
+        }
+      }
+
+      html += '<div class="block-tasks">';
+      if (block.tasks && block.tasks.length > 0) {
+        block.tasks.forEach((task, i) => {
+          const completed = block.completedTasks?.includes(i);
+          html += `
+            <div class="block-task ${completed ? 'completed' : ''}">
+              <input type="checkbox" ${completed ? 'checked' : ''} 
+                     onchange="toggleTask('${day}', '${block.id}', ${i})" />
+              <span>${task}</span>
+            </div>
+          `;
+        });
+      }
+      html += `
+        <input type="text" class="add-task-input" placeholder="+ Add task..." 
+               onkeypress="handleAddTask(event, '${day}', '${block.id}')" />
+      </div>`;
+
+      if (block.nestedBlocks && block.nestedBlocks.length > 0) {
+        html += '<div class="nested-blocks">';
+        block.nestedBlocks.forEach(nested => {
+          html += createBlockElement(nested, day).outerHTML;
+        });
+        html += '</div>';
+      }
+
+      el.innerHTML = html;
+      
+      // Attach drag listeners
+      el.addEventListener('dragstart', handleBlockDragStart);
+      el.addEventListener('dragend', handleBlockDragEnd);
+
+      return el;
+    }
+
+    function getBlockIcon(type) {
+      // No longer using icons
+      return '';
+    }
+
+    function findGoalById(goalId) {
+      return [...dashboardState.workGoals, ...dashboardState.lifeGoals]
+        .find(g => g.id === goalId);
+    }
+
+    // Drag and Drop
+    function attachPaletteDragListeners() {
+      document.querySelectorAll('.palette-item').forEach(item => {
+        item.addEventListener('dragstart', handlePaletteDragStart);
+      });
+    }
+
+    function handlePaletteDragStart(e) {
+      draggedBlockData = {
+        type: e.target.dataset.type,
+        name: e.target.dataset.name,
+        goalId: e.target.dataset.goalId || null,
+        fromPalette: true
+      };
+      e.dataTransfer.effectAllowed = 'copy';
+    }
+
+    function handleBlockDragStart(e) {
+      draggedElement = e.currentTarget;
+      const day = e.currentTarget.dataset.day;
+      const blockId = e.currentTarget.dataset.blockId;
+      
+      draggedBlockData = {
+        day: day,
+        blockId: blockId,
+        fromPalette: false
+      };
+      
+      e.dataTransfer.effectAllowed = 'move';
+      e.currentTarget.style.opacity = '0.5';
+    }
+
+    function handleBlockDragEnd(e) {
+      e.currentTarget.style.opacity = '1';
+    }
+
+    function attachDropListeners() {
+      document.querySelectorAll('.day-blocks').forEach(container => {
+        container.addEventListener('dragover', handleDragOver);
+        container.addEventListener('drop', handleDrop);
+        container.addEventListener('dragleave', handleDragLeave);
+      });
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.dataTransfer.dropEffect = draggedBlockData?.fromPalette ? 'copy' : 'move';
+      
+      const dayColumn = e.target.closest('.day-column');
+      if (dayColumn) {
+        dayColumn.classList.add('drag-over');
+      }
+    }
+
+    function handleDragLeave(e) {
+      const dayColumn = e.target.closest('.day-column');
+      if (dayColumn && !dayColumn.contains(e.relatedTarget)) {
+        dayColumn.classList.remove('drag-over');
+      }
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const dayColumn = e.target.closest('.day-column');
+      if (dayColumn) {
+        dayColumn.classList.remove('drag-over');
+        const targetDay = dayColumn.dataset.day;
+        
+        if (draggedBlockData.fromPalette) {
+          // Create new block from palette
+          createBlockInDay(targetDay, draggedBlockData);
+        } else {
+          // Move existing block
+          moveBlock(draggedBlockData.day, draggedBlockData.blockId, targetDay);
+        }
+      }
+    }
+
+    function createBlockInDay(day, blockData) {
+      const newBlock = {
+        id: generateId(),
+        type: blockData.type,
+        name: blockData.name,
+        goalId: blockData.goalId,
+        tasks: [],
+        completedTasks: [],
+        nestedBlocks: []
+      };
+
+      dashboardState.weeklyBlocks[day].push(newBlock);
+      saveDashboard();
+      renderDayBlocks(day);
+      updateRealityCheck();
+      updateProgress();
+    }
+
+    function moveBlock(fromDay, blockId, toDay) {
+      if (fromDay === toDay) return;
+
+      const blockIndex = dashboardState.weeklyBlocks[fromDay].findIndex(b => b.id === blockId);
+      if (blockIndex === -1) return;
+
+      const block = dashboardState.weeklyBlocks[fromDay].splice(blockIndex, 1)[0];
+      dashboardState.weeklyBlocks[toDay].push(block);
+
+      saveDashboard();
+      renderDayBlocks(fromDay);
+      renderDayBlocks(toDay);
+      updateRealityCheck();
+    }
+
+    function deleteBlock(day, blockId) {
+      if (!confirm('Delete this block?')) return;
+
+      const index = dashboardState.weeklyBlocks[day].findIndex(b => b.id === blockId);
+      if (index > -1) {
+        dashboardState.weeklyBlocks[day].splice(index, 1);
+        saveDashboard();
+        renderDayBlocks(day);
+        updateRealityCheck();
+        updateProgress();
+      }
+    }
+
+    // Task Management
+    function handleAddTask(e, day, blockId) {
+      if (e.key !== 'Enter') return;
+      
+      const input = e.target;
+      const taskText = input.value.trim();
+      if (!taskText) return;
+
+      const block = dashboardState.weeklyBlocks[day].find(b => b.id === blockId);
+      if (block) {
+        if (!block.tasks) block.tasks = [];
+        block.tasks.push(taskText);
+        saveDashboard();
+        renderDayBlocks(day);
+        updateProgress();
+      }
+
+      input.value = '';
+    }
+
+    function toggleTask(day, blockId, taskIndex) {
+      const block = dashboardState.weeklyBlocks[day].find(b => b.id === blockId);
+      if (!block) return;
+
+      if (!block.completedTasks) block.completedTasks = [];
+      
+      const completedIndex = block.completedTasks.indexOf(taskIndex);
+      if (completedIndex > -1) {
+        block.completedTasks.splice(completedIndex, 1);
+      } else {
+        block.completedTasks.push(taskIndex);
+        showConfetti(event.target);
+      }
+
+      saveDashboard();
+      renderDayBlocks(day);
+      updateProgress();
+    }
+
+    function showConfetti(element) {
+      const rect = element.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+
+      for (let i = 0; i < 20; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = x + 'px';
+        confetti.style.top = y + 'px';
+        confetti.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+        confetti.style.transform = `translate(${(Math.random() - 0.5) * 100}px, ${(Math.random() - 0.5) * 100}px)`;
+        document.body.appendChild(confetti);
+
+        setTimeout(() => confetti.remove(), 1000);
+      }
+    }
+
+    // Reality Check
+    function updateRealityCheck() {
+      const stats = calculateStats();
+      const alerts = generateAlerts(stats);
+      
+      const container = document.getElementById('realityCheckContent');
+      container.innerHTML = alerts.map(alert => 
+        `<div class="reality-alert ${alert.type}">${alert.message}</div>`
+      ).join('');
+    }
+
+    function calculateStats() {
+      const days = Object.keys(dashboardState.weeklyBlocks);
+      let totalBlocks = 0;
+      const blocksByType = {};
+      const blocksByDay = {};
+
+      days.forEach(day => {
+        const blocks = dashboardState.weeklyBlocks[day] || [];
+        totalBlocks += blocks.length;
+        blocksByDay[day] = blocks.length;
+
+        blocks.forEach(block => {
+          blocksByType[block.type] = (blocksByType[block.type] || 0) + 1;
+        });
+      });
+
+      return {
+        totalBlocks,
+        avgPerDay: totalBlocks / 7,
+        blocksByType,
+        blocksByDay
+      };
+    }
+
+    function generateAlerts(stats) {
+      const alerts = [];
+
+      // Overall load check
+      if (stats.avgPerDay > 4) {
+        alerts.push({
+          type: 'warning',
+          message: `Heavy week: ${stats.avgPerDay.toFixed(1)} blocks/day on average. Is this sustainable?`
+        });
+      } else if (stats.avgPerDay < 1.5 && stats.totalBlocks > 0) {
+        alerts.push({
+          type: 'info',
+          message: `Light week: ${stats.avgPerDay.toFixed(1)} blocks/day. Intentional rest or room for more?`
+        });
+      } else if (stats.totalBlocks > 0) {
+        alerts.push({
+          type: 'success',
+          message: `Balanced load: ${stats.avgPerDay.toFixed(1)} blocks/day feels realistic`
+        });
+      }
+
+      // Work-life balance
+      const workBlocks = (stats.blocksByType.work || 0) + (stats.blocksByType.upleveling || 0);
+      const lifeBlocks = stats.totalBlocks - workBlocks;
+      
+      if (stats.totalBlocks > 0) {
+        const workRatio = workBlocks / stats.totalBlocks;
+        if (workRatio > 0.7) {
+          alerts.push({
+            type: 'warning',
+            message: `Heavy on work (${Math.round(workRatio * 100)}%) - where's rest, joy, and adventure?`
+          });
+        } else if (workRatio < 0.3 && workBlocks > 0) {
+          alerts.push({
+            type: 'info',
+            message: `Life-focused week (${Math.round((1 - workRatio) * 100)}% non-work) - is this aligned with your sprint goals?`
+          });
+        }
+      }
+
+      // Rest check
+      if (stats.totalBlocks > 5 && !stats.blocksByType.rest) {
+        alerts.push({
+          type: 'warning',
+          message: 'No rest blocks - burnout alert! Add some recovery time.'
+        });
+      }
+
+      // Joy check
+      if (stats.totalBlocks > 5 && !stats.blocksByType.joy) {
+        alerts.push({
+          type: 'warning',
+          message: 'No joy blocks - what makes this week exciting?'
+        });
+      }
+
+      // Empty days check
+      const emptyDays = Object.entries(stats.blocksByDay)
+        .filter(([day, count]) => count === 0)
+        .map(([day]) => day);
+      
+      if (emptyDays.length > 0 && stats.totalBlocks > 0) {
+        alerts.push({
+          type: 'info',
+          message: `Empty days: ${emptyDays.join(', ')} - intentional or need planning?`
+        });
+      }
+
+      if (alerts.length === 0) {
+        alerts.push({
+          type: 'info',
+          message: 'Start dragging blocks into your week to build your plan...'
+        });
+      }
+
+      return alerts;
+    }
+
+    // Progress Tracking
+    function updateProgress() {
+      const days = Object.keys(dashboardState.weeklyBlocks);
+      let totalTasks = 0;
+      let completedTasks = 0;
+
+      days.forEach(day => {
+        const blocks = dashboardState.weeklyBlocks[day] || [];
+        blocks.forEach(block => {
+          if (block.tasks) {
+            totalTasks += block.tasks.length;
+            completedTasks += (block.completedTasks || []).length;
+          }
+        });
+      });
+
+      const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+      
+      document.getElementById('weekProgress').textContent = percentage + '%';
+      document.getElementById('completedTasks').textContent = `${completedTasks}/${totalTasks}`;
+    }
+
+    // Goal Management
+    function showAddGoalModal(type) {
+      currentGoalType = type;
+      currentGoalId = null;
+      selectedImage = null;
+
+      document.getElementById('goalModalTitle').textContent = 
+        type === 'work' ? 'Add Work Goal' : 'Add Life Goal';
+      document.getElementById('goalNameInput').value = '';
+      
+      resetImageUpload();
+      renderVisionBoardGrid();
+      
+      document.getElementById('goalModal').classList.add('active');
+    }
+
+    function editGoal(type, goalId) {
+      const goals = type === 'work' ? dashboardState.workGoals : dashboardState.lifeGoals;
+      const goal = goals.find(g => g.id === goalId);
+      if (!goal) return;
+
+      currentGoalType = type;
+      currentGoalId = goalId;
+      selectedImage = goal.image;
+
+      document.getElementById('goalModalTitle').textContent = 
+        type === 'work' ? 'Edit Work Goal' : 'Edit Life Goal';
+      document.getElementById('goalNameInput').value = goal.name;
+      
+      if (goal.image) {
+        showImagePreview(goal.image);
+      } else {
+        resetImageUpload();
+      }
+      
+      renderVisionBoardGrid();
+      
+      document.getElementById('goalModal').classList.add('active');
+    }
+
+    function closeGoalModal() {
+      document.getElementById('goalModal').classList.remove('active');
+    }
+
+    function saveGoal() {
+      const name = document.getElementById('goalNameInput').value.trim();
+      if (!name) {
+        alert('Please enter a goal name');
+        return;
+      }
+
+      const goalData = {
+        id: currentGoalId || generateId(),
+        name: name,
+        image: selectedImage,
+        progress: 0,
+        blocks: []
+      };
+
+      const goals = currentGoalType === 'work' ? dashboardState.workGoals : dashboardState.lifeGoals;
+      
+      if (currentGoalId) {
+        // Edit existing
+        const index = goals.findIndex(g => g.id === currentGoalId);
+        if (index > -1) {
+          goals[index] = { ...goals[index], ...goalData };
+        }
+      } else {
+        // Add new
+        goals.push(goalData);
+      }
+
+      saveDashboard();
+      renderGoals();
+      renderPalette();
+      closeGoalModal();
+    }
+
+    // Image Handling
+    function renderVisionBoardGrid() {
+      const grid = document.getElementById('visionBoardGrid');
+      grid.innerHTML = '';
+
+      visionImages.forEach(img => {
+        const item = document.createElement('div');
+        item.className = 'image-grid-item';
+        item.style.backgroundImage = `url('${img}')`;
+        if (selectedImage === img) {
+          item.classList.add('selected');
+        }
+        item.onclick = () => selectVisionImage(img);
+        grid.appendChild(item);
+      });
+    }
+
+    function selectVisionImage(img) {
+      selectedImage = img;
+      showImagePreview(img);
+      renderVisionBoardGrid();
+    }
+
+    function handleImageUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        selectedImage = event.target.result;
+        showImagePreview(selectedImage);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function showImagePreview(imageSrc) {
+      const uploadArea = document.getElementById('imageUploadArea');
+      const placeholder = document.getElementById('uploadPlaceholder');
+      const preview = document.getElementById('imagePreview');
+
+      uploadArea.classList.add('has-image');
+      placeholder.style.display = 'none';
+      preview.src = imageSrc;
+      preview.style.display = 'block';
+    }
+
+    function resetImageUpload() {
+      const uploadArea = document.getElementById('imageUploadArea');
+      const placeholder = document.getElementById('uploadPlaceholder');
+      const preview = document.getElementById('imagePreview');
+
+      uploadArea.classList.remove('has-image');
+      placeholder.style.display = 'block';
+      preview.style.display = 'none';
+      preview.src = '';
+    }
+
+    // Data Persistence
+    function saveDashboard() {
+      localStorage.setItem('dashboardState', JSON.stringify(dashboardState));
+    }
+
+    // Start New Week
+    function startNewWeek() {
+      if (!confirm('Start a new week? This will save your progress and return to the weekly planner.')) {
+        return;
+      }
+
+      // Calculate completion data for next week's pre-population
+      const days = Object.keys(dashboardState.weeklyBlocks);
+      let completedWorkGoals = [];
+      let completedLifeGoals = [];
+      
+      // Save completion state
+      const lastWeekData = {
+        workGoals: dashboardState.workGoals.map(g => g.name).join('\n'),
+        lifeGoals: dashboardState.lifeGoals.map(g => g.name).join('\n'),
+        completedGoals: [...completedWorkGoals, ...completedLifeGoals]
+      };
+      
+      localStorage.setItem('lastWeekGoals', JSON.stringify(lastWeekData));
+      
+      // Clear dashboard state
+      localStorage.removeItem('dashboardState');
+      
+      // Redirect to questionnaire
+      window.location.href = 'questionnaire.html';
+    }
+
+    // Reset Dashboard - force re-import from questionnaire
+    function resetDashboard() {
+      if (!confirm('Reset dashboard? This will re-import goals from your weekly planner and clear all blocks/tasks.')) {
+        return;
+      }
+      
+      console.log('🔄 Resetting dashboard...');
+      localStorage.removeItem('dashboardState');
+      location.reload();
+    }
+
+    // Initialize on load
+    initializeDashboard();
+  </script>
+
+</body>
+</html>
