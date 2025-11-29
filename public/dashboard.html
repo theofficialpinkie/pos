@@ -928,6 +928,100 @@
       letter-spacing: 0.5px;
     }
 
+    /* Quick Action Icons */
+    .quick-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 12px;
+      padding: 0 20px;
+    }
+
+    .quick-action-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1rem;
+      position: relative;
+    }
+
+    .quick-action-icon:hover {
+      background: rgba(0, 0, 0, 0.08);
+      transform: scale(1.05);
+    }
+
+    .quick-action-icon:active {
+      transform: scale(0.95);
+    }
+
+    .quick-action-tooltip {
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: #ffffff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+      z-index: 100;
+    }
+
+    .quick-action-icon:hover .quick-action-tooltip {
+      opacity: 1;
+    }
+
+    /* Quick Action Dropdown */
+    .quick-action-dropdown {
+      position: absolute;
+      top: 40px;
+      left: 0;
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      padding: 8px 0;
+      min-width: 200px;
+      z-index: 1000;
+      display: none;
+    }
+
+    .quick-action-dropdown.active {
+      display: block;
+    }
+
+    .quick-action-dropdown-item {
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      color: rgba(0, 0, 0, 0.8);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .quick-action-dropdown-item:hover {
+      background: rgba(0, 0, 0, 0.04);
+      color: #000000;
+    }
+
+    .quick-action-dropdown-header {
+      padding: 8px 16px;
+      font-size: 0.7rem;
+      color: rgba(0, 0, 0, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+    }
+
     .empty-state {
       min-height: 400px;
     }
@@ -1148,6 +1242,27 @@
       border-color: rgba(255, 100, 100, 0.5);
     }
 
+    /* Action Buttons for Special Tasks */
+    .action-btn {
+      border: none;
+      padding: 12px 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border-radius: 6px;
+      width: 100%;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+
+    .action-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .action-btn:active {
+      transform: translateY(0);
+    }
+
     /* Modal - White Minimal */
     .modal-overlay {
       position: fixed;
@@ -1366,6 +1481,36 @@
           placeholder="+ Add task..."
           />
         
+        <!-- Quick Action Icons -->
+        <div class="quick-actions" id="quickActions">
+          <div class="quick-action-icon" onclick="handleTherapy()">
+            💬
+            <div class="quick-action-tooltip">Therapy</div>
+          </div>
+          
+          <div class="quick-action-icon" onclick="handleSunday()">
+            📅
+            <div class="quick-action-tooltip">Sunday</div>
+          </div>
+          
+          <div class="quick-action-icon" onclick="handleRest()">
+            😴
+            <div class="quick-action-tooltip">Rest</div>
+          </div>
+          
+          <div class="quick-action-icon" onclick="toggleUplevel()" style="position: relative;">
+            ⬆️
+            <div class="quick-action-tooltip">Uplevel</div>
+            <div class="quick-action-dropdown" id="uplevelDropdown"></div>
+          </div>
+          
+          <div class="quick-action-icon" onclick="toggleFun()" style="position: relative;">
+            🎉
+            <div class="quick-action-tooltip">Fun</div>
+            <div class="quick-action-dropdown" id="funDropdown"></div>
+          </div>
+        </div>
+        
         <!-- Goal Selector (shows on focus) -->
         <div class="task-goal-selector" id="taskGoalSelector">
           <label>Link to goal:</label>
@@ -1393,6 +1538,36 @@
           placeholder="+ Add task..."
           style="text-align: center; font-size: 1rem; padding: 20px;"
           />
+        
+        <!-- Quick Action Icons -->
+        <div class="quick-actions" style="justify-content: center; padding: 0;">
+          <div class="quick-action-icon" onclick="handleTherapy()">
+            💬
+            <div class="quick-action-tooltip">Therapy</div>
+          </div>
+          
+          <div class="quick-action-icon" onclick="handleSunday()">
+            📅
+            <div class="quick-action-tooltip">Sunday</div>
+          </div>
+          
+          <div class="quick-action-icon" onclick="handleRest()">
+            😴
+            <div class="quick-action-tooltip">Rest</div>
+          </div>
+          
+          <div class="quick-action-icon" onclick="toggleUplevel()" style="position: relative;">
+            ⬆️
+            <div class="quick-action-tooltip">Uplevel</div>
+            <div class="quick-action-dropdown" id="emptyUplevelDropdown"></div>
+          </div>
+          
+          <div class="quick-action-icon" onclick="toggleFun()" style="position: relative;">
+            🎉
+            <div class="quick-action-tooltip">Fun</div>
+            <div class="quick-action-dropdown" id="emptyFunDropdown"></div>
+          </div>
+        </div>
         
         <!-- Goal Selector (shows on focus) -->
         <div class="task-goal-selector" id="emptyGoalSelector" style="text-align: center;">
@@ -1567,6 +1742,336 @@
       renderTasks();
       initializeInlineTaskInput();
       initializeEmptyStateInput();
+      initializeQuickActions();
+    }
+
+    // QUICK ACTIONS
+    function initializeQuickActions() {
+      // Load uplevel/fun options from localStorage (from questionnaire)
+      const uplevelData = localStorage.getItem('uplevelingIdentity');
+      const funData = localStorage.getItem('uplevelingLearning');
+      
+      // Populate dropdowns
+      renderUplevelDropdown();
+      renderFunDropdown();
+      
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.quick-action-icon')) {
+          document.querySelectorAll('.quick-action-dropdown').forEach(d => d.classList.remove('active'));
+        }
+      });
+    }
+
+    function handleTherapy() {
+      // Get breakthrough answers from questionnaire (localStorage)
+      const breakthroughData = {
+        wins: localStorage.getItem('breakthroughWins') || '',
+        challenges: localStorage.getItem('breakthroughChallenges') || '',
+        insights: localStorage.getItem('breakthroughInsights') || '',
+        shifts: localStorage.getItem('breakthroughShifts') || '',
+        integration: localStorage.getItem('breakthroughIntegration') || ''
+      };
+      
+      // Build breakthrough text
+      let breakthroughText = '**BREAKTHROUGHS FROM QUESTIONNAIRE:**\n\n';
+      
+      if (breakthroughData.wins) {
+        breakthroughText += `**What were your biggest wins this week?**\n${breakthroughData.wins}\n\n`;
+      }
+      if (breakthroughData.challenges) {
+        breakthroughText += `**What challenges pushed you to grow?**\n${breakthroughData.challenges}\n\n`;
+      }
+      if (breakthroughData.insights) {
+        breakthroughText += `**What insights came through?**\n${breakthroughData.insights}\n\n`;
+      }
+      if (breakthroughData.shifts) {
+        breakthroughText += `**What shifts are happening in your identity?**\n${breakthroughData.shifts}\n\n`;
+      }
+      if (breakthroughData.integration) {
+        breakthroughText += `**How will you integrate these?**\n${breakthroughData.integration}\n\n`;
+      }
+      
+      breakthroughText += '\n---\n\n**NEW BREAKTHROUGHS THIS WEEK:**\n(Add here - will auto-populate in next week\'s planner)\n\n';
+      
+      // Create therapy task
+      const therapyTask = {
+        id: generateId(),
+        name: '💬 Therapy Session',
+        goalId: null,
+        completed: false,
+        description: breakthroughText,
+        hasJournalingButton: true,
+        breakthroughs: breakthroughData
+      };
+      
+      if (!dashboardState.weeklyTasks[currentDay]) {
+        dashboardState.weeklyTasks[currentDay] = [];
+      }
+      
+      dashboardState.weeklyTasks[currentDay].push(therapyTask);
+      saveDashboard();
+      renderTasks();
+    }
+
+    function openJournaling(taskId) {
+      const task = dashboardState.weeklyTasks[currentDay]?.find(t => t.id === taskId);
+      if (!task || !task.breakthroughs) return;
+      
+      // Build ChatGPT prompt
+      let prompt = 'Here are my breakthroughs this week:\n\n';
+      
+      if (task.breakthroughs.wins) {
+        prompt += `Biggest wins: ${task.breakthroughs.wins}\n\n`;
+      }
+      if (task.breakthroughs.challenges) {
+        prompt += `Growth challenges: ${task.breakthroughs.challenges}\n\n`;
+      }
+      if (task.breakthroughs.insights) {
+        prompt += `Key insights: ${task.breakthroughs.insights}\n\n`;
+      }
+      if (task.breakthroughs.shifts) {
+        prompt += `Identity shifts: ${task.breakthroughs.shifts}\n\n`;
+      }
+      if (task.breakthroughs.integration) {
+        prompt += `Integration plan: ${task.breakthroughs.integration}\n\n`;
+      }
+      
+      prompt += 'Help me process these breakthroughs and integrate them into my growth journey.';
+      
+      const chatGPTUrl = `https://chat.openai.com/?q=${encodeURIComponent(prompt)}`;
+      window.open(chatGPTUrl, '_blank');
+    }
+
+    function handleSunday() {
+      if (currentDay !== 'sunday') {
+        alert('Navigate to Sunday to use this action');
+        return;
+      }
+      
+      // Auto-populate Sunday tasks with descriptions and buttons
+      const sundayTasks = [
+        {
+          name: 'Weekly Finances',
+          description: '',
+          hasFinanceButton: true
+        },
+        {
+          name: 'Hair Appointment',
+          description: '',
+          hasHairButton: true
+        },
+        {
+          name: 'Grocery Shopping',
+          description: ''
+        }
+      ];
+      
+      sundayTasks.forEach(taskData => {
+        if (!dashboardState.weeklyTasks['sunday']) {
+          dashboardState.weeklyTasks['sunday'] = [];
+        }
+        
+        // Check if task already exists
+        const exists = dashboardState.weeklyTasks['sunday'].some(t => t.name === taskData.name);
+        if (!exists) {
+          const newTask = {
+            id: generateId(),
+            name: taskData.name,
+            goalId: null,
+            completed: false,
+            description: taskData.description,
+            hasFinanceButton: taskData.hasFinanceButton || false,
+            hasHairButton: taskData.hasHairButton || false
+          };
+          
+          dashboardState.weeklyTasks['sunday'].push(newTask);
+        }
+      });
+      
+      saveDashboard();
+      renderTasks();
+    }
+
+    function openFinanceSheet() {
+      window.open('https://docs.google.com/spreadsheets/d/1fhXnyTk09IbDDvzs1cAceZUtBkYW5g90y_eICCVD9q0/edit?usp=sharing', '_blank');
+    }
+
+    function scheduleHairAppointment() {
+      window.open('https://www.fresha.com/a/lush-bali-beauty-salon-umalas-bali-jl-tengah-no-8-kerobokan-badung-regency-jalan-tengah-no-8-jag4ep7n/booking?bookingId=1473368882&offerItems=sv%3A16699163&rebook=true&appointmentId=1092704254%3A1473368882&cartId=ea8710fa-fd62-4a34-a4a5-f986ed6c0620', '_blank');
+    }
+
+    function generateNextWeek() {
+      // Open questionnaire in new tab for next week
+      window.open('questionnaire.html', '_blank');
+    }
+
+    function handleRest() {
+      // Create rest task with activity options
+      const restTask = {
+        id: generateId(),
+        name: '😴 Rest & Recharge',
+        goalId: null,
+        completed: false,
+        description: '',
+        hasRestOptions: true
+      };
+      
+      if (!dashboardState.weeklyTasks[currentDay]) {
+        dashboardState.weeklyTasks[currentDay] = [];
+      }
+      
+      dashboardState.weeklyTasks[currentDay].push(restTask);
+      saveDashboard();
+      renderTasks();
+    }
+
+    function selectRestActivity(activity) {
+      const links = {
+        'massage': 'https://www.fresha.com',
+        'movie': '',
+        'cafe': '',
+        'beach': ''
+      };
+      
+      if (links[activity]) {
+        window.open(links[activity], '_blank');
+      }
+      
+      // Show confirmation
+      const message = document.createElement('div');
+      message.style.position = 'fixed';
+      message.style.top = '50%';
+      message.style.left = '50%';
+      message.style.transform = 'translate(-50%, -50%)';
+      message.style.background = 'rgba(0, 0, 0, 0.9)';
+      message.style.color = '#ffffff';
+      message.style.padding = '30px 50px';
+      message.style.borderRadius = '12px';
+      message.style.zIndex = '9999';
+      message.style.fontSize = '1.2rem';
+      message.style.fontWeight = '300';
+      message.style.textAlign = 'center';
+      message.style.pointerEvents = 'none';
+      
+      const activityNames = {
+        'massage': '💆‍♀️ Book Massage',
+        'movie': '🎬 Movie & Order In',
+        'cafe': '☕ Nude Cafe Dinner',
+        'beach': '🌊 Beach Walk'
+      };
+      
+      message.textContent = `${activityNames[activity]} selected!`;
+      
+      document.body.appendChild(message);
+      
+      message.animate([
+        { opacity: 0, transform: 'translate(-50%, -40%)' },
+        { opacity: 1, transform: 'translate(-50%, -50%)', offset: 0.2 },
+        { opacity: 1, transform: 'translate(-50%, -50%)', offset: 0.8 },
+        { opacity: 0, transform: 'translate(-50%, -60%)' }
+      ], {
+        duration: 2000,
+        easing: 'ease-out'
+      });
+      
+      setTimeout(() => message.remove(), 2000);
+    }
+
+    function toggleUplevel() {
+      const dropdown = document.getElementById('uplevelDropdown') || document.getElementById('emptyUplevelDropdown');
+      const funDropdown = document.getElementById('funDropdown') || document.getElementById('emptyFunDropdown');
+      
+      if (funDropdown) funDropdown.classList.remove('active');
+      
+      if (dropdown) {
+        dropdown.classList.toggle('active');
+      }
+    }
+
+    function toggleFun() {
+      const dropdown = document.getElementById('funDropdown') || document.getElementById('emptyFunDropdown');
+      const uplevelDropdown = document.getElementById('uplevelDropdown') || document.getElementById('emptyUplevelDropdown');
+      
+      if (uplevelDropdown) uplevelDropdown.classList.remove('active');
+      
+      if (dropdown) {
+        dropdown.classList.toggle('active');
+      }
+    }
+
+    function renderUplevelDropdown() {
+      const uplevelOptions = [
+        "Badass builder (10 min)",
+        "Flexibility (10 min)",
+        "Dark feminine (10 min)",
+        "$2.5k/mo biz (5 min)",
+        "Social media fun (5 min)"
+      ];
+      
+      const dropdowns = [
+        document.getElementById('uplevelDropdown'),
+        document.getElementById('emptyUplevelDropdown')
+      ];
+      
+      dropdowns.forEach(dropdown => {
+        if (!dropdown) return;
+        
+        let html = '<div class="quick-action-dropdown-header">Uplevel</div>';
+        
+        uplevelOptions.forEach(option => {
+          html += `<div class="quick-action-dropdown-item" onclick="addQuickTask('${option}')">${option}</div>`;
+        });
+        
+        dropdown.innerHTML = html;
+      });
+    }
+
+    function renderFunDropdown() {
+      const funOptions = [
+        "Physics (10 min)",
+        "Balinese (5 min)",
+        "English vocab (5 min)"
+      ];
+      
+      const dropdowns = [
+        document.getElementById('funDropdown'),
+        document.getElementById('emptyFunDropdown')
+      ];
+      
+      dropdowns.forEach(dropdown => {
+        if (!dropdown) return;
+        
+        let html = '<div class="quick-action-dropdown-header">Fun Learning</div>';
+        
+        funOptions.forEach(option => {
+          html += `<div class="quick-action-dropdown-item" onclick="addQuickTask('${option}')">${option}</div>`;
+        });
+        
+        dropdown.innerHTML = html;
+      });
+    }
+
+    function addQuickTask(taskName) {
+      const newTask = {
+        id: generateId(),
+        name: taskName,
+        goalId: null,
+        completed: false,
+        description: ''
+      };
+      
+      if (!dashboardState.weeklyTasks[currentDay]) {
+        dashboardState.weeklyTasks[currentDay] = [];
+      }
+      
+      dashboardState.weeklyTasks[currentDay].push(newTask);
+      
+      saveDashboard();
+      renderTasks();
+      
+      // Close dropdown
+      document.querySelectorAll('.quick-action-dropdown').forEach(d => d.classList.remove('active'));
     }
 
     // Inline Task Input - Tasks Column
@@ -1986,7 +2491,7 @@
           <input type="text" class="add-task-input" id="newGoalTaskInput" placeholder="+ Add task..." onkeypress="handleAddGoalTask(event, '${goalId}')" />
         </div>
         
-        
+        <button class="delete-btn" onclick="deleteGoal('${goalId}')">Delete Goal</button>
       `;
       
       document.getElementById('sidebarContent').innerHTML = html;
@@ -2373,6 +2878,18 @@
         tasksList.appendChild(taskEl);
       });
       
+      // Add "Plan for Next Week" button on Sunday
+      if (currentDay === 'sunday') {
+        const planButton = document.createElement('button');
+        planButton.className = 'action-btn';
+        planButton.style.background = '#8b5cf6';
+        planButton.style.color = '#ffffff';
+        planButton.style.marginTop = '20px';
+        planButton.textContent = '📋 Plan for Next Week';
+        planButton.onclick = generateNextWeek;
+        tasksList.appendChild(planButton);
+      }
+      
       updateDayLabel();
     }
 
@@ -2663,7 +3180,56 @@
           <div class="sidebar-label">Description</div>
           <textarea class="sidebar-textarea" id="taskDescription" placeholder="Add description...">${task.description || ''}</textarea>
         </div>
-        
+      `;
+      
+      // Add special buttons based on task type
+      if (task.hasJournalingButton) {
+        html += `
+          <button class="action-btn" onclick="openJournaling('${taskId}')" style="background: #10b981; color: white; margin: 10px 0;">
+            💬 Start Journaling
+          </button>
+        `;
+      }
+      
+      if (task.hasFinanceButton) {
+        html += `
+          <button class="action-btn" onclick="openFinanceSheet()" style="background: #3b82f6; color: white; margin: 10px 0;">
+            📊 View Spreadsheet
+          </button>
+        `;
+      }
+      
+      if (task.hasHairButton) {
+        html += `
+          <button class="action-btn" onclick="scheduleHairAppointment()" style="background: #ec4899; color: white; margin: 10px 0;">
+            💇‍♀️ Schedule Appointment
+          </button>
+        `;
+      }
+      
+      if (task.hasRestOptions) {
+        html += `
+          <div class="sidebar-section">
+            <div class="sidebar-label">Rest Activities</div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <button class="action-btn" onclick="selectRestActivity('massage')" style="background: rgba(0,0,0,0.05); text-align: left;">
+                💆‍♀️ Book Massage
+              </button>
+              <button class="action-btn" onclick="selectRestActivity('movie')" style="background: rgba(0,0,0,0.05); text-align: left;">
+                🎬 Movie & Order In
+              </button>
+              <button class="action-btn" onclick="selectRestActivity('cafe')" style="background: rgba(0,0,0,0.05); text-align: left;">
+                ☕ Nude Cafe Dinner
+              </button>
+              <button class="action-btn" onclick="selectRestActivity('beach')" style="background: rgba(0,0,0,0.05); text-align: left;">
+                🌊 Beach Walk
+              </button>
+            </div>
+          </div>
+        `;
+      }
+      
+      html += `
         <div class="sidebar-section">
           <div class="sidebar-label">Tag Goal</div>
           <select class="sidebar-select" id="taskGoal">
