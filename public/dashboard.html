@@ -32,6 +32,24 @@
       font-weight: 300;
       letter-spacing: -1px;
       color: #000000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .day-name {
+      font-size: 1.8rem;
+      font-weight: 300;
+      letter-spacing: -1px;
+    }
+
+    .date-range {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(0, 0, 0, 0.4);
     }
 
     .day-nav-btn {
@@ -77,25 +95,37 @@
     /* Main Container */
     .main-container {
       padding-top: 20px;
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
-      padding-left: 60px;
-      padding-right: 60px;
+      padding-left: 120px;
+      padding-right: 120px;
       padding-bottom: 60px;
     }
 
-    /* Goals in Empty State - Collage/Mosaic Style */
+    /* Goals Grid - Always visible on right (or full width when empty) */
     .goals-empty-grid {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      grid-auto-rows: 120px;
-      grid-auto-flow: dense; /* Chrome fix */
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 140px;
+      grid-auto-flow: dense;
       gap: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 280px;
+    }
+
+    /* Larger grid when empty state - more visual impact */
+    .goals-empty-grid-large {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-auto-rows: 140px;
+      grid-auto-flow: dense;
+      gap: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 280px;
       max-width: 900px;
-      margin: 0 auto 40px;
-      min-height: 240px; /* Chrome fix - ensure grid has height */
-      border-radius: 12px; /* Rounded outer edges */
-      overflow: hidden; /* Clips inner cards to rounded border */
+      margin: 0 auto;
     }
 
     .goal-empty-card {
@@ -138,16 +168,28 @@
       transform: scale(1.02);
     }
 
-    /* Mosaic layout - varied sizes */
-    .goal-empty-card:nth-child(1) { grid-column: span 2; grid-row: span 2; }
-    .goal-empty-card:nth-child(2) { grid-column: span 2; grid-row: span 1; }
-    .goal-empty-card:nth-child(3) { grid-column: span 2; grid-row: span 1; }
-    .goal-empty-card:nth-child(4) { grid-column: span 3; grid-row: span 1; }
-    .goal-empty-card:nth-child(5) { grid-column: span 3; grid-row: span 1; }
-    .goal-empty-card:nth-child(6) { grid-column: span 2; grid-row: span 1; }
-    .goal-empty-card:nth-child(7) { grid-column: span 2; grid-row: span 1; }
-    .goal-empty-card:nth-child(8) { grid-column: span 2; grid-row: span 1; }
-    .goal-empty-card:nth-child(n+9) { grid-column: span 2; grid-row: span 1; }
+    /* Mosaic layout - 4 columns (right side) - COHESIVE varied sizes */
+    .goals-empty-card:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+    .goals-empty-card:nth-child(2) { grid-column: span 2; grid-row: span 1; }
+    .goals-empty-card:nth-child(3) { grid-column: span 2; grid-row: span 1; }
+    .goals-empty-card:nth-child(4) { grid-column: span 2; grid-row: span 2; }
+    .goals-empty-card:nth-child(5) { grid-column: span 2; grid-row: span 1; }
+    .goals-empty-card:nth-child(6) { grid-column: span 2; grid-row: span 1; }
+    .goals-empty-card:nth-child(7) { grid-column: span 2; grid-row: span 1; }
+    .goals-empty-card:nth-child(8) { grid-column: span 2; grid-row: span 1; }
+    .goals-empty-card:nth-child(n+9) { grid-column: span 1; grid-row: span 1; }
+
+    /* 6 columns - LARGE empty state grid - bigger impact */
+    .goals-empty-grid-large .goal-empty-card:nth-child(1) { grid-column: span 3; grid-row: span 2; }
+    .goals-empty-grid-large .goal-empty-card:nth-child(2) { grid-column: span 2; grid-row: span 1; }
+    .goals-empty-grid-large .goal-empty-card:nth-child(3) { grid-column: span 1; grid-row: span 1; }
+    .goals-empty-grid-large .goal-empty-card:nth-child(4) { grid-column: span 2; grid-row: span 2; }
+    .goals-empty-grid-large .goal-empty-card:nth-child(5) { grid-column: span 1; grid-row: span 1; }
+    .goals-empty-grid-large .goal-empty-card:nth-child(6) { grid-column: span 3; grid-row: span 1; }
+    .goals-empty-grid-large .goal-empty-card:nth-child(7) { grid-column: span 2; grid-row: span 1; }
+    .goals-empty-grid-large .goal-empty-card:nth-child(8) { grid-column: span 2; grid-row: span 1; }
+    .goals-empty-grid-large .goal-empty-card:nth-child(9) { grid-column: span 2; grid-row: span 1; }
+    .goals-empty-grid-large .goal-empty-card:nth-child(n+10) { grid-column: span 2; grid-row: span 1; }
 
     .goal-empty-card::before {
       content: '';
@@ -297,81 +339,58 @@
       text-shadow: none;
     }
 
-    /* Goals in Background - Subtle mini version when tasks exist */
-    .goals-background {
+    /* Full-Screen Celebration Overlay */
+    .celebration-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 10000;
       display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 30px;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.01);
-      border-radius: 8px;
-      justify-content: center;
-    }
-
-    .goal-bg-card {
-      width: 60px;
-      height: 60px;
-      border-radius: 6px;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-      cursor: pointer;
-      transition: all 0.2s;
-      filter: grayscale(0.6) brightness(1.1) opacity(0.7);
-      -webkit-filter: grayscale(0.6) brightness(1.1) opacity(0.7);
-    }
-
-    .goal-bg-card:hover {
-      transform: scale(1.1);
-      filter: grayscale(0.4) brightness(1.05) opacity(1);
-      -webkit-filter: grayscale(0.4) brightness(1.05) opacity(1);
-      z-index: 5;
-    }
-
-    .goal-bg-card.no-image {
-      background: #f5f5f5;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 0.6rem;
-      color: rgba(0, 0, 0, 0.3);
-      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
     }
 
-    .goal-bg-card.completed {
-      filter: grayscale(0.9) brightness(1.2) opacity(0.4);
-      -webkit-filter: grayscale(0.9) brightness(1.2) opacity(0.4);
+    .celebration-overlay.active {
+      opacity: 1;
+      pointer-events: all;
     }
 
-    .goal-bg-checkbox {
-      position: absolute;
-      top: 3px;
-      right: 3px;
-      width: 12px;
-      height: 12px;
-      cursor: pointer;
-      z-index: 10;
-      accent-color: #ffffff;
-      opacity: 0.8;
+    .celebration-image {
+      max-width: 600px;
+      max-height: 600px;
+      width: 80%;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      margin-bottom: 40px;
+      object-fit: cover;
     }
 
-    .goal-bg-card.no-image .goal-bg-checkbox {
-      accent-color: #000000;
+    .celebration-text {
+      font-size: 3rem;
+      font-weight: 200;
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: 20px;
+      letter-spacing: -1px;
     }
 
-    .goal-bg-in-progress {
-      position: absolute;
-      top: 3px;
-      left: 3px;
-      width: 6px;
-      height: 6px;
-      background: #10b981;
-      border-radius: 50%;
-      animation: pulse-green 2s ease-in-out infinite;
+    .celebration-subtext {
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      text-align: center;
+      max-width: 500px;
     }
 
+    /* Goals in Background - Subtle mini version when tasks exist */
     @media (max-width: 768px) {
       .goals-empty-grid {
         grid-template-columns: repeat(3, 1fr);
@@ -681,10 +700,28 @@
       50% { transform: translateY(-5px); }
     }
 
-    /* WEEKLY PLAN - Unified Page */
+    /* WEEKLY PLAN - Two Column Layout */
     .planner-section {
-      max-width: 800px;
+      max-width: 1200px;
       margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 600px;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .planner-section.empty-state {
+      grid-template-columns: 1fr;
+      max-width: 900px;
+    }
+
+    .tasks-column {
+      min-height: 400px;
+    }
+
+    .goals-column {
+      position: sticky;
+      top: 20px;
     }
 
     .day-nav-btn {
@@ -707,18 +744,14 @@
       display: flex;
       flex-direction: column;
       gap: 1px;
-      margin-bottom: 20px;
       background: transparent;
       border-radius: 8px;
-      overflow: visible; /* Changed from hidden - Chrome fix */
+      overflow: visible;
       min-height: 200px;
     }
 
     .tasks-list.empty-state {
-      background: transparent;
-      min-height: 400px;
-      display: block; /* CHROME FIX - flex container can't properly contain grid child */
-      overflow: visible;
+      display: none; /* Hidden when empty - grid takes full width */
     }
 
     .task-item {
@@ -828,12 +861,71 @@
       width: 100%;
       font-weight: 400;
       letter-spacing: 0.3px;
+      display: none; /* Hidden - using inline input instead */
     }
 
-    .add-task-btn:hover {
+    /* Inline Task Input - Document Editor Style */
+    .inline-task-input {
+      border: none;
+      background: transparent;
+      padding: 16px 20px;
+      font-size: 0.9rem;
+      color: rgba(0, 0, 0, 0.4);
+      font-weight: 400;
+      letter-spacing: -0.2px;
+      width: 100%;
+      outline: none;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .inline-task-input:focus {
+      color: #000000;
+      background: rgba(0, 0, 0, 0.01);
+      border-radius: 8px;
+    }
+
+    .inline-task-input::placeholder {
+      color: rgba(0, 0, 0, 0.3);
+    }
+
+    /* Task Goal Selector - Appears on focus */
+    .task-goal-selector {
+      display: none;
+      padding: 8px 20px 16px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .task-goal-selector.active {
+      display: block;
+      opacity: 1;
+    }
+
+    .task-goal-selector select {
       background: #fafafa;
-      border-color: rgba(0, 0, 0, 0.25);
-      color: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      color: rgba(0, 0, 0, 0.6);
+      border-radius: 6px;
+      cursor: pointer;
+      outline: none;
+      width: 200px;
+      transition: all 0.2s;
+    }
+
+    .task-goal-selector select:focus {
+      border-color: rgba(0, 0, 0, 0.2);
+      background: #ffffff;
+    }
+
+    .task-goal-selector label {
+      font-size: 0.7rem;
+      color: rgba(0, 0, 0, 0.4);
+      margin-right: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .empty-state {
@@ -1259,15 +1351,62 @@
   <!-- Main Container -->
   <div class="main-container">
     
-    <!-- Weekly Planner -->
-    <div class="planner-section">
+    <!-- Weekly Planner - Two Column Layout -->
+    <div class="planner-section" id="plannerSection">
       
-      <div class="tasks-list" id="tasksList">
-        <!-- Populated by JavaScript - shows goals when empty, tasks when not -->
+      <!-- Left: Tasks Column (hidden when empty) -->
+      <div class="tasks-column" id="tasksColumn">
+        <div class="tasks-list" id="tasksList"></div>
+        
+        <!-- Inline Task Input -->
+        <input 
+          type="text" 
+          class="inline-task-input" 
+          id="inlineTaskInput"
+          placeholder="+ Add task..."
+          />
+        
+        <!-- Goal Selector (shows on focus) -->
+        <div class="task-goal-selector" id="taskGoalSelector">
+          <label>Link to goal:</label>
+          <select id="inlineGoalSelect">
+            <option value="">None</option>
+          </select>
+        </div>
       </div>
 
-      <button class="add-task-btn" id="addTaskBtn" onclick="showAddTaskModal()">+ Add Task</button>
+      <!-- Right: Goals Grid (always visible) -->
+      <div class="goals-column" id="goalsColumn">
+        <!-- Populated by JavaScript -->
+      </div>
 
+    </div>
+    
+    <!-- Empty State - Input First, Then Goals -->
+    <div id="emptyStateContainer" style="display: none;">
+      <!-- Inline Input for Empty State (at top) -->
+      <div style="max-width: 800px; margin: 0 auto 60px;">
+        <input 
+          type="text" 
+          class="inline-task-input" 
+          id="emptyTaskInput"
+          placeholder="+ Add task..."
+          style="text-align: center; font-size: 1rem; padding: 20px;"
+          />
+        
+        <!-- Goal Selector (shows on focus) -->
+        <div class="task-goal-selector" id="emptyGoalSelector" style="text-align: center;">
+          <label>Link to goal:</label>
+          <select id="emptyGoalSelect">
+            <option value="">None</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- Goals Grid (larger, centered) -->
+      <div id="emptyGoalsGrid" style="max-width: 1200px; margin: 0 auto;">
+        <!-- Populated by JavaScript -->
+      </div>
     </div>
 
   </div>
@@ -1316,6 +1455,13 @@
         <button class="modal-btn modal-btn-primary" onclick="saveGoalImage()">Save</button>
       </div>
     </div>
+  </div>
+
+  <!-- Full-Screen Celebration Overlay -->
+  <div class="celebration-overlay" id="celebrationOverlay">
+    <img class="celebration-image" id="celebrationImage" src="" alt="" />
+    <div class="celebration-text" id="celebrationText">Goal Complete!</div>
+    <div class="celebration-subtext" id="celebrationSubtext">Amazing work!</div>
   </div>
 
   <script>
@@ -1419,6 +1565,148 @@
 
       console.log('Dashboard initialized:', dashboardState);
       renderTasks();
+      initializeInlineTaskInput();
+      initializeEmptyStateInput();
+    }
+
+    // Inline Task Input - Tasks Column
+    function initializeInlineTaskInput() {
+      const input = document.getElementById('inlineTaskInput');
+      const selector = document.getElementById('taskGoalSelector');
+      const goalSelect = document.getElementById('inlineGoalSelect');
+      
+      if (!input) return;
+      
+      // Populate goal dropdown
+      if (goalSelect && dashboardState.goals) {
+        goalSelect.innerHTML = '<option value="">None</option>';
+        dashboardState.goals.forEach(goal => {
+          const option = document.createElement('option');
+          option.value = goal.id;
+          option.textContent = goal.name;
+          goalSelect.appendChild(option);
+        });
+      }
+      
+      // Show goal selector on focus
+      input.addEventListener('focus', () => {
+        if (selector) {
+          selector.classList.add('active');
+        }
+      });
+      
+      // Hide goal selector on blur (with delay for select click)
+      input.addEventListener('blur', () => {
+        setTimeout(() => {
+          if (selector && document.activeElement !== goalSelect) {
+            selector.classList.remove('active');
+          }
+        }, 200);
+      });
+      
+      // Add task on Enter
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          const taskName = input.value.trim();
+          if (!taskName) return;
+          
+          const goalId = goalSelect ? goalSelect.value : null;
+          
+          addInlineTask(taskName, goalId);
+          
+          input.value = '';
+          if (goalSelect) goalSelect.value = '';
+          if (selector) selector.classList.remove('active');
+          input.blur();
+        }
+      });
+    }
+
+    // Inline Task Input - Empty State
+    function initializeEmptyStateInput() {
+      const input = document.getElementById('emptyTaskInput');
+      const selector = document.getElementById('emptyGoalSelector');
+      const goalSelect = document.getElementById('emptyGoalSelect');
+      
+      if (!input) return;
+      
+      // Populate goal dropdown
+      if (goalSelect && dashboardState.goals) {
+        goalSelect.innerHTML = '<option value="">None</option>';
+        dashboardState.goals.forEach(goal => {
+          const option = document.createElement('option');
+          option.value = goal.id;
+          option.textContent = goal.name;
+          goalSelect.appendChild(option);
+        });
+      }
+      
+      // Show goal selector on focus
+      input.addEventListener('focus', () => {
+        if (selector) {
+          selector.classList.add('active');
+        }
+      });
+      
+      // Hide goal selector on blur (with delay for select click)
+      input.addEventListener('blur', () => {
+        setTimeout(() => {
+          if (selector && document.activeElement !== goalSelect) {
+            selector.classList.remove('active');
+          }
+        }, 200);
+      });
+      
+      // Add task on Enter
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          const taskName = input.value.trim();
+          if (!taskName) return;
+          
+          const goalId = goalSelect ? goalSelect.value : null;
+          
+          addInlineTask(taskName, goalId);
+          
+          input.value = '';
+          if (goalSelect) goalSelect.value = '';
+          if (selector) selector.classList.remove('active');
+          input.blur();
+        }
+      });
+    }
+
+    function addInlineTask(taskName, goalId) {
+      const newTask = {
+        id: generateId(),
+        name: taskName,
+        goalId: goalId || null,
+        completed: false,
+        description: ''
+      };
+      
+      // Add to weekly tasks
+      dashboardState.weeklyTasks[currentDay].push(newTask);
+      
+      // If linked to goal, add to goal's task list
+      if (goalId) {
+        const goal = dashboardState.goals.find(g => g.id === goalId);
+        if (goal) {
+          if (!goal.tasks) goal.tasks = [];
+          
+          const goalTask = {
+            id: generateId(),
+            name: taskName,
+            completed: false,
+            scheduledDay: currentDay
+          };
+          
+          goal.tasks.push(goalTask);
+          newTask.goalTaskIndex = goal.tasks.length - 1;
+        }
+      }
+      
+      saveDashboard();
+      renderTasks();
     }
 
     function toggleGoalComplete(goalId) {
@@ -1430,27 +1718,78 @@
       renderTasks(); // Re-render to update goals in empty state
       
       if (goal.completed) {
-        // Find the checkbox element
-        const checkbox = event.target;
-        const card = checkbox.closest('.goal-empty-card, .goal-bg-card');
+        showFullScreenCelebration(goal);
+      }
+    }
+
+    function showFullScreenCelebration(goal) {
+      const overlay = document.getElementById('celebrationOverlay');
+      const image = document.getElementById('celebrationImage');
+      const text = document.getElementById('celebrationText');
+      const subtext = document.getElementById('celebrationSubtext');
+      
+      if (!overlay) return;
+      
+      // Set content
+      text.textContent = 'Goal Complete!';
+      subtext.textContent = `${goal.name} is complete! Amazing work! 🎉`;
+      
+      if (goal.image) {
+        image.src = goal.image;
+        image.style.display = 'block';
+      } else {
+        image.style.display = 'none';
+      }
+      
+      // Show overlay
+      overlay.classList.add('active');
+      
+      // Full-screen confetti explosion
+      createFullScreenConfetti();
+      
+      // Hide after 3 seconds
+      setTimeout(() => {
+        overlay.classList.remove('active');
+      }, 3000);
+    }
+
+    function createFullScreenConfetti() {
+      const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+      
+      // Create 100 confetti particles across entire screen
+      for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'fixed';
+        confetti.style.left = Math.random() * window.innerWidth + 'px';
+        confetti.style.top = Math.random() * window.innerHeight + 'px';
+        confetti.style.width = (Math.random() * 12 + 6) + 'px';
+        confetti.style.height = (Math.random() * 12 + 6) + 'px';
+        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        confetti.style.pointerEvents = 'none';
+        confetti.style.zIndex = '10001';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
         
-        // WOW ANIMATION: Scale pulse + glow
-        if (card) {
-          card.style.transition = 'all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-          card.style.transform = 'scale(1.15)';
-          card.style.filter = 'grayscale(0) brightness(1.3) drop-shadow(0 0 20px rgba(16, 185, 129, 0.8))';
-          
-          setTimeout(() => {
-            card.style.transform = '';
-            card.style.filter = '';
-          }, 500);
-        }
-        
-        // Enhanced confetti
-        showEnhancedConfetti(checkbox);
-        
-        // Success sound effect (if you want)
-        // playSuccessSound();
+        document.body.appendChild(confetti);
+
+        const tx = (Math.random() - 0.5) * 600;
+        const ty = (Math.random() - 0.5) * 600;
+        const rotation = Math.random() * 720 - 360;
+
+        confetti.animate([
+          { 
+            transform: 'translate(0, 0) rotate(0deg) scale(1)',
+            opacity: 1
+          },
+          { 
+            transform: `translate(${tx}px, ${ty}px) rotate(${rotation}deg) scale(0)`,
+            opacity: 0
+          }
+        ], {
+          duration: 1200 + Math.random() * 800,
+          easing: 'cubic-bezier(0, .9, .57, 1)',
+        });
+
+        setTimeout(() => confetti.remove(), 2000);
       }
     }
 
@@ -1647,7 +1986,7 @@
           <input type="text" class="add-task-input" id="newGoalTaskInput" placeholder="+ Add task..." onkeypress="handleAddGoalTask(event, '${goalId}')" />
         </div>
         
-        <button class="delete-btn" onclick="deleteGoal('${goalId}')">Delete Goal</button>
+        
       `;
       
       document.getElementById('sidebarContent').innerHTML = html;
@@ -1969,71 +2308,45 @@
 
     // WEEKLY PLAN
     function renderTasks() {
-      const container = document.getElementById('tasksList');
-      const addBtn = document.getElementById('addTaskBtn');
+      const tasksList = document.getElementById('tasksList');
+      const tasksColumn = document.getElementById('tasksColumn');
+      const goalsColumn = document.getElementById('goalsColumn');
+      const plannerSection = document.getElementById('plannerSection');
+      const emptyStateContainer = document.getElementById('emptyStateContainer');
+      const emptyGoalsGrid = document.getElementById('emptyGoalsGrid');
       
-      if (!container) {
-        console.error('tasksList container not found');
+      if (!tasksList || !goalsColumn) {
+        console.error('Required containers not found');
         return;
       }
       
-      container.innerHTML = '';
+      tasksList.innerHTML = '';
       
       console.log('Rendering tasks for:', currentDay);
-      console.log('Weekly tasks:', dashboardState.weeklyTasks);
-      
       const tasks = dashboardState.weeklyTasks[currentDay] || [];
       console.log('Tasks for', currentDay, ':', tasks);
       
-      // EMPTY STATE: Show goals grid
+      // EMPTY STATE: Hide planner, show empty state container with large grid
       if (tasks.length === 0) {
-        container.classList.add('empty-state');
-        container.innerHTML = renderGoalsEmptyState();
-        
-        // CHROME FIX: Force reflow after innerHTML
-        void container.offsetHeight;
-        
-        // CHROME FIX: Re-query and log rendered elements
-        setTimeout(() => {
-          const renderedCards = container.querySelectorAll('.goal-empty-card');
-          console.log('Chrome check - Rendered goal cards:', renderedCards.length);
-          renderedCards.forEach((card, i) => {
-            console.log(`Card ${i}:`, {
-              visible: card.offsetHeight > 0,
-              height: card.offsetHeight,
-              width: card.offsetWidth,
-              hasImage: card.classList.contains('has-image'),
-              backgroundImage: card.style.backgroundImage
-            });
-          });
-        }, 0);
-        
-        // Show Add Task button even when empty
-        if (addBtn) addBtn.style.display = 'block';
+        tasksList.classList.add('empty-state');
+        tasksColumn.style.display = 'none';
+        plannerSection.style.display = 'none';
+        if (emptyStateContainer) emptyStateContainer.style.display = 'block';
+        if (emptyGoalsGrid) emptyGoalsGrid.innerHTML = renderGoalsGrid(true); // true = large
         
         updateDayLabel();
         return;
       }
       
-      // HAS TASKS: Show task list
-      container.classList.remove('empty-state');
+      // HAS TASKS: Show planner, hide empty state, two-column layout
+      tasksList.classList.remove('empty-state');
+      tasksColumn.style.display = 'block';
+      plannerSection.style.display = 'grid';
+      plannerSection.classList.remove('empty-state');
+      if (emptyStateContainer) emptyStateContainer.style.display = 'none';
       
-      // Remove old goals background if exists
-      const oldGoalsBg = container.parentElement.querySelector('.goals-background');
-      if (oldGoalsBg) {
-        oldGoalsBg.remove();
-      }
-      
-      // Show goals in background
-      const goalsBackgroundHTML = renderGoalsBackground();
-      if (goalsBackgroundHTML) {
-        const goalsDiv = document.createElement('div');
-        goalsDiv.innerHTML = goalsBackgroundHTML;
-        container.parentElement.insertBefore(goalsDiv.firstChild, container);
-      }
-      
-      // Show Add Task button at bottom
-      if (addBtn) addBtn.style.display = 'block';
+      // Render goals in right column
+      goalsColumn.innerHTML = renderGoalsGrid(false); // false = normal size
       
       tasks.forEach(task => {
         const taskEl = document.createElement('div');
@@ -2057,21 +2370,22 @@
           }
         };
         
-        container.appendChild(taskEl);
+        tasksList.appendChild(taskEl);
       });
       
       updateDayLabel();
     }
 
-    function renderGoalsEmptyState() {
+    function renderGoalsGrid(isLarge = false) {
       if (!dashboardState.goals || dashboardState.goals.length === 0) {
         console.log('No goals to render');
-        return '';
+        return '<div style="text-align: center; padding: 40px; color: rgba(0,0,0,0.3); font-size: 0.85rem;">No goals yet</div>';
       }
       
-      console.log('Rendering goals in empty state:', dashboardState.goals);
+      console.log('Rendering goals grid:', dashboardState.goals);
       
-      let html = '<div class="goals-empty-grid">';
+      const gridClass = isLarge ? 'goals-empty-grid-large' : 'goals-empty-grid';
+      let html = `<div class="${gridClass}">`;
       
       dashboardState.goals.forEach(goal => {
         console.log('Goal:', goal.name, 'Image:', goal.image);
@@ -2112,44 +2426,6 @@
       return html;
     }
 
-    function renderGoalsBackground() {
-      if (!dashboardState.goals || dashboardState.goals.length === 0) {
-        return '';
-      }
-      
-      let html = '<div class="goals-background">';
-      
-      dashboardState.goals.forEach(goal => {
-        const isComplete = goal.completed || false;
-        const completedClass = isComplete ? ' completed' : '';
-        const hasActiveTasks = goal.tasks && goal.tasks.length > 0 && !isComplete;
-        
-        if (goal.image) {
-          html += `
-            <div class="goal-bg-card has-image${completedClass}" style="background-image: url('${goal.image}')" 
-                 onclick="openGoalSidebar('${goal.id}')" title="${goal.name}">
-              <input type="checkbox" class="goal-bg-checkbox" ${isComplete ? 'checked' : ''} 
-                     onclick="event.stopPropagation(); toggleGoalComplete('${goal.id}')" />
-              ${hasActiveTasks ? '<div class="goal-bg-in-progress"></div>' : ''}
-            </div>
-          `;
-        } else {
-          html += `
-            <div class="goal-bg-card no-image${completedClass}" onclick="openGoalSidebar('${goal.id}')" title="${goal.name}">
-              <input type="checkbox" class="goal-bg-checkbox" ${isComplete ? 'checked' : ''} 
-                     onclick="event.stopPropagation(); toggleGoalComplete('${goal.id}')" />
-              ${hasActiveTasks ? '<div class="goal-bg-in-progress"></div>' : ''}
-              +
-            </div>
-          `;
-        }
-      });
-      
-      html += '</div>';
-      
-      return html;
-    }
-
     function updateDayLabel() {
       const dayNames = {
         monday: 'Monday',
@@ -2160,9 +2436,40 @@
         saturday: 'Saturday',
         sunday: 'Sunday'
       };
+      
       const headerDay = document.getElementById('currentDayHeader');
       if (headerDay) {
-        headerDay.textContent = dayNames[currentDay] || 'Monday';
+        const dayName = dayNames[currentDay] || 'Monday';
+        const dateRange = getWeekDateRange();
+        headerDay.innerHTML = `
+          <div class="day-name">${dayName}</div>
+          <div class="date-range">${dateRange}</div>
+        `;
+      }
+    }
+
+    function getWeekDateRange() {
+      const today = new Date();
+      const dayOfWeek = today.getDay();
+      const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Monday is start
+      
+      const monday = new Date(today);
+      monday.setDate(today.getDate() + diff);
+      
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+      
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      
+      const startMonth = monthNames[monday.getMonth()];
+      const endMonth = monthNames[sunday.getMonth()];
+      const startDay = monday.getDate();
+      const endDay = sunday.getDate();
+      
+      if (startMonth === endMonth) {
+        return `${startMonth} ${startDay}-${endDay}`.toUpperCase();
+      } else {
+        return `${startMonth} ${startDay}-${endMonth} ${endDay}`.toUpperCase();
       }
     }
 
@@ -2200,12 +2507,103 @@
       }
       
       if (task.completed) {
-        showConfetti(event.target);
+        showTaskCompleteCelebration(task, event.target);
       }
       
       saveDashboard();
       renderTasks();
-      renderGoals();
+    }
+
+    function showTaskCompleteCelebration(task, element) {
+      // Check if linked to goal
+      const goal = task.goalId ? dashboardState.goals.find(g => g.id === task.goalId) : null;
+      
+      // Create encouraging message overlay
+      const message = document.createElement('div');
+      message.style.position = 'fixed';
+      message.style.top = '50%';
+      message.style.left = '50%';
+      message.style.transform = 'translate(-50%, -50%)';
+      message.style.background = 'rgba(0, 0, 0, 0.9)';
+      message.style.color = '#ffffff';
+      message.style.padding = '30px 50px';
+      message.style.borderRadius = '12px';
+      message.style.zIndex = '9999';
+      message.style.fontSize = '1.5rem';
+      message.style.fontWeight = '300';
+      message.style.textAlign = 'center';
+      message.style.pointerEvents = 'none';
+      
+      if (goal && !goal.completed) {
+        const completedTasks = goal.tasks ? goal.tasks.filter(t => t.completed).length : 0;
+        const totalTasks = goal.tasks ? goal.tasks.length : 0;
+        message.innerHTML = `✨ You're so close!<br/><span style="font-size: 1rem; opacity: 0.7;">${completedTasks}/${totalTasks} tasks complete</span>`;
+      } else {
+        const messages = [
+          '✨ Amazing!',
+          '🎯 You did it!',
+          '💪 Keep going!',
+          '🔥 On fire!',
+          '⭐ Fantastic!'
+        ];
+        message.textContent = messages[Math.floor(Math.random() * messages.length)];
+      }
+      
+      document.body.appendChild(message);
+      
+      // Animate in
+      message.animate([
+        { opacity: 0, transform: 'translate(-50%, -40%)' },
+        { opacity: 1, transform: 'translate(-50%, -50%)', offset: 0.3 },
+        { opacity: 1, transform: 'translate(-50%, -50%)', offset: 0.7 },
+        { opacity: 0, transform: 'translate(-50%, -60%)' }
+      ], {
+        duration: 2000,
+        easing: 'ease-out'
+      });
+      
+      // Small confetti burst
+      createSmallConfetti(element);
+      
+      setTimeout(() => message.remove(), 2000);
+    }
+
+    function createSmallConfetti(element) {
+      const rect = element.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      
+      const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ec4899'];
+      
+      for (let i = 0; i < 20; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'fixed';
+        confetti.style.left = x + 'px';
+        confetti.style.top = y + 'px';
+        confetti.style.width = '6px';
+        confetti.style.height = '6px';
+        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        confetti.style.pointerEvents = 'none';
+        confetti.style.zIndex = '9998';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        document.body.appendChild(confetti);
+
+        const angle = (Math.PI * 2 * i) / 20;
+        const velocity = 50 + Math.random() * 50;
+        const tx = Math.cos(angle) * velocity;
+        const ty = Math.sin(angle) * velocity;
+
+        confetti.animate([
+          { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+          { transform: `translate(${tx}px, ${ty}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+        ], {
+          duration: 600 + Math.random() * 400,
+          easing: 'cubic-bezier(0, .9, .57, 1)',
+        });
+
+        setTimeout(() => confetti.remove(), 1000);
+      }
     }
 
     function showAddTaskModal() {
