@@ -27,6 +27,16 @@
       position: relative;
     }
 
+    .week-range-label {
+      position: absolute;
+      left: 60px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
     .current-day-header {
       font-size: 1.8rem;
       font-weight: 300;
@@ -35,7 +45,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
     }
 
     .day-name {
@@ -44,12 +54,12 @@
       letter-spacing: -1px;
     }
 
-    .date-range {
-      font-size: 0.65rem;
+    .current-date {
+      font-size: 0.7rem;
       font-weight: 500;
-      letter-spacing: 1px;
-      text-transform: uppercase;
       color: rgba(0, 0, 0, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .day-nav-btn {
@@ -148,6 +158,15 @@
       -webkit-filter: grayscale(0.3) brightness(1.05);
       z-index: 10;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Drag over goal feedback */
+    .goal-empty-card.drag-over-goal {
+      transform: scale(1.05) !important;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.5) !important;
+      filter: brightness(1.15) !important;
+      -webkit-filter: brightness(1.15) !important;
+      z-index: 20 !important;
     }
 
     .goal-empty-card.no-image {
@@ -933,27 +952,35 @@
       display: flex;
       gap: 8px;
       align-items: center;
+      justify-content: flex-end;
       margin-top: 12px;
       padding: 0 20px;
     }
 
     .quick-action-icon {
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       border-radius: 6px;
-      background: rgba(0, 0, 0, 0.04);
+      background: rgba(0, 0, 0, 0.02);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: all 0.2s;
-      font-size: 1rem;
       position: relative;
+      opacity: 0.5;
+    }
+
+    .quick-action-icon img {
+      width: 14px;
+      height: 14px;
+      object-fit: contain;
     }
 
     .quick-action-icon:hover {
-      background: rgba(0, 0, 0, 0.08);
+      background: rgba(0, 0, 0, 0.06);
       transform: scale(1.05);
+      opacity: 0.8;
     }
 
     .quick-action-icon:active {
@@ -1457,6 +1484,7 @@
   
   <!-- Header -->
   <div class="dashboard-header">
+    <div class="week-range-label" id="weekRangeLabel">NOV 24-30</div>
     <button class="day-nav-btn" onclick="previousDay()">←</button>
     <div class="current-day-header" id="currentDayHeader">Monday</div>
     <button class="day-nav-btn" onclick="nextDay()">→</button>
@@ -1473,41 +1501,44 @@
       <div class="tasks-column" id="tasksColumn">
         <div class="tasks-list" id="tasksList"></div>
         
-        <!-- Inline Task Input -->
-        <input 
-          type="text" 
-          class="inline-task-input" 
-          id="inlineTaskInput"
-          placeholder="+ Add task..."
-          />
-        
-        <!-- Quick Action Icons -->
-        <div class="quick-actions" id="quickActions">
-          <div class="quick-action-icon" onclick="handleTherapy()">
-            💬
-            <div class="quick-action-tooltip">Therapy</div>
-          </div>
+        <!-- Inline Task Input Container -->
+        <div style="display: flex; align-items: center; gap: 12px; padding: 0 20px;">
+          <input 
+            type="text" 
+            class="inline-task-input" 
+            id="inlineTaskInput"
+            placeholder="+ Add task..."
+            style="flex: 1; margin: 0;"
+            />
           
-          <div class="quick-action-icon" onclick="handleSunday()">
-            📅
-            <div class="quick-action-tooltip">Sunday</div>
-          </div>
-          
-          <div class="quick-action-icon" onclick="handleRest()">
-            😴
-            <div class="quick-action-tooltip">Rest</div>
-          </div>
-          
-          <div class="quick-action-icon" onclick="toggleUplevel()" style="position: relative;">
-            ⬆️
-            <div class="quick-action-tooltip">Uplevel</div>
-            <div class="quick-action-dropdown" id="uplevelDropdown"></div>
-          </div>
-          
-          <div class="quick-action-icon" onclick="toggleFun()" style="position: relative;">
-            🎉
-            <div class="quick-action-tooltip">Fun</div>
-            <div class="quick-action-dropdown" id="funDropdown"></div>
+          <!-- Quick Action Icons - Inline -->
+          <div class="quick-actions" id="quickActions" style="margin: 0; padding: 0;">
+            <div class="quick-action-icon" onclick="handleTherapy()">
+              <img src="therapy.png" />
+              <div class="quick-action-tooltip">Therapy</div>
+            </div>
+            
+            <div class="quick-action-icon" onclick="handleSunday()">
+              <img src="sunday-3.png" />
+              <div class="quick-action-tooltip">Sunday</div>
+            </div>
+            
+            <div class="quick-action-icon" onclick="handleRest()">
+              <img src="rest.png" />
+              <div class="quick-action-tooltip">Rest</div>
+            </div>
+            
+            <div class="quick-action-icon" onclick="toggleUplevel()" style="position: relative;">
+              <img src="uplevel.png" />
+              <div class="quick-action-tooltip">Uplevel</div>
+              <div class="quick-action-dropdown" id="uplevelDropdown"></div>
+            </div>
+            
+            <div class="quick-action-icon" onclick="toggleFun()" style="position: relative;">
+              <img src="fun.png" />
+              <div class="quick-action-tooltip">Fun</div>
+              <div class="quick-action-dropdown" id="funDropdown"></div>
+            </div>
           </div>
         </div>
         
@@ -1522,7 +1553,13 @@
 
       <!-- Right: Goals Grid (always visible) -->
       <div class="goals-column" id="goalsColumn">
-        <!-- Populated by JavaScript -->
+        <!-- Goals Grid Container -->
+        <div id="goalsGridContainer">
+          <!-- Populated by JavaScript -->
+        </div>
+        
+        <!-- Week-End Button (Sunday only, below goals) -->
+        <div id="weekEndButton" style="display: none;"></div>
       </div>
 
     </div>
@@ -1530,42 +1567,44 @@
     <!-- Empty State - Input First, Then Goals -->
     <div id="emptyStateContainer" style="display: none;">
       <!-- Inline Input for Empty State (at top) -->
-      <div style="max-width: 800px; margin: 0 auto 60px;">
-        <input 
-          type="text" 
-          class="inline-task-input" 
-          id="emptyTaskInput"
-          placeholder="+ Add task..."
-          style="text-align: center; font-size: 1rem; padding: 20px;"
-          />
-        
-        <!-- Quick Action Icons -->
-        <div class="quick-actions" style="justify-content: center; padding: 0;">
-          <div class="quick-action-icon" onclick="handleTherapy()">
-            💬
-            <div class="quick-action-tooltip">Therapy</div>
-          </div>
+      <div style="max-width: 600px; margin: 0 auto 40px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <input 
+            type="text" 
+            class="inline-task-input" 
+            id="emptyTaskInput"
+            placeholder="+ Add task..."
+            style="text-align: center; font-size: 1rem; padding: 20px; flex: 1; margin: 0;"
+            />
           
-          <div class="quick-action-icon" onclick="handleSunday()">
-            📅
-            <div class="quick-action-tooltip">Sunday</div>
-          </div>
-          
-          <div class="quick-action-icon" onclick="handleRest()">
-            😴
-            <div class="quick-action-tooltip">Rest</div>
-          </div>
-          
-          <div class="quick-action-icon" onclick="toggleUplevel()" style="position: relative;">
-            ⬆️
-            <div class="quick-action-tooltip">Uplevel</div>
-            <div class="quick-action-dropdown" id="emptyUplevelDropdown"></div>
-          </div>
-          
-          <div class="quick-action-icon" onclick="toggleFun()" style="position: relative;">
-            🎉
-            <div class="quick-action-tooltip">Fun</div>
-            <div class="quick-action-dropdown" id="emptyFunDropdown"></div>
+          <!-- Quick Action Icons - Inline -->
+          <div class="quick-actions" style="margin: 0; padding: 0;">
+            <div class="quick-action-icon" onclick="handleTherapy()">
+              <img src="therapy.png" />
+              <div class="quick-action-tooltip">Therapy</div>
+            </div>
+            
+            <div class="quick-action-icon" onclick="handleSunday()">
+              <img src="sunday-3.png" />
+              <div class="quick-action-tooltip">Sunday</div>
+            </div>
+            
+            <div class="quick-action-icon" onclick="handleRest()">
+              <img src="rest.png" />
+              <div class="quick-action-tooltip">Rest</div>
+            </div>
+            
+            <div class="quick-action-icon" onclick="toggleUplevel()" style="position: relative;">
+              <img src="uplevel.png" />
+              <div class="quick-action-tooltip">Uplevel</div>
+              <div class="quick-action-dropdown" id="emptyUplevelDropdown"></div>
+            </div>
+            
+            <div class="quick-action-icon" onclick="toggleFun()" style="position: relative;">
+              <img src="fun.png" />
+              <div class="quick-action-tooltip">Fun</div>
+              <div class="quick-action-dropdown" id="emptyFunDropdown"></div>
+            </div>
           </div>
         </div>
         
@@ -1655,7 +1694,13 @@
 
     // State
     let currentTab = 'goals';
-    let currentDay = 'monday';
+    let currentDay = getCurrentDayOfWeek();
+    
+    function getCurrentDayOfWeek() {
+      const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+      const today = new Date();
+      return days[today.getDay()];
+    }
     let currentGoalForImage = null;
     let selectedGoalImage = null;
 
@@ -1722,6 +1767,21 @@
           ...goal,
           tasks: goal.tasks || []
         }));
+        
+        // Ensure backlog goal exists
+        const backlogGoal = dashboardState.goals.find(g => g.id === 'backlog');
+        if (!backlogGoal) {
+          dashboardState.goals.push({
+            id: 'backlog',
+            name: 'Backlog',
+            description: 'Tasks to do later',
+            image: '', // User can set this
+            completed: false,
+            tasks: [],
+            isBacklog: true
+          });
+          saveDashboard();
+        }
       }
       
       // Ensure weeklyTasks exists and has all days
@@ -1764,32 +1824,56 @@
     }
 
     function handleTherapy() {
-      // Get breakthrough answers from questionnaire (localStorage)
-      const breakthroughData = {
-        wins: localStorage.getItem('breakthroughWins') || '',
-        challenges: localStorage.getItem('breakthroughChallenges') || '',
-        insights: localStorage.getItem('breakthroughInsights') || '',
-        shifts: localStorage.getItem('breakthroughShifts') || '',
-        integration: localStorage.getItem('breakthroughIntegration') || ''
+      // Get breakthrough answers from questionnaire weeklyPlanData
+      let breakthroughData = {
+        emotional: '',
+        learning: '',
+        fear: '',
+        fearMindset: '',
+        release: ''
       };
+      
+      const savedData = localStorage.getItem('weeklyPlanData');
+      if (savedData) {
+        const parsed = JSON.parse(savedData);
+        const formData = parsed.formData || parsed;
+        
+        breakthroughData = {
+          emotional: formData.emotionalBreakthrough || '',
+          learning: formData.biggestLearning || '',
+          fear: formData.biggestFear || '',
+          fearMindset: formData.fearMindset || '',
+          release: formData.toRelease || ''
+        };
+      }
       
       // Build breakthrough text
       let breakthroughText = '**BREAKTHROUGHS FROM QUESTIONNAIRE:**\n\n';
+      let hasData = false;
       
-      if (breakthroughData.wins) {
-        breakthroughText += `**What were your biggest wins this week?**\n${breakthroughData.wins}\n\n`;
+      if (breakthroughData.emotional) {
+        breakthroughText += `**What was your biggest emotional breakthrough or shift?**\n${breakthroughData.emotional}\n\n`;
+        hasData = true;
       }
-      if (breakthroughData.challenges) {
-        breakthroughText += `**What challenges pushed you to grow?**\n${breakthroughData.challenges}\n\n`;
+      if (breakthroughData.learning) {
+        breakthroughText += `**What was the biggest learning or surprise?**\n${breakthroughData.learning}\n\n`;
+        hasData = true;
       }
-      if (breakthroughData.insights) {
-        breakthroughText += `**What insights came through?**\n${breakthroughData.insights}\n\n`;
+      if (breakthroughData.fear) {
+        breakthroughText += `**What's your biggest fear right now?**\n${breakthroughData.fear}\n\n`;
+        hasData = true;
       }
-      if (breakthroughData.shifts) {
-        breakthroughText += `**What shifts are happening in your identity?**\n${breakthroughData.shifts}\n\n`;
+      if (breakthroughData.fearMindset) {
+        breakthroughText += `**Any fear or scarcity mindset to clear?**\n${breakthroughData.fearMindset}\n\n`;
+        hasData = true;
       }
-      if (breakthroughData.integration) {
-        breakthroughText += `**How will you integrate these?**\n${breakthroughData.integration}\n\n`;
+      if (breakthroughData.release) {
+        breakthroughText += `**Anything to release before next week?**\n${breakthroughData.release}\n\n`;
+        hasData = true;
+      }
+      
+      if (!hasData) {
+        breakthroughText += '(No breakthrough data found - complete the Breakthroughs section in your weekly planner)\n\n';
       }
       
       breakthroughText += '\n---\n\n**NEW BREAKTHROUGHS THIS WEEK:**\n(Add here - will auto-populate in next week\'s planner)\n\n';
@@ -1821,20 +1905,20 @@
       // Build ChatGPT prompt
       let prompt = 'Here are my breakthroughs this week:\n\n';
       
-      if (task.breakthroughs.wins) {
-        prompt += `Biggest wins: ${task.breakthroughs.wins}\n\n`;
+      if (task.breakthroughs.emotional) {
+        prompt += `Biggest emotional breakthrough: ${task.breakthroughs.emotional}\n\n`;
       }
-      if (task.breakthroughs.challenges) {
-        prompt += `Growth challenges: ${task.breakthroughs.challenges}\n\n`;
+      if (task.breakthroughs.learning) {
+        prompt += `Biggest learning: ${task.breakthroughs.learning}\n\n`;
       }
-      if (task.breakthroughs.insights) {
-        prompt += `Key insights: ${task.breakthroughs.insights}\n\n`;
+      if (task.breakthroughs.fear) {
+        prompt += `Biggest fear: ${task.breakthroughs.fear}\n\n`;
       }
-      if (task.breakthroughs.shifts) {
-        prompt += `Identity shifts: ${task.breakthroughs.shifts}\n\n`;
+      if (task.breakthroughs.fearMindset) {
+        prompt += `Fear mindset to clear: ${task.breakthroughs.fearMindset}\n\n`;
       }
-      if (task.breakthroughs.integration) {
-        prompt += `Integration plan: ${task.breakthroughs.integration}\n\n`;
+      if (task.breakthroughs.release) {
+        prompt += `To release: ${task.breakthroughs.release}\n\n`;
       }
       
       prompt += 'Help me process these breakthroughs and integrate them into my growth journey.';
@@ -1902,8 +1986,51 @@
     }
 
     function generateNextWeek() {
-      // Open questionnaire in new tab for next week
-      window.open('questionnaire.html', '_blank');
+      // Save current week first
+      const currentWeek = localStorage.getItem('currentWeek') || getCurrentWeekKey();
+      console.log('Saving current week:', currentWeek);
+      saveDashboard();
+      
+      // Calculate next week
+      const nextWeek = getNextWeekKey();
+      const weekLabel = formatWeekLabel(nextWeek);
+      console.log('Next week will be:', nextWeek);
+      
+      // Confirm
+      const confirmed = confirm(`Complete this week and start planning:\n${weekLabel}\n\nThis will save your current week and open the questionnaire for next week.`);
+      if (!confirmed) return;
+      
+      // Create fresh next week
+      const newWeekData = {
+        weekStart: nextWeek,
+        weekEnd: getWeekEnd(nextWeek),
+        weeklyTasks: {
+          monday: [],
+          tuesday: [],
+          wednesday: [],
+          thursday: [],
+          friday: [],
+          saturday: [],
+          sunday: []
+        },
+        formData: {}  // Fresh questionnaire data
+      };
+      
+      // Save the fresh week
+      saveWeekData(nextWeek, newWeekData);
+      
+      // Switch to new week
+      localStorage.setItem('currentWeek', nextWeek);
+      
+      // Clear old questionnaire data so it starts fresh
+      localStorage.removeItem('weeklyPlanData');
+      
+      console.log('✅ Saved week:', currentWeek);
+      console.log('✅ Created fresh week:', nextWeek);
+      console.log('✅ Opening questionnaire for new week...');
+      
+      // Redirect to questionnaire for new week
+      window.location.href = 'questionnaire.html';
     }
 
     function handleRest() {
@@ -2552,6 +2679,7 @@
 
     // Drag and Drop Handlers
     let draggedTaskData = null;
+    let draggedWeeklyTaskData = null;
 
     function handleTaskDragStart(e) {
       const taskEl = e.currentTarget;
@@ -2568,6 +2696,70 @@
 
     function handleTaskDragEnd(e) {
       e.currentTarget.classList.remove('dragging');
+    }
+
+    // Weekly task drag handlers
+    function handleWeeklyTaskDragStart(e) {
+      const taskEl = e.currentTarget;
+      taskEl.classList.add('dragging');
+      
+      const taskId = taskEl.dataset.taskId;
+      const weekDay = taskEl.dataset.weekDay;
+      
+      draggedWeeklyTaskData = { taskId, weekDay };
+      
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', taskEl.innerHTML);
+    }
+
+    function handleWeeklyTaskDragEnd(e) {
+      e.currentTarget.classList.remove('dragging');
+    }
+
+    // Goal card drop handlers (for backlog)
+    function handleGoalCardDragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      e.currentTarget.classList.add('drag-over-goal');
+    }
+
+    function handleGoalCardDragLeave(e) {
+      e.currentTarget.classList.remove('drag-over-goal');
+    }
+
+    function handleGoalCardDrop(e, goalId) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.currentTarget.classList.remove('drag-over-goal');
+      
+      if (!draggedWeeklyTaskData) return;
+      
+      const { taskId, weekDay } = draggedWeeklyTaskData;
+      const tasks = dashboardState.weeklyTasks[weekDay];
+      const taskIndex = tasks.findIndex(t => t.id === taskId);
+      
+      if (taskIndex === -1) return;
+      
+      const task = tasks[taskIndex];
+      
+      // Remove from weekly planner
+      tasks.splice(taskIndex, 1);
+      
+      // Add to goal's task list
+      const goal = dashboardState.goals.find(g => g.id === goalId);
+      if (goal) {
+        if (!goal.tasks) goal.tasks = [];
+        goal.tasks.push({
+          id: generateId(),
+          name: task.name,
+          completed: false,
+          scheduledDay: 'none'
+        });
+      }
+      
+      draggedWeeklyTaskData = null;
+      saveDashboard();
+      renderTasks();
     }
 
     // Initialize drop zone on tasks list
@@ -2850,13 +3042,18 @@
       plannerSection.classList.remove('empty-state');
       if (emptyStateContainer) emptyStateContainer.style.display = 'none';
       
-      // Render goals in right column
-      goalsColumn.innerHTML = renderGoalsGrid(false); // false = normal size
+      // Render goals in right column (use container to preserve weekEndButton)
+      const goalsGridContainer = document.getElementById('goalsGridContainer');
+      if (goalsGridContainer) {
+        goalsGridContainer.innerHTML = renderGoalsGrid(false); // false = normal size
+      }
       
       tasks.forEach(task => {
         const taskEl = document.createElement('div');
         taskEl.className = 'task-item' + (task.completed ? ' completed' : '');
-        taskEl.draggable = false;
+        taskEl.draggable = true; // Enable dragging
+        taskEl.dataset.taskId = task.id;
+        taskEl.dataset.weekDay = currentDay;
         
         const goal = dashboardState.goals ? dashboardState.goals.find(g => g.id === task.goalId) : null;
         
@@ -2869,6 +3066,10 @@
           </div>
         `;
         
+        // Drag handlers
+        taskEl.addEventListener('dragstart', handleWeeklyTaskDragStart);
+        taskEl.addEventListener('dragend', handleWeeklyTaskDragEnd);
+        
         taskEl.onclick = (e) => {
           if (e.target.type !== 'checkbox') {
             openTaskSidebar(task.id);
@@ -2878,19 +3079,8 @@
         tasksList.appendChild(taskEl);
       });
       
-      // Add "Plan for Next Week" button on Sunday
-      if (currentDay === 'sunday') {
-        const planButton = document.createElement('button');
-        planButton.className = 'action-btn';
-        planButton.style.background = '#8b5cf6';
-        planButton.style.color = '#ffffff';
-        planButton.style.marginTop = '20px';
-        planButton.textContent = '📋 Plan for Next Week';
-        planButton.onclick = generateNextWeek;
-        tasksList.appendChild(planButton);
-      }
-      
       updateDayLabel();
+      renderWeekEndButton();
     }
 
     function renderGoalsGrid(isLarge = false) {
@@ -2940,7 +3130,91 @@
       
       html += '</div>';
       
+      // Add drop handlers after render
+      setTimeout(() => {
+        const goalCards = document.querySelectorAll('.goal-empty-card');
+        goalCards.forEach(card => {
+          const goalId = card.getAttribute('onclick').match(/'([^']+)'/)[1];
+          
+          card.addEventListener('dragover', handleGoalCardDragOver);
+          card.addEventListener('dragleave', handleGoalCardDragLeave);
+          card.addEventListener('drop', (e) => handleGoalCardDrop(e, goalId));
+        });
+      }, 0);
+      
       return html;
+    }
+
+    function renderWeekEndButton() {
+      const weekEndContainer = document.getElementById('weekEndButton');
+      if (!weekEndContainer) {
+        console.log('weekEndButton element not found!');
+        return;
+      }
+      
+      // Show on all days for now (change back to 'sunday' later)
+      const showButton = true; // currentDay === 'sunday'
+      
+      if (showButton) {
+        const nextWeekDates = getNextWeekDates();
+        
+        weekEndContainer.innerHTML = `
+          <div style="
+            margin-top: 60px;
+            padding: 30px 20px 0 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+          ">
+            <div style="
+              font-size: 0.7rem;
+              font-weight: 500;
+              color: rgba(0, 0, 0, 0.3);
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            ">Week Complete</div>
+            
+            <button id="planNextWeekBtn" style="
+              background: #000000;
+              color: #ffffff;
+              border: none;
+              padding: 16px 32px;
+              border-radius: 8px;
+              font-size: 0.9rem;
+              font-weight: 500;
+              cursor: pointer;
+              transition: all 0.2s;
+              letter-spacing: 0.5px;
+            ">Plan for Next Week</button>
+            
+            <div style="
+              font-size: 0.7rem;
+              font-weight: 400;
+              color: rgba(0, 0, 0, 0.4);
+              letter-spacing: 0.5px;
+            ">${nextWeekDates}</div>
+          </div>
+        `;
+        
+        weekEndContainer.style.display = 'block';
+        
+        const planBtn = document.getElementById('planNextWeekBtn');
+        if (planBtn) {
+          planBtn.onmouseover = () => {
+            planBtn.style.background = '#1a1a1a';
+            planBtn.style.transform = 'translateY(-2px)';
+          };
+          planBtn.onmouseout = () => {
+            planBtn.style.background = '#000000';
+            planBtn.style.transform = 'translateY(0)';
+          };
+          planBtn.onclick = generateNextWeek;
+        }
+      } else {
+        weekEndContainer.style.display = 'none';
+      }
     }
 
     function updateDayLabel() {
@@ -2954,15 +3228,51 @@
         sunday: 'Sunday'
       };
       
+      const dayIndexes = {
+        monday: 0,
+        tuesday: 1,
+        wednesday: 2,
+        thursday: 3,
+        friday: 4,
+        saturday: 5,
+        sunday: 6
+      };
+      
       const headerDay = document.getElementById('currentDayHeader');
+      const weekRangeLabel = document.getElementById('weekRangeLabel');
+      
       if (headerDay) {
         const dayName = dayNames[currentDay] || 'Monday';
-        const dateRange = getWeekDateRange();
+        const currentDate = getCurrentDate(dayIndexes[currentDay]);
+        
         headerDay.innerHTML = `
           <div class="day-name">${dayName}</div>
-          <div class="date-range">${dateRange}</div>
+          <div class="current-date">${currentDate}</div>
         `;
       }
+      
+      if (weekRangeLabel) {
+        const dateRange = getWeekDateRange();
+        weekRangeLabel.textContent = dateRange;
+      }
+    }
+
+    function getCurrentDate(dayIndex) {
+      const today = new Date();
+      const dayOfWeek = today.getDay();
+      const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Monday is start
+      
+      const monday = new Date(today);
+      monday.setDate(today.getDate() + diff);
+      
+      const targetDate = new Date(monday);
+      targetDate.setDate(monday.getDate() + dayIndex);
+      
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const month = monthNames[targetDate.getMonth()];
+      const day = targetDate.getDate();
+      
+      return `${month} ${day}`.toUpperCase();
     }
 
     function getWeekDateRange() {
@@ -2982,6 +3292,34 @@
       const endMonth = monthNames[sunday.getMonth()];
       const startDay = monday.getDate();
       const endDay = sunday.getDate();
+      
+      if (startMonth === endMonth) {
+        return `${startMonth} ${startDay}-${endDay}`.toUpperCase();
+      } else {
+        return `${startMonth} ${startDay}-${endMonth} ${endDay}`.toUpperCase();
+      }
+    }
+
+    function getNextWeekDates() {
+      const today = new Date();
+      const dayOfWeek = today.getDay();
+      const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+      
+      const thisMonday = new Date(today);
+      thisMonday.setDate(today.getDate() + diff);
+      
+      const nextMonday = new Date(thisMonday);
+      nextMonday.setDate(thisMonday.getDate() + 7);
+      
+      const nextSunday = new Date(nextMonday);
+      nextSunday.setDate(nextMonday.getDate() + 6);
+      
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      
+      const startMonth = monthNames[nextMonday.getMonth()];
+      const endMonth = monthNames[nextSunday.getMonth()];
+      const startDay = nextMonday.getDate();
+      const endDay = nextSunday.getDate();
       
       if (startMonth === endMonth) {
         return `${startMonth} ${startDay}-${endDay}`.toUpperCase();
@@ -3012,14 +3350,11 @@
       
       task.completed = !task.completed;
       
-      // Update goal task if linked
-      if (task.goalTaskId) {
+      // Update goal task if linked (bidirectional sync)
+      if (task.goalId && task.goalTaskIndex !== undefined) {
         const goal = dashboardState.goals.find(g => g.id === task.goalId);
-        if (goal) {
-          const goalTask = goal.tasks.find(t => t.id === task.goalTaskId);
-          if (goalTask) {
-            goalTask.completed = task.completed;
-          }
+        if (goal && goal.tasks && goal.tasks[task.goalTaskIndex]) {
+          goal.tasks[task.goalTaskIndex].completed = task.completed;
         }
       }
       

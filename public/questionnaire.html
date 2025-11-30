@@ -46,6 +46,139 @@
       opacity: 1;
       pointer-events: all;
     }
+    /* Sidebar Navigation */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 300px;
+  background: #ffffff;
+  border-right: 1px solid rgba(0,0,0,0.1);
+  transform: translateX(-250px);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+}
+
+.sidebar.expanded {
+  transform: translateX(0);
+}
+
+.sidebar.collapsed {
+  transform: translateX(-250px);
+}
+
+.sidebar-toggle {
+  position: absolute;
+  right: 10px;
+  top: 20px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: rgba(0,0,0,0.03);
+  cursor: pointer;
+  font-size: 1.4rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.sidebar-toggle:hover {
+  background: rgba(0,0,0,0.06);
+}
+
+.sidebar-content {
+  padding: 80px 0 40px 0;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.1s;
+}
+
+.sidebar.expanded .sidebar-content {
+  opacity: 1;
+}
+
+/* Sidebar Sections */
+.sidebar-section-top {
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.sidebar-section {
+  padding: 20px 0;
+}
+
+.sidebar-header {
+  padding: 12px 20px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgba(0,0,0,0.3);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+/* Sidebar Items */
+.sidebar-item {
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  color: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-item.active {
+  background: rgba(0,0,0,0.05);
+  font-weight: 500;
+  color: #000000;
+}
+
+.sidebar-item:hover {
+  background: rgba(0,0,0,0.03);
+}
+
+.sidebar-icon {
+  font-size: 1.1rem;
+  width: 24px;
+  display: inline-flex;
+  justify-content: center;
+}
+
+/* Week Items */
+.week-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.8rem;
+  color: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 400;
+}
+
+.week-item.active {
+  background: rgba(0,0,0,0.05);
+  font-weight: 500;
+  color: #000000;
+}
+
+.week-item:hover {
+  background: rgba(0,0,0,0.02);
+}
+
+/* Main Content */
+.main-content {
+  margin-left: 50px;
+  transition: margin-left 0.3s ease;
+}
+
+.main-content.sidebar-open {
+  margin-left: 300px;
+}
 
     /* Step 1: Vision Splash - Cinematic Carousel */
     /* Vision Collage — Full Screen */
@@ -1130,6 +1263,49 @@
 </head>
 
 <body>
+    <!-- Sidebar Navigation -->
+  <div id="sidebar" class="sidebar collapsed">
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    
+    <div class="sidebar-content">
+      <!-- Top Section: Main Navigation -->
+      <div class="sidebar-section-top">
+        <div class="sidebar-item" onclick="openVision()">
+          <span class="sidebar-icon">🎯</span>
+          <span>Vision</span>
+        </div>
+        
+        <div class="sidebar-item" onclick="openMilestones()">
+          <span class="sidebar-icon">🏆</span>
+          <span>Milestones</span>
+        </div>
+        
+        <div class="sidebar-item" onclick="goToDashboard()">
+          <span class="sidebar-icon">📊</span>
+          <div style="flex: 1;">
+            <div>Dashboard</div>
+            <div style="font-size: 0.7rem; color: rgba(0,0,0,0.4); margin-top: 2px;" id="currentWeekLabel">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Gap -->
+      <div style="height: 40px;"></div>
+      
+      <!-- Previous Weeks Section -->
+      <div class="sidebar-section">
+        <div class="sidebar-header">PREVIOUS WEEKS</div>
+        <div id="weeksList">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Wrapper -->
+  <div id="mainContent" class="main-content">
   <!-- The Bigger Picture - Multi-Step Experience -->
   <div class="bigger-picture-experience" id="biggerPictureExp">
     
@@ -1335,6 +1511,143 @@ document.addEventListener("DOMContentLoaded", () => {
     el.textContent = `Planning for: ${getNextWeekDates()}`;
   }
 });
+// ===== WEEK-BASED HELPER FUNCTIONS =====
+
+function getCurrentWeekKey() {
+  const today = new Date();
+  const monday = getMonday(today);
+  return formatDateKey(monday);
+}
+
+function getMonday(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  return new Date(d.setDate(diff));
+}
+
+function formatDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function formatWeekLabel(weekKey) {
+  const startDate = new Date(weekKey);
+  const endDate = new Date(startDate);
+  endDate.setDate(startDate.getDate() + 6);
+  
+  const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 
+                      'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+  
+  const startMonth = monthNames[startDate.getMonth()];
+  const endMonth = monthNames[endDate.getMonth()];
+  const startDay = startDate.getDate();
+  const endDay = endDate.getDate();
+  
+  if (startMonth === endMonth) {
+    return `${startMonth} ${startDay}-${endDay}`;
+  } else {
+    return `${startMonth} ${startDay}-${endMonth} ${endDay}`;
+  }
+}
+
+function getAllWeeks() {
+  const weeks = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith('week-')) {
+      weeks.push(key.replace('week-', ''));
+    }
+  }
+  return weeks.sort().reverse();
+}
+
+// ===== SIDEBAR FUNCTIONS =====
+
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const mainContent = document.getElementById('mainContent');
+  
+  if (sidebar.classList.contains('expanded')) {
+    sidebar.classList.remove('expanded');
+    sidebar.classList.add('collapsed');
+    mainContent.classList.remove('sidebar-open');
+  } else {
+    sidebar.classList.add('expanded');
+    sidebar.classList.remove('collapsed');
+    mainContent.classList.add('sidebar-open');
+    renderWeeksList();
+    updateSidebarCurrentWeek();
+  }
+}
+
+function renderWeeksList() {
+  const weeksList = document.getElementById('weeksList');
+  const allWeeks = getAllWeeks();
+  const currentWeek = localStorage.getItem('currentWeek');
+  
+  // Filter out current week
+  const previousWeeks = allWeeks.filter(w => w !== currentWeek);
+  
+  if (previousWeeks.length === 0) {
+    weeksList.innerHTML = '<div style="padding: 20px; text-align: center; color: rgba(0,0,0,0.3); font-size: 0.75rem;">No previous weeks yet</div>';
+    return;
+  }
+  
+  let html = '';
+  previousWeeks.forEach(weekKey => {
+    const weekLabel = formatWeekLabel(weekKey);
+    
+    html += `
+      <div class="week-item" onclick="switchToWeek('${weekKey}')">
+        <span>${weekLabel}</span>
+      </div>
+    `;
+  });
+  
+  weeksList.innerHTML = html;
+}
+
+function updateSidebarCurrentWeek() {
+  const currentWeek = localStorage.getItem('currentWeek');
+  const label = document.getElementById('currentWeekLabel');
+  if (label && currentWeek) {
+    label.textContent = formatWeekLabel(currentWeek);
+  }
+}
+
+function switchToWeek(weekKey) {
+  const confirmed = confirm(`Switch to week: ${formatWeekLabel(weekKey)}?\n\nThis will leave the questionnaire.`);
+  if (confirmed) {
+    localStorage.setItem('currentWeek', weekKey);
+    window.location.href = 'dashboard.html';
+  }
+}
+
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const mainContent = document.getElementById('mainContent');
+  sidebar.classList.remove('expanded');
+  sidebar.classList.add('collapsed');
+  mainContent.classList.remove('sidebar-open');
+}
+
+function goToDashboard() {
+  const confirmed = confirm('Go to dashboard?\n\nAny unsaved questionnaire progress will be lost.');
+  if (confirmed) {
+    window.location.href = 'dashboard.html';
+  }
+}
+
+function openVision() {
+  alert('Vision board coming soon!');
+}
+
+function openMilestones() {
+  alert('Milestones coming soon!');
+}
 
     // Yearly goals data
     // ============================================
@@ -2158,8 +2471,23 @@ const celebrationQuotes = [
       });
       
       // Save to localStorage
-      localStorage.setItem('weeklyPlanData', JSON.stringify({ formData }));
-      
+      // Get current week
+const currentWeek = localStorage.getItem('currentWeek');
+if (currentWeek) {
+  // Load existing week data
+  const weekKey = `week-${currentWeek}`;
+  const weekData = JSON.parse(localStorage.getItem(weekKey) || '{}');
+  
+  // Update formData
+  weekData.formData = formData;
+  
+  // Save back
+  localStorage.setItem(weekKey, JSON.stringify(weekData));
+  console.log('Saved questionnaire to week:', currentWeek);
+} else {
+  // Fallback to old method
+  localStorage.setItem('weeklyPlanData', JSON.stringify({ formData }));
+}
       // Save current goals for next week
       if (formData.workGoals || formData.lifeGoals) {
         localStorage.setItem('lastWeekGoals', JSON.stringify({
@@ -2272,6 +2600,8 @@ if (document.readyState === 'loading') {
 
 </script>
 
+  </div> <!-- Close mainContent -->
+</body>
 
 </body>
 </html>
