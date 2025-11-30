@@ -46,106 +46,7 @@
       opacity: 1;
       pointer-events: all;
     }
-    /* Sidebar Navigation */
-.sidebar {
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100vh;
-  width: 300px;
-  background: #ffffff;
-  border-right: 1px solid rgba(0,0,0,0.1);
-  transform: translateX(-250px);
-  transition: transform 0.3s ease;
-  z-index: 1000;
-  overflow-y: auto;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.05);
-}
-
-.sidebar.expanded {
-  transform: translateX(0);
-}
-
-.sidebar.collapsed {
-  transform: translateX(-250px);
-}
-
-.sidebar-toggle {
-  position: absolute;
-  right: 10px;
-  top: 20px;
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: rgba(0,0,0,0.03);
-  cursor: pointer;
-  font-size: 1.4rem;
-  border-radius: 6px;
-  transition: all 0.2s;
-  z-index: 10;
-}
-
-.sidebar-toggle:hover {
-  background: rgba(0,0,0,0.06);
-}
-
-.sidebar-content {
-  padding: 80px 0 40px 0;
-  opacity: 0;
-  transition: opacity 0.3s ease 0.1s;
-}
-
-.sidebar.expanded .sidebar-content {
-  opacity: 1;
-}
-
-/* Sidebar Sections */
-.sidebar-section-top {
-  padding: 20px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
-}
-
-.sidebar-section {
-  padding: 20px 0;
-}
-
-.sidebar-header {
-  padding: 12px 20px;
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: rgba(0,0,0,0.3);
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-}
-
-/* Sidebar Items */
-.sidebar-item {
-  padding: 14px 20px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 0.9rem;
-  color: rgba(0,0,0,0.7);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.sidebar-item.active {
-  background: rgba(0,0,0,0.05);
-  font-weight: 500;
-  color: #000000;
-}
-
-.sidebar-item:hover {
-  background: rgba(0,0,0,0.03);
-}
-
-.sidebar-icon {
-  font-size: 1.1rem;
-  width: 24px;
-  display: inline-flex;
-  justify-content: center;
-}
+    
 
 /* Week Items */
 .week-item {
@@ -176,9 +77,6 @@
   transition: margin-left 0.3s ease;
 }
 
-.main-content.sidebar-open {
-  margin-left: 300px;
-}
 
     /* Step 1: Vision Splash - Cinematic Carousel */
     /* Vision Collage — Full Screen */
@@ -937,38 +835,6 @@
       display: grid; grid-template-columns: 280px 1fr; gap: 60px; flex: 1;
     }
 
-    /* Sidebar */
-    .sidebar { position: sticky; top: 40px; height: fit-content; }
-    .section-nav { display: flex; flex-direction: column; gap: 8px; }
-    .section-nav-item {
-      padding: 12px 20px; font-size: 0.85rem; color: rgba(0, 0, 0, 0.5);
-      cursor: pointer; transition: all 0.2s; border-left: 2px solid transparent;
-    }
-    .section-nav-item:hover {
-      color: rgba(0, 0, 0, 0.8); border-left-color: rgba(0, 0, 0, 0.2);
-    }
-    .section-nav-item.active {
-      color: #000000; border-left-color: #000000; font-weight: 500;
-    }
-    .section-nav-item.completed { color: rgba(0, 0, 0, 0.6); }
-
-    .recommended-actions {
-      margin-top: 40px; padding: 20px;
-      background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.08);
-      border-radius: 4px;
-    }
-    .recommended-title {
-      font-size: 0.75rem; color: #000000; text-transform: uppercase;
-      letter-spacing: 1px; margin-bottom: 15px; font-weight: 600;
-    }
-    .recommended-item {
-      margin-bottom: 12px; padding: 10px; background: rgba(0, 0, 0, 0.02);
-      border-left: 2px solid rgba(0, 0, 0, 0.15); font-size: 0.8rem; line-height: 1.4;
-      border-radius: 2px;
-    }
-    .recommended-label {
-      color: rgba(0, 0, 0, 0.5); font-size: 0.7rem; margin-bottom: 4px;
-    }
 
     /* Content Area */
     .content-area { max-width: 800px; }
@@ -1232,7 +1098,6 @@
     /* Responsive */
     @media (max-width: 1200px) {
       .content-wrapper { grid-template-columns: 1fr; gap: 40px; }
-      .sidebar { position: static; }
       .section-nav { flex-direction: row; flex-wrap: wrap; }
       .recommended-actions { margin-top: 20px; }
       .milestones-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
@@ -1263,47 +1128,7 @@
 </head>
 
 <body>
-    <!-- Sidebar Navigation -->
-  <div id="sidebar" class="sidebar collapsed">
-    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
     
-    <div class="sidebar-content">
-      <!-- Top Section: Main Navigation -->
-      <div class="sidebar-section-top">
-        <div class="sidebar-item" onclick="openVision()">
-          <span class="sidebar-icon">🎯</span>
-          <span>Vision</span>
-        </div>
-        
-        <div class="sidebar-item" onclick="openMilestones()">
-          <span class="sidebar-icon">🏆</span>
-          <span>Milestones</span>
-        </div>
-        
-        <div class="sidebar-item" onclick="goToDashboard()">
-          <span class="sidebar-icon">📊</span>
-          <div style="flex: 1;">
-            <div>Dashboard</div>
-            <div style="font-size: 0.7rem; color: rgba(0,0,0,0.4); margin-top: 2px;" id="currentWeekLabel">
-              <!-- Populated by JS -->
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Gap -->
-      <div style="height: 40px;"></div>
-      
-      <!-- Previous Weeks Section -->
-      <div class="sidebar-section">
-        <div class="sidebar-header">PREVIOUS WEEKS</div>
-        <div id="weeksList">
-          <!-- Populated by JavaScript -->
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Main Content Wrapper -->
   <div id="mainContent" class="main-content">
   <!-- The Bigger Picture - Multi-Step Experience -->
@@ -1447,9 +1272,7 @@
       </div>
     </div>
 
-  </div>
-
-  <!-- Milestone Celebration Overlay -->
+      <!-- Milestone Celebration Overlay -->
   <div class="celebration-overlay" id="celebrationOverlay">
     <div class="celebration-content">
       <div class="celebration-particles"></div>
@@ -1458,6 +1281,9 @@
       <div class="celebration-quote" id="celebrationQuote"></div>
     </div>
   </div>
+
+  </div>
+
 
   <!-- Main Container -->
   <div class="main-container">
@@ -1470,16 +1296,6 @@
       </div>
     </div>
 
-    <!-- Two Column Layout -->
-    <div class="content-wrapper">
-      <!-- Sidebar -->
-      <div class="sidebar">
-        <div class="section-nav" id="sectionNav"></div>
-        <div class="recommended-actions" id="recommendedActions" style="display: none;">
-          <div class="recommended-title">📌 Recommended</div>
-          <div id="recommendedContent"></div>
-        </div>
-      </div>
 
       <!-- Main Content -->
       <div class="content-area" id="contentArea"></div>
@@ -1562,91 +1378,6 @@ function getAllWeeks() {
     }
   }
   return weeks.sort().reverse();
-}
-
-// ===== SIDEBAR FUNCTIONS =====
-
-function toggleSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  const mainContent = document.getElementById('mainContent');
-  
-  if (sidebar.classList.contains('expanded')) {
-    sidebar.classList.remove('expanded');
-    sidebar.classList.add('collapsed');
-    mainContent.classList.remove('sidebar-open');
-  } else {
-    sidebar.classList.add('expanded');
-    sidebar.classList.remove('collapsed');
-    mainContent.classList.add('sidebar-open');
-    renderWeeksList();
-    updateSidebarCurrentWeek();
-  }
-}
-
-function renderWeeksList() {
-  const weeksList = document.getElementById('weeksList');
-  const allWeeks = getAllWeeks();
-  const currentWeek = localStorage.getItem('currentWeek');
-  
-  // Filter out current week
-  const previousWeeks = allWeeks.filter(w => w !== currentWeek);
-  
-  if (previousWeeks.length === 0) {
-    weeksList.innerHTML = '<div style="padding: 20px; text-align: center; color: rgba(0,0,0,0.3); font-size: 0.75rem;">No previous weeks yet</div>';
-    return;
-  }
-  
-  let html = '';
-  previousWeeks.forEach(weekKey => {
-    const weekLabel = formatWeekLabel(weekKey);
-    
-    html += `
-      <div class="week-item" onclick="switchToWeek('${weekKey}')">
-        <span>${weekLabel}</span>
-      </div>
-    `;
-  });
-  
-  weeksList.innerHTML = html;
-}
-
-function updateSidebarCurrentWeek() {
-  const currentWeek = localStorage.getItem('currentWeek');
-  const label = document.getElementById('currentWeekLabel');
-  if (label && currentWeek) {
-    label.textContent = formatWeekLabel(currentWeek);
-  }
-}
-
-function switchToWeek(weekKey) {
-  const confirmed = confirm(`Switch to week: ${formatWeekLabel(weekKey)}?\n\nThis will leave the questionnaire.`);
-  if (confirmed) {
-    localStorage.setItem('currentWeek', weekKey);
-    window.location.href = 'dashboard.html';
-  }
-}
-
-function closeSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  const mainContent = document.getElementById('mainContent');
-  sidebar.classList.remove('expanded');
-  sidebar.classList.add('collapsed');
-  mainContent.classList.remove('sidebar-open');
-}
-
-function goToDashboard() {
-  const confirmed = confirm('Go to dashboard?\n\nAny unsaved questionnaire progress will be lost.');
-  if (confirmed) {
-    window.location.href = 'dashboard.html';
-  }
-}
-
-function openVision() {
-  alert('Vision board coming soon!');
-}
-
-function openMilestones() {
-  alert('Milestones coming soon!');
 }
 
     // Yearly goals data
@@ -2016,7 +1747,6 @@ const celebrationQuotes = [
     // Main render function
     function renderAll() {
       renderProgressBar();
-      renderSidebarNav();
       renderCurrentSection();
       updateRecommendedActions();
     }
@@ -2035,16 +1765,6 @@ const celebrationQuotes = [
       document.getElementById('sectionName').textContent = sections[currentIndex].name;
     }
 
-    function renderSidebarNav() {
-      const currentIndex = sections.findIndex(s => s.id === currentSection);
-      const nav = document.getElementById('sectionNav');
-      nav.innerHTML = sections.map((section, i) => {
-        let className = 'section-nav-item';
-        if (i < currentIndex) className += ' completed';
-        if (section.id === currentSection) className += ' active';
-        return `<div class="${className}" onclick="navigateToSection('${section.id}')">${section.name}</div>`;
-      }).join('');
-    }
 
     function navigateToSection(sectionId) {
       saveFormData();

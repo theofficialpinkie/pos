@@ -1054,85 +1054,380 @@
     }
 
     /* Right Sidebar - White Minimal */
+    /* Navigation Sidebar - Sleek & Transparent */
     .sidebar {
       position: fixed;
+      left: 0;
       top: 0;
-      right: -450px;
-      width: 450px;
       height: 100vh;
-      background: #ffffff;
-      border-left: 1px solid rgba(0, 0, 0, 0.08);
-      padding: 40px 30px;
+      width: 280px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-right: 1px solid rgba(0,0,0,0.06);
+      transform: translateX(-230px);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+      z-index: 1000;
       overflow-y: auto;
-      transition: right 0.3s ease;
-      z-index: 200;
-      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.08);
+      box-shadow: 2px 0 20px rgba(0,0,0,0.03);
     }
 
-    .sidebar.active {
-      right: 0;
+    .sidebar.expanded {
+      transform: translateX(0);
     }
 
-    .sidebar-close {
-      position: absolute;
-      top: 20px;
-      right: 20px;
+    .sidebar.collapsed {
+      pointer-events: none;
+      transform: translateX(-230px);
       background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border-right: none;
+      box-shadow: none;
+    }
+
+    .sidebar-toggle {
+      position: absolute;
+      right: 12px;
+      top: 18px;
+      width: 36px;
+      height: 36px;
       border: none;
-      color: rgba(0, 0, 0, 0.4);
-      font-size: 1.5rem;
+      background: rgba(0,0,0,0.04);
       cursor: pointer;
-      transition: all 0.2s;
-      padding: 5px;
-      line-height: 1;
-    }
-
-    .sidebar-close:hover {
-      color: rgba(0, 0, 0, 0.8);
-    }
-
-    .sidebar-title {
       font-size: 1.3rem;
-      font-weight: 500;
-      margin-bottom: 25px;
-      color: #000000;
-      letter-spacing: -0.5px;
-      padding-right: 30px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      z-index: 10;
+      color: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-toggle:hover {
+      background: rgba(0,0,0,0.08);
+      transform: scale(1.05);
+    }
+
+    .sidebar-content {
+      padding: 70px 0 40px 0;
+      opacity: 0;
+      transition: opacity 0.3s ease 0.15s;
+    }
+
+    .sidebar.expanded .sidebar-content {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Sidebar Sections */
+    .sidebar-section-top {
+      padding: 10px 0 20px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
     }
 
     .sidebar-section {
-      margin-bottom: 30px;
+      padding: 20px 0;
+    }
+
+    .sidebar-header {
+      padding: 10px 20px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: rgba(0,0,0,0.3);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+    }
+
+    /* Sidebar Items - Sleek */
+    .sidebar-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+      color: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-item.active {
+      background: rgba(0,0,0,0.04);
+      font-weight: 500;
+      color: #000000;
+      border-left-color: #000000;
+    }
+
+    .sidebar-item:hover {
+      background: rgba(0,0,0,0.02);
+    }
+
+    .sidebar-icon {
+      font-size: 1.1rem;
+      width: 24px;
+      display: inline-flex;
+      justify-content: center;
+      filter: grayscale(0.2);
+    }
+
+    /* Week Items - Minimal */
+    .week-item {
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.8rem;
+      color: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 400;
+    }
+
+    .week-item.active {
+      background: rgba(0,0,0,0.03);
+      font-weight: 500;
+      color: #000000;
+    }
+
+    .week-item:hover {
+      background: rgba(0,0,0,0.02);
+      color: rgba(0,0,0,0.7);
+    }
+
+    /* Main Content Shift */
+    .main-content {
+      margin-left: 0;
+      transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .main-content.sidebar-open {
+      margin-left: 280px;
+    }
+
+    /* Scrollbar for sidebar */
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.1);
+      border-radius: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb:hover {
+      background: rgba(0,0,0,0.2);
+    }
+
+    /* Goal Details Sidebar (Right side overlay - different from nav sidebar) */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .sidebar-panel {
+      width: 400px;
+      height: 100%;
+      background: white;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+      overflow-y: auto;
+      padding: 30px;
+      position: relative;
+    }
+
+    .close-sidebar {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #666;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+
+    .close-sidebar:hover {
+      background: rgba(0,0,0,0.05);
+      color: #000;
+    }
+
+    .sidebar-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      padding-right: 40px;
+    }
+
+    .sidebar-section {
+      margin-bottom: 25px;
     }
 
     .sidebar-label {
-      font-size: 0.7rem;
-      color: rgba(0, 0, 0, 0.5);
-      margin-bottom: 10px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: #666;
     }
 
-    .sidebar-input, .sidebar-textarea, .sidebar-select {
+    .sidebar-image {
       width: 100%;
-      background: #fafafa;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      border-radius: 6px;
-      padding: 12px 15px;
-      color: #000000;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .sidebar-progress {
+      padding: 12px;
+      background: rgba(0,0,0,0.03);
+      border-radius: 8px;
       font-size: 0.9rem;
+    }
+
+    .sidebar-tasks {
+      margin-bottom: 10px;
+    }
+
+    .sidebar-task {
+      padding: 10px;
+      background: rgba(0,0,0,0.02);
+      border-radius: 6px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: grab;
+      transition: all 0.2s;
+    }
+
+    .sidebar-task:hover {
+      background: rgba(0,0,0,0.04);
+      transform: translateX(2px);
+    }
+
+    .sidebar-task.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+    }
+
+    .task-drag-handle {
+      color: rgba(0,0,0,0.3);
+      font-size: 0.9rem;
+      cursor: grab;
+      user-select: none;
+      line-height: 1;
+    }
+
+    .sidebar-task-checkbox {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .sidebar-task-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sidebar-task-name {
+      font-size: 0.9rem;
+      color: #000000;
+      line-height: 1.4;
+    }
+
+    .sidebar-task input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .sidebar-task.completed {
+      opacity: 0.5;
+    }
+
+    .sidebar-task.completed span {
+      text-decoration: line-through;
+    }
+
+    .delete-btn {
+      width: 100%;
+      padding: 12px;
+      background: #ff4444;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 20px;
+    }
+
+    .delete-btn:hover {
+      background: #cc0000;
+    }
+
+    .sidebar-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      background: rgba(0,0,0,0.02);
+      color: #000000;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
+      transition: all 0.2s;
     }
 
     .sidebar-textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      background: rgba(0,0,0,0.02);
+      color: #000000;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
       min-height: 100px;
       resize: vertical;
+      line-height: 1.5;
+      transition: all 0.2s;
+    }
+
+    .sidebar-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      background: rgba(0,0,0,0.02);
+      color: #000000;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
+      transition: all 0.2s;
+      cursor: pointer;
     }
 
     .sidebar-input:focus, .sidebar-textarea:focus, .sidebar-select:focus {
       outline: none;
-      border-color: rgba(0, 0, 0, 0.2);
+      border-color: rgba(0, 0, 0, 0.3);
       background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
     }
 
     .sidebar-image {
@@ -1179,6 +1474,14 @@
       font-size: 0.85rem;
       color: #000000;
       line-height: 1.4;
+
+    }
+
+    .sidebar {
+    overflow: visible;
+}
+    .sidebar-scroll {
+    overflow-y: auto;
     }
 
     .sidebar-task.completed .sidebar-task-name {
@@ -1482,6 +1785,54 @@
 
 <body>
   
+  <!-- Navigation Sidebar -->
+   <div class="sidebar">
+    <div class="sidebar-scroll">
+  <div id="sidebar" class="sidebar collapsed">
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    
+    <div class="sidebar-content">
+      <!-- Top Section: Main Navigation -->
+      <div class="sidebar-section-top">
+        <div class="sidebar-item" onclick="openVision()">
+          <span class="sidebar-icon">🎯</span>
+          <span>Vision</span>
+        </div>
+        
+        <div class="sidebar-item" onclick="openMilestones()">
+          <span class="sidebar-icon">🏆</span>
+          <span>Milestones</span>
+        </div>
+        
+        <div class="sidebar-item active" onclick="closeSidebar()">
+          <span class="sidebar-icon">📊</span>
+          <div style="flex: 1;">
+            <div>Dashboard</div>
+            <div style="font-size: 0.7rem; color: rgba(0,0,0,0.4); margin-top: 2px;" id="currentWeekLabel">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Gap -->
+      <div style="height: 40px;"></div>
+      
+      <!-- Previous Weeks Section -->
+      <div class="sidebar-section">
+        <div class="sidebar-header">PREVIOUS WEEKS</div>
+        <div id="weeksList">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+  <!-- Main Content Wrapper -->
+  <div id="mainContent" class="main-content">
+  
   <!-- Header -->
   <div class="dashboard-header">
     <div class="week-range-label" id="weekRangeLabel">NOV 24-30</div>
@@ -1625,12 +1976,6 @@
 
   </div>
 
-  <!-- Sidebar (for both tabs) -->
-  <div class="sidebar" id="sidebar">
-    <button class="sidebar-close" onclick="closeSidebar()">×</button>
-    <div id="sidebarContent"></div>
-  </div>
-
   <!-- Add Task Modal -->
   <div class="modal-overlay" id="addTaskModal">
     <div class="modal-content">
@@ -1730,6 +2075,135 @@
           description: '',
           tasks: []
         }));
+    }
+
+    // ===== WEEK HELPER FUNCTIONS =====
+
+    function formatWeekLabel(weekKey) {
+      // weekKey format: "2025-11-24" (Sunday)
+      const startDate = new Date(weekKey + 'T00:00:00');
+      const endDate = new Date(startDate);
+      endDate.setDate(endDate.getDate() + 6); // Saturday
+      
+      const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+      
+      const startMonth = months[startDate.getMonth()];
+      const endMonth = months[endDate.getMonth()];
+      const startDay = startDate.getDate();
+      const endDay = endDate.getDate();
+      
+      if (startMonth === endMonth) {
+        return `${startMonth} ${startDay}-${endDay}`;
+      } else {
+        return `${startMonth} ${startDay} - ${endMonth} ${endDay}`;
+      }
+    }
+
+    function getNextWeekKey() {
+      const currentWeek = localStorage.getItem('currentWeek');
+      const currentDate = new Date(currentWeek + 'T00:00:00');
+      const nextWeekDate = new Date(currentDate);
+      nextWeekDate.setDate(nextWeekDate.getDate() + 7);
+      
+      const year = nextWeekDate.getFullYear();
+      const month = String(nextWeekDate.getMonth() + 1).padStart(2, '0');
+      const day = String(nextWeekDate.getDate()).padStart(2, '0');
+      
+      return `${year}-${month}-${day}`;
+    }
+
+    function getWeekEnd(weekKey) {
+      const startDate = new Date(weekKey + 'T00:00:00');
+      const endDate = new Date(startDate);
+      endDate.setDate(endDate.getDate() + 6);
+      
+      const year = endDate.getFullYear();
+      const month = String(endDate.getMonth() + 1).padStart(2, '0');
+      const day = String(endDate.getDate()).padStart(2, '0');
+      
+      return `${year}-${month}-${day}`;
+    }
+
+    // ===== SIDEBAR NAVIGATION FUNCTIONS =====
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const mainContent = document.getElementById('mainContent');
+      
+      if (sidebar.classList.contains('expanded')) {
+        sidebar.classList.remove('expanded');
+        sidebar.classList.add('collapsed');
+        mainContent.classList.remove('sidebar-open');
+      } else {
+        sidebar.classList.add('expanded');
+        sidebar.classList.remove('collapsed');
+        mainContent.classList.add('sidebar-open');
+        renderWeeksList();
+        updateSidebarCurrentWeek();
+      }
+    }
+
+    function renderWeeksList() {
+      const weeksList = document.getElementById('weeksList');
+      if (!weeksList) return;
+      
+      const allWeeks = getAllWeeks();
+      const currentWeek = localStorage.getItem('currentWeek');
+      
+      // Filter to show ONLY weeks BEFORE current week (past weeks only)
+      const previousWeeks = allWeeks.filter(w => w !== currentWeek && w < currentWeek);
+      
+      if (previousWeeks.length === 0) {
+        weeksList.innerHTML = '<div style="padding: 20px; text-align: center; color: rgba(0,0,0,0.3); font-size: 0.75rem;">No previous weeks yet</div>';
+        return;
+      }
+      
+      let html = '';
+      previousWeeks.forEach(weekKey => {
+        const weekLabel = formatWeekLabel(weekKey);
+        
+        html += `
+          <div class="week-item" onclick="switchToWeek('${weekKey}')">
+            <span>${weekLabel}</span>
+          </div>
+        `;
+      });
+      
+      weeksList.innerHTML = html;
+    }
+
+    function updateSidebarCurrentWeek() {
+      const currentWeek = localStorage.getItem('currentWeek');
+      const label = document.getElementById('currentWeekLabel');
+      if (label && currentWeek) {
+        label.textContent = formatWeekLabel(currentWeek);
+      }
+    }
+
+    function switchToWeek(weekKey) {
+      const confirmed = confirm(`Switch to week: ${formatWeekLabel(weekKey)}?`);
+      if (confirmed) {
+        localStorage.setItem('currentWeek', weekKey);
+        location.reload();
+      }
+    }
+
+    function closeSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const mainContent = document.getElementById('mainContent');
+      if (sidebar && mainContent) {
+        sidebar.classList.remove('expanded');
+        sidebar.classList.add('collapsed');
+        mainContent.classList.remove('sidebar-open');
+      }
+    }
+
+    function openVision() {
+      window.location.href = 'questionnaire.html#vision';
+    }
+
+    function openMilestones() {
+      window.location.href = 'questionnaire.html#milestones';
     }
 
     // Initialize
@@ -2632,7 +3106,12 @@
         saveDashboard();
       };
       
-      document.getElementById('sidebar').classList.add('active');
+      // Show the goal sidebar overlay
+      document.getElementById('goalSidebar').style.display = 'flex';
+    }
+
+    function closeGoalSidebar() {
+      document.getElementById('goalSidebar').style.display = 'none';
     }
 
     function renderGoalTasks(goal) {
@@ -2652,22 +3131,23 @@
         taskEl.dataset.goalId = goal.id;
         taskEl.dataset.taskIndex = index;
         
-        // Drag event handlers
-        taskEl.addEventListener('dragstart', handleTaskDragStart);
-        taskEl.addEventListener('dragend', handleTaskDragEnd);
-        
         const scheduledDay = task.scheduledDay || 'none';
         const scheduledText = scheduledDay !== 'none' ? capitalizeDay(scheduledDay) : '';
         
+        // Set innerHTML FIRST
         taskEl.innerHTML = `
           <div class="task-drag-handle">⋮⋮</div>
           <input type="checkbox" class="sidebar-task-checkbox" ${task.completed ? 'checked' : ''} 
-                 onchange="toggleGoalTask('${goal.id}', ${index})" />
+                 onchange="toggleGoalTask('${goal.id}', ${index}); event.stopPropagation();" />
           <div class="sidebar-task-content">
             <div class="sidebar-task-name">${task.name}</div>
             ${scheduledText ? `<div style="font-size: 0.7rem; color: rgba(0, 0, 0, 0.4); margin-top: 4px;">→ ${scheduledText}</div>` : ''}
           </div>
         `;
+        
+        // Add drag event handlers AFTER innerHTML
+        taskEl.addEventListener('dragstart', handleTaskDragStart);
+        taskEl.addEventListener('dragend', handleTaskDragEnd);
         
         container.appendChild(taskEl);
       });
@@ -2681,24 +3161,34 @@
     let draggedTaskData = null;
     let draggedWeeklyTaskData = null;
 
-    function handleTaskDragStart(e) {
-      const taskEl = e.currentTarget;
-      taskEl.classList.add('dragging');
-      
-      const goalId = taskEl.dataset.goalId;
-      const taskIndex = parseInt(taskEl.dataset.taskIndex);
-      
-      draggedTaskData = { goalId, taskIndex };
-      
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/html', taskEl.innerHTML);
-    }
 
     function handleTaskDragEnd(e) {
+      console.log('🎯 DRAG END - Goal Task');
       e.currentTarget.classList.remove('dragging');
     }
 
     // Weekly task drag handlers
+
+function handleTaskDragStart(e) {
+  const taskEl = e.currentTarget;
+  taskEl.classList.add('dragging');
+
+  const goalId = taskEl.dataset.goalId;
+  const taskIndex = parseInt(taskEl.dataset.taskIndex);
+
+  // Required data for dropping later
+  draggedTaskData = { goalId, taskIndex };
+
+  // Required for HTML5 DnD to actually work
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', `${goalId}:${taskIndex}`);
+
+  console.log('🎯 DRAG START (GOAL TASK) →', draggedTaskData);
+}
+
+
+
+
     function handleWeeklyTaskDragStart(e) {
       const taskEl = e.currentTarget;
       taskEl.classList.add('dragging');
@@ -2709,12 +3199,14 @@
       draggedWeeklyTaskData = { taskId, weekDay };
       
       e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/html', taskEl.innerHTML);
+      e.dataTransfer.setData('text/plain', taskEl.innerHTML);
     }
 
     function handleWeeklyTaskDragEnd(e) {
       e.currentTarget.classList.remove('dragging');
     }
+
+    
 
     // Goal card drop handlers (for backlog)
     function handleGoalCardDragOver(e) {
@@ -2776,6 +3268,8 @@
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
       
+      console.log('📥 DRAG OVER - Tasks List');
+      
       const tasksList = e.currentTarget;
       tasksList.classList.add('drag-over');
       
@@ -2788,6 +3282,8 @@
 
     function handleDragLeave(e) {
       const tasksList = e.currentTarget;
+      
+      console.log('📥 DRAG LEAVE - Tasks List');
       
       // Only remove if we're actually leaving the tasksList, not a child
       if (!tasksList.contains(e.relatedTarget)) {
@@ -2803,6 +3299,9 @@
     function handleDrop(e) {
       e.preventDefault();
       
+      console.log('🎉 DROP - Tasks List');
+      console.log('  Current draggedTaskData:', draggedTaskData);
+      
       const tasksList = e.currentTarget;
       tasksList.classList.remove('drag-over');
       
@@ -2811,13 +3310,22 @@
         emptyState.classList.remove('drag-over');
       }
       
-      if (!draggedTaskData) return;
+      if (!draggedTaskData) {
+        console.log('  ❌ No draggedTaskData!');
+        return;
+      }
       
       const { goalId, taskIndex } = draggedTaskData;
+      console.log('  Processing drop for goal:', goalId, 'task:', taskIndex);
+      
       const goal = dashboardState.goals.find(g => g.id === goalId);
-      if (!goal || !goal.tasks[taskIndex]) return;
+      if (!goal || !goal.tasks[taskIndex]) {
+        console.log('  ❌ Goal or task not found!');
+        return;
+      }
       
       const task = goal.tasks[taskIndex];
+      console.log('  ✅ Task found:', task.name);
       
       // Update the task's scheduled day
       task.scheduledDay = currentDay;
@@ -2837,17 +3345,20 @@
       }
       
       dashboardState.weeklyTasks[currentDay].push(weeklyTask);
+      console.log('  ✅ Added to weekly tasks for', currentDay);
       
       saveDashboard();
       renderTasks();
       renderMiniGoalCubes();
       
-      // Update sidebar if it's open for this goal
-      if (document.getElementById('sidebar').classList.contains('active')) {
+      // Update goal sidebar if it's open for this goal
+      const goalSidebar = document.getElementById('goalSidebar');
+      if (goalSidebar && goalSidebar.style.display === 'flex') {
         renderGoalTasks(goal);
       }
       
       draggedTaskData = null;
+      console.log('  ✅ Drop complete!');
     }
 
     function handleAddGoalTask(e, goalId) {
@@ -2946,7 +3457,7 @@
       
       saveDashboard();
       renderGoals();
-      closeSidebar();
+      closeGoalSidebar();
     }
 
     function openAnchorSidebar(anchorId) {
@@ -2977,7 +3488,7 @@
       }
       
       document.getElementById('sidebarContent').innerHTML = html;
-      document.getElementById('sidebar').classList.add('active');
+      document.getElementById('goalSidebar').style.display = 'flex';
     }
 
     function incrementAnchor(anchorId) {
@@ -3022,6 +3533,18 @@
       console.log('Rendering tasks for:', currentDay);
       const tasks = dashboardState.weeklyTasks[currentDay] || [];
       console.log('Tasks for', currentDay, ':', tasks);
+      
+      // Re-initialize drop zone (critical for drag & drop to work)
+      requestAnimationFrame(() => {
+      const freshTasksList = document.getElementById('tasksList');
+      if (!freshTasksList) return;
+
+    freshTasksList.addEventListener('dragover', handleDragOver);
+    freshTasksList.addEventListener('dragleave', handleDragLeave);
+    freshTasksList.addEventListener('drop', handleDrop);
+
+    console.log('🔥 Drop zone re-attached to fresh tasksList node');
+    });
       
       // EMPTY STATE: Hide planner, show empty state container with large grid
       if (tasks.length === 0) {
@@ -3645,7 +4168,7 @@
         renderTasks();
       };
       
-      document.getElementById('sidebar').classList.add('active');
+      document.getElementById('goalSidebar').style.display = 'flex';
     }
 
     function deleteTask(taskId) {
@@ -3654,11 +4177,7 @@
       dashboardState.weeklyTasks[currentDay] = dashboardState.weeklyTasks[currentDay].filter(t => t.id !== taskId);
       saveDashboard();
       renderTasks();
-      closeSidebar();
-    }
-
-    function closeSidebar() {
-      document.getElementById('sidebar').classList.remove('active');
+      closeGoalSidebar();
     }
 
     // Goal Image Modal
@@ -3764,6 +4283,16 @@
     initializeDashboard();
     initializeDropZone();
   </script>
+
+  <!-- Goal Details Sidebar (Different from Navigation Sidebar) -->
+  <div id="goalSidebar" class="sidebar-overlay" style="display: none;">
+    <div class="sidebar-panel">
+      <button class="close-sidebar" onclick="closeGoalSidebar()">×</button>
+      <div id="sidebarContent"></div>
+    </div>
+  </div>
+
+  </div> <!-- Close mainContent -->
 
 </body>
 </html>
