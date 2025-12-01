@@ -802,6 +802,7 @@
       border-radius: 6px;
       cursor: move;
       transition: all 0.2s;
+      pointer-events: auto;
     }
 
     .sidebar-task:hover {
@@ -818,6 +819,8 @@
       font-size: 1rem;
       cursor: move;
       user-select: none;
+      pointer-events: auto;
+      cursor: grab;
     }
 
     /* Drop zone highlighting */
@@ -1236,6 +1239,15 @@
       display: flex;
       justify-content: flex-end;
     }
+    #goalSidebar.sidebar-overlay {
+    pointer-events: none !important;
+  }
+
+/* The right-hand panel INSIDE the overlay SHOULD receive clicks */
+    #goalSidebar .sidebar-panel {
+    pointer-events: auto !important;
+  }
+
 
     .sidebar-panel {
       width: 400px;
@@ -1849,7 +1861,9 @@
     <div class="planner-section" id="plannerSection">
       
       <!-- Left: Tasks Column (hidden when empty) -->
-      <div class="tasks-column" id="tasksColumn">
+      <div 
+  class="tasks-column" 
+  id="tasksColumn">
         <div class="tasks-list" id="tasksList"></div>
         
         <!-- Inline Task Input Container -->
@@ -3161,12 +3175,6 @@
     let draggedTaskData = null;
     let draggedWeeklyTaskData = null;
 
-
-    function handleTaskDragEnd(e) {
-      console.log('🎯 DRAG END - Goal Task');
-      e.currentTarget.classList.remove('dragging');
-    }
-
     // Weekly task drag handlers
 
 function handleTaskDragStart(e) {
@@ -3176,37 +3184,56 @@ function handleTaskDragStart(e) {
   const goalId = taskEl.dataset.goalId;
   const taskIndex = parseInt(taskEl.dataset.taskIndex);
 
-  // Required data for dropping later
   draggedTaskData = { goalId, taskIndex };
 
-  // Required for HTML5 DnD to actually work
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('text/plain', `${goalId}:${taskIndex}`);
 
-  console.log('🎯 DRAG START (GOAL TASK) →', draggedTaskData);
+  console.log('🔥 DRAG START - GOAL TASK', draggedTaskData);
+}
+
+function initializeDropZone() {
+  const dropZone = document.getElementById('tasksColumn');
+  if (!dropZone) {
+    console.error("❌ #tasksColumn not found for drop zone");
+    return;
+  }
+
+  dropZone.addEventListener('dragover', handleDragOver);
+  dropZone.addEventListener('dragleave', handleDragLeave);
+  dropZone.addEventListener('drop', handleDrop);
+
+  console.log("🔥 Drop zone attached to #tasksColumn");
+}
+
+
+function handleWeeklyTaskDragStart(e) {
+  const taskEl = e.currentTarget;
+  taskEl.classList.add('dragging');
+
+  const taskId = taskEl.dataset.taskId;
+  const weekDay = taskEl.dataset.weekDay;
+
+  draggedWeeklyTaskData = { taskId, weekDay };
+
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', taskEl.innerHTML);
+
+  console.log('🔥 DRAG START - WEEKLY TASK', draggedWeeklyTaskData);
 }
 
 
 
+function handleWeeklyTaskDragEnd(e) {
+  console.log('🧊 DRAG END - WEEKLY TASK');
+  e.currentTarget.classList.remove('dragging');
+}
 
-    function handleWeeklyTaskDragStart(e) {
-      const taskEl = e.currentTarget;
-      taskEl.classList.add('dragging');
-      
-      const taskId = taskEl.dataset.taskId;
-      const weekDay = taskEl.dataset.weekDay;
-      
-      draggedWeeklyTaskData = { taskId, weekDay };
-      
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/plain', taskEl.innerHTML);
-    }
+function handleTaskDragEnd(e) {
+  console.log('🧊 DRAG END - GOAL TASK');
+  e.currentTarget.classList.remove('dragging');
+}
 
-    function handleWeeklyTaskDragEnd(e) {
-      e.currentTarget.classList.remove('dragging');
-    }
-
-    
 
     // Goal card drop handlers (for backlog)
     function handleGoalCardDragOver(e) {
@@ -3254,66 +3281,172 @@ function handleTaskDragStart(e) {
       renderTasks();
     }
 
-    // Initialize drop zone on tasks list
-    function initializeDropZone() {
-      const tasksList = document.getElementById('tasksList');
-      if (!tasksList) return;
-      
-      tasksList.addEventListener('dragover', handleDragOver);
-      tasksList.addEventListener('dragleave', handleDragLeave);
-      tasksList.addEventListener('drop', handleDrop);
-    }
+    // Prevent default dragover and drop on empty input
 
-    function handleDragOver(e) {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
-      
-      console.log('📥 DRAG OVER - Tasks List');
-      
-      const tasksList = e.currentTarget;
-      tasksList.classList.add('drag-over');
-      
-      // Also add to empty state if present
-      const emptyState = tasksList.querySelector('.empty-state');
-      if (emptyState) {
-        emptyState.classList.add('drag-over');
-      }
-    }
+    const emptyInput = document.getElementById("emptyTaskInput");
+if (emptyInput) {
+  emptyInput.addEventListener("dragover", e => e.preventDefault());
+  emptyInput.addEventListener("drop", e => e.preventDefault());
+}
+
+    // Initialize drop zone on tasks list
+function handleDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+
+  console.log('📥 DRAG OVER - Tasks Column');
+  console.log("OVER:", e.target);
+
+  const dropZone = e.currentTarget;
+  dropZone.classList.add('drag-over');
+
+  // Visual highlight inside tasks list if present
+  const tasksList = document.getElementById('tasksList');
+  if (tasksList) {
+    tasksList.classList.add('drag-over');
+  }
+
+  const emptyState = dropZone.querySelector('.empty-state');
+  if (emptyState) {
+    emptyState.classList.add('drag-over');
+  }
+}
 
     function handleDragLeave(e) {
-      const tasksList = e.currentTarget;
-      
-      console.log('📥 DRAG LEAVE - Tasks List');
-      
-      // Only remove if we're actually leaving the tasksList, not a child
-      if (!tasksList.contains(e.relatedTarget)) {
-        tasksList.classList.remove('drag-over');
-        
-        const emptyState = tasksList.querySelector('.empty-state');
-        if (emptyState) {
-          emptyState.classList.remove('drag-over');
-        }
-      }
+  const dropZone = e.currentTarget;
+
+  console.log('📥 DRAG LEAVE - Tasks Column');
+  
+   // Only remove highlight if pointer really left the column
+  if (!dropZone.contains(e.relatedTarget)) {
+    dropZone.classList.remove('drag-over');
+
+    const tasksList = document.getElementById('tasksList');
+    if (tasksList) {
+      tasksList.classList.remove('drag-over');
     }
 
+    const emptyState = dropZone.querySelector('.empty-state');
+    if (emptyState) {
+      emptyState.classList.remove('drag-over');
+    }
+  }
+}
+
     function handleDrop(e) {
-      e.preventDefault();
-      
-      console.log('🎉 DROP - Tasks List');
-      console.log('  Current draggedTaskData:', draggedTaskData);
-      
-      const tasksList = e.currentTarget;
-      tasksList.classList.remove('drag-over');
-      
-      const emptyState = tasksList.querySelector('.empty-state');
-      if (emptyState) {
-        emptyState.classList.remove('drag-over');
-      }
-      
-      if (!draggedTaskData) {
-        console.log('  ❌ No draggedTaskData!');
-        return;
-      }
+  e.preventDefault();
+  e.stopPropagation();
+
+  // Prevent Safari text insertion into inputs
+  if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {
+    e.target.blur();
+  }
+
+  console.log('🎉 DROP ON TASKS COLUMN');
+  console.log('  draggedTaskData:', draggedTaskData);
+  console.log('  draggedWeeklyTaskData:', draggedWeeklyTaskData);
+
+  const dropZone = e.currentTarget;
+  dropZone.classList.remove('drag-over');
+
+  const tasksList = document.getElementById('tasksList');
+  if (tasksList) {
+    tasksList.classList.remove('drag-over');
+  }
+
+  const emptyState = dropZone.querySelector('.empty-state');
+  if (emptyState) {
+    emptyState.classList.remove('drag-over');
+  }
+
+  if (!draggedTaskData && !draggedWeeklyTaskData) {
+    console.log('❌ Nothing being dragged!');
+    return;
+  }
+
+  const isEmptyState = tasksList && tasksList.classList.contains("empty-state");
+
+  // ⭐ NEW: needed DOM references
+  const emptyStateContainer = document.getElementById("emptyStateContainer");
+  const tasksColumn = document.getElementById("tasksColumn");
+  const plannerSection = document.getElementById("plannerSection");
+
+  // ⭐ EMPTY STATE LOGIC
+  if (isEmptyState && draggedTaskData) {
+    console.log("🌟 EMPTY STATE DROP — creating first task");
+
+    const { goalId, taskIndex } = draggedTaskData;
+    const goal = dashboardState.goals.find(g => g.id === goalId);
+    if (!goal) return;
+
+    const task = goal.tasks[taskIndex];
+
+    // Create weekly task
+    const weeklyTask = {
+      id: generateId(),
+      name: task.name,
+      goalId,
+      goalTaskIndex: taskIndex,
+      completed: false,
+      description: ""
+    };
+
+    if (!dashboardState.weeklyTasks[currentDay]) {
+      dashboardState.weeklyTasks[currentDay] = [];
+    }
+
+    dashboardState.weeklyTasks[currentDay].push(weeklyTask);
+
+    task.scheduledDay = currentDay;
+
+    console.log("✅ Created weekly task in empty state:", weeklyTask);
+
+    // Switch UI from empty → full planner
+    if (emptyStateContainer) emptyStateContainer.style.display = "none";
+    if (tasksColumn) tasksColumn.style.display = "flex";
+    if (plannerSection) plannerSection.style.display = "flex";
+
+    saveDashboard();
+    renderTasks();
+    renderMiniGoalCubes();
+
+    draggedTaskData = null;
+    return;
+  }
+
+  // ======================
+  // Weekly Task → Weekly Task Drop
+  // ======================
+  if (draggedWeeklyTaskData) {
+    console.log("📌 Weekly task drop detected");
+
+    const { taskId, weekDay } = draggedWeeklyTaskData;
+
+    const sourceList = dashboardState.weeklyTasks[weekDay] || [];
+    const index = sourceList.findIndex(t => t.id === taskId);
+    if (index === -1) {
+      console.log("❌ Weekly task not found");
+      draggedWeeklyTaskData = null;
+      return;
+    }
+
+    const task = sourceList[index];
+
+    sourceList.splice(index, 1);
+
+    if (!dashboardState.weeklyTasks[currentDay]) {
+      dashboardState.weeklyTasks[currentDay] = [];
+    }
+    dashboardState.weeklyTasks[currentDay].push(task);
+
+    console.log("✅ Weekly task moved from", weekDay, "→", currentDay);
+
+    draggedWeeklyTaskData = null;
+    saveDashboard();
+    renderTasks();
+    return;
+  }
+
       
       const { goalId, taskIndex } = draggedTaskData;
       console.log('  Processing drop for goal:', goalId, 'task:', taskIndex);
@@ -3534,29 +3667,26 @@ function handleTaskDragStart(e) {
       const tasks = dashboardState.weeklyTasks[currentDay] || [];
       console.log('Tasks for', currentDay, ':', tasks);
       
-      // Re-initialize drop zone (critical for drag & drop to work)
-      requestAnimationFrame(() => {
-      const freshTasksList = document.getElementById('tasksList');
-      if (!freshTasksList) return;
-
-    freshTasksList.addEventListener('dragover', handleDragOver);
-    freshTasksList.addEventListener('dragleave', handleDragLeave);
-    freshTasksList.addEventListener('drop', handleDrop);
-
-    console.log('🔥 Drop zone re-attached to fresh tasksList node');
-    });
       
       // EMPTY STATE: Hide planner, show empty state container with large grid
-      if (tasks.length === 0) {
-        tasksList.classList.add('empty-state');
-        tasksColumn.style.display = 'none';
-        plannerSection.style.display = 'none';
-        if (emptyStateContainer) emptyStateContainer.style.display = 'block';
-        if (emptyGoalsGrid) emptyGoalsGrid.innerHTML = renderGoalsGrid(true); // true = large
-        
-        updateDayLabel();
-        return;
-      }
+    if (tasks.length === 0) {
+    tasksList.classList.add('empty-state');
+    tasksColumn.style.display = 'none';
+    plannerSection.style.display = 'none';
+    if (emptyStateContainer) emptyStateContainer.style.display = 'block';
+    if (emptyGoalsGrid) emptyGoalsGrid.innerHTML = renderGoalsGrid(true);
+
+    // ⭐ Correct: attach events to empty-state container, not tasksColumn
+    const dropZone = emptyStateContainer; 
+    if (dropZone) {
+        dropZone.addEventListener("dragover", handleDragOver);
+        dropZone.addEventListener("drop", handleDrop);
+        dropZone.addEventListener("dragleave", handleDragLeave);
+    }
+
+    updateDayLabel();
+    return;
+}
       
       // HAS TASKS: Show planner, hide empty state, two-column layout
       tasksList.classList.remove('empty-state');
