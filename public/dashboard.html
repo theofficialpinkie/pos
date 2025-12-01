@@ -2019,6 +2019,7 @@
 
   
 <script>
+ 
 // ===============================
 // 1. DETERMINE CURRENT WEEK FOR DASHBOARD
 // ===============================
@@ -2041,9 +2042,10 @@ if (!currentWeek) {
   monday.setDate(today.getDate() + mondayOffset);
   currentWeek = monday.toISOString().split("T")[0]; // YYYY-MM-DD
   localStorage.setItem("currentWeek", currentWeek);
+
 }
 
-const weekKey = `week-${currentWeek}`;
+const weekKey = localStorage.getItem("currentWeek"); 
 
 document.addEventListener("DOMContentLoaded", () => {
   const weekLabelEl = document.getElementById("weekRangeLabel");
@@ -2058,32 +2060,21 @@ document.addEventListener("DOMContentLoaded", () => {
 // ===============================
 // 2. LOAD QUESTIONNAIRE FOR THIS WEEK
 // ===============================
-const weekData = JSON.parse(localStorage.getItem(weekKey) || "{}");
+// 2. LOAD QUESTIONNAIRE FOR THIS WEEK
+// ===============================
+const weekData = JSON.parse(localStorage.getItem(`week-${weekKey}`) || "{}");
 const questionnaireData = weekData.formData || {};
 
 // ===============================
 // 3. LOAD DASHBOARD STATE FOR THIS WEEK
 // ===============================
-let dashboardState = JSON.parse(
-  localStorage.getItem(`dashboardState-${weekKey}`) || "null"
-);
+let dashboardState = JSON.parse(localStorage.getItem(`dashboardState-${weekKey}`));
+console.log("🔥 RAW DASHBOARD BEFORE INIT:", JSON.parse(localStorage.getItem(`dashboardState-${weekKey}`)));
 
-// (One–time migration from old global dashboardState, if it exists)
-if (!dashboardState) {
-  const legacy = JSON.parse(localStorage.getItem("dashboardState") || "null");
-  if (legacy) {
-    dashboardState = legacy;
-    localStorage.setItem(`dashboardState-${weekKey}`, JSON.stringify(legacy));
-    console.log("🔄 Migrated old dashboardState →", `dashboardState-${weekKey}`);
-  }
-}
 
+// ===============================
 // Always save per-week
-function saveDashboard() {
-  localStorage.setItem(`dashboardState-${weekKey}`, JSON.stringify(dashboardState));
-}
-
-
+// ===============================
 
   // ===============================
   // 4. WEEK LABEL HELPERS
@@ -2310,56 +2301,19 @@ let currentDay = getDayOfWeekFromDate(weekStartDate);
   // ===============================
   // 8. DASHBOARD INITIALIZATION
   // ===============================
-  function initializeDashboard() {
-    const needsReset = dashboardState && (
-      !dashboardState.goals ||
-      !dashboardState.weeklyTasks ||
-      dashboardState.weeklyBlocks
-    );
+function initializeDashboard() {
+  // If this week has NO dashboard stored → build a fresh one
+  if (!dashboardState) {
+    console.log("🆕 Creating new dashboard for", weekKey);
+    console.log("🔥 RAW DASHBOARD BEFORE INIT:", JSON.parse(localStorage.getItem(`dashboardState-${weekKey}`)));
 
-    if (!dashboardState || needsReset) {
-      console.log('Initializing fresh dashboard state for', weekKey);
-      dashboardState = {
-        goals: [
-          ...parseGoalsFromQuestionnaire(questionnaireData.workGoals),
-          ...parseGoalsFromQuestionnaire(questionnaireData.lifeGoals)
-        ],
-        weeklyTasks: {
-          monday: [],
-          tuesday: [],
-          wednesday: [],
-          thursday: [],
-          friday: [],
-          saturday: [],
-          sunday: []
-        }
-      };
-      saveDashboard();
-    }
 
-    if (dashboardState.goals) {
-      dashboardState.goals = dashboardState.goals.map(goal => ({
-        ...goal,
-        tasks: goal.tasks || []
-      }));
-
-      const backlogGoal = dashboardState.goals.find(g => g.id === 'backlog');
-      if (!backlogGoal) {
-        dashboardState.goals.push({
-          id: 'backlog',
-          name: 'Backlog',
-          description: 'Tasks to do later',
-          image: '',
-          completed: false,
-          tasks: [],
-          isBacklog: true
-        });
-        saveDashboard();
-      }
-    }
-
-    if (!dashboardState.weeklyTasks) {
-      dashboardState.weeklyTasks = {
+    dashboardState = {
+      goals: [
+        ...parseGoalsFromQuestionnaire(questionnaireData.workGoals || ""),
+        ...parseGoalsFromQuestionnaire(questionnaireData.lifeGoals || "")
+      ],
+      weeklyTasks: {
         monday: [],
         tuesday: [],
         wednesday: [],
@@ -2367,16 +2321,39 @@ let currentDay = getDayOfWeekFromDate(weekStartDate);
         friday: [],
         saturday: [],
         sunday: []
-      };
-      saveDashboard();
-    }
+      }
+    };
 
-    console.log('Dashboard initialized:', weekKey, dashboardState);
-    renderTasks();
-    initializeInlineTaskInput();
-    initializeEmptyStateInput();
-    initializeQuickActions();
+    saveDashboard();
   }
+
+  // Add 'backlog' goal if missing
+  if (!dashboardState.goals.find(g => g.id === "backlog")) {
+    dashboardState.goals.push({
+      id: "backlog",
+      name: "Backlog",
+      description: "Tasks to do later",
+      image: "",
+      completed: false,
+      tasks: [],
+      isBacklog: true
+    });
+    saveDashboard();
+  }
+
+  // Ensure each goal has a tasks array
+  dashboardState.goals = dashboardState.goals.map(g => ({
+    ...g,
+    tasks: g.tasks || []
+  }));
+
+  console.log("Dashboard initialized for week:", weekKey, dashboardState);
+
+  renderTasks();
+  initializeInlineTaskInput();
+  initializeEmptyStateInput();
+  initializeQuickActions();
+}
 
 
     // QUICK ACTIONS
@@ -3752,6 +3729,7 @@ function handleDragOver(e) {
       console.log('Rendering tasks for:', currentDay);
       const tasks = dashboardState.weeklyTasks[currentDay] || [];
       console.log('Tasks for', currentDay, ':', tasks);
+      console.log("🔥 REAL weekKey:", weekKey);
       
       
       // EMPTY STATE: Hide planner, show empty state container with large grid
@@ -4453,9 +4431,9 @@ function handleDragOver(e) {
       }
     }
 
-    function saveDashboard() {
-      localStorage.setItem('dashboardState', JSON.stringify(dashboardState));
-    }
+  function saveDashboard() {
+  localStorage.setItem(`dashboardState-${weekKey}`, JSON.stringify(dashboardState));
+}
     
       
 
