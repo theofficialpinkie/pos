@@ -809,6 +809,110 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Navigation Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100%;
+  background: white;
+  border-right: 1px solid #ddd;
+  transform: translateX(-260px);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+.sidebar.expanded {
+  transform: translateX(0);
+}
+
+.sidebar.collapsed {
+  pointer-events: auto;
+  transform: translateX(-260px);
+  background: transparent;
+  border-right: none;
+  box-shadow: none;
+}
+
+/* Toggle Button */
+.sidebar-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1100;
+  background: black;
+  color: white;
+  font-size: 18px;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.sidebar-toggle:hover {
+  background: rgba(0,0,0,0.08);
+  transform: scale(1.05);
+}
+
+/* Content inside sidebar */
+.sidebar-content {
+  margin-top: 70px;
+  padding: 20px;
+}
+
+.sidebar-section-top {
+  padding: 10px 0 20px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.sidebar-section {
+  padding: 20px 0;
+}
+
+.sidebar-header {
+  padding: 10px 20px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgba(0,0,0,0.3);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+.sidebar-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  color: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-left: 3px solid transparent;
+}
+
+.sidebar-item.active {
+  background: rgba(0,0,0,0.04);
+  font-weight: 500;
+  color: #000;
+  border-left-color: #000;
+}
+
+.week-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.85rem;
+  color: rgba(0,0,0,0.7);
+}
+
+.week-item:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+
+
+
     /* Main Container */
     .main-container {
       max-width: 1400px; margin: 0 auto; padding: 40px 60px;
@@ -1128,6 +1232,34 @@
 </head>
 
 <body>
+
+  <!-- Sidebar Toggle Button -->
+<button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+<!-- Navigation Sidebar -->
+<div id="sidebar" class="sidebar collapsed">
+  <div class="sidebar-content">
+
+    <!-- Current Week -->
+    <div class="sidebar-section-top">
+      <div class="sidebar-header">Current Week</div>
+      <div id="currentWeekLabel" class="sidebar-item active">Loading…</div>
+    </div>
+
+    <!-- Next Week -->
+    <div class="sidebar-section">
+      <div class="sidebar-header">Next Week</div>
+      <div id="nextWeekLabel"></div>
+    </div>
+
+    <!-- Previous Weeks -->
+    <div class="sidebar-section">
+      <div class="sidebar-header">Previous Weeks</div>
+      <div id="weeksList"></div>
+    </div>
+
+  </div>
+</div>
     
   <!-- Main Content Wrapper -->
   <div id="mainContent" class="main-content">
@@ -2291,6 +2423,103 @@ function generateDashboard() {
 }
 
     // Don't auto-render on load - wait for ritual
+
+    function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const mainContent = document.getElementById('mainContent');
+
+  if (sidebar.classList.contains('expanded')) {
+    sidebar.classList.remove('expanded');
+    sidebar.classList.add('collapsed');
+    mainContent.classList.remove('sidebar-open');
+  } else {
+    sidebar.classList.add('expanded');
+    sidebar.classList.remove('collapsed');
+    mainContent.classList.add('sidebar-open');
+
+    updateSidebarCurrentWeek();
+    renderWeeksList();
+    renderNextWeek();
+  }
+}
+
+function renderWeeksList() {
+  const weeksList = document.getElementById('weeksList');
+  if (!weeksList) return;
+
+  const allWeeks = getAllWeeks();
+  const cw = localStorage.getItem('currentWeek');
+
+  const previousWeeks = allWeeks
+    .filter(w => new Date(w) < new Date(cw))
+    .sort((a, b) => new Date(b) - new Date(a));
+
+  if (previousWeeks.length === 0) {
+    weeksList.innerHTML =
+      '<div style="padding:20px;text-align:center;color:rgba(0,0,0,0.3);font-size:0.75rem;">No previous weeks yet</div>';
+    return;
+  }
+
+  let html = '';
+  previousWeeks.forEach(weekKey => {
+    html += `
+      <div class="week-item" onclick="switchToWeek('${weekKey}')">
+        <span>${formatWeekLabel(weekKey)}</span>
+      </div>
+    `;
+  });
+
+  weeksList.innerHTML = html;
+}
+
+function renderNextWeek() {
+  const nextWeekDiv = document.getElementById("nextWeekLabel");
+  if (!nextWeekDiv) return;
+
+  const nextWeekKey = getNextWeekKey();
+  const allWeeks = getAllWeeks();
+
+  if (allWeeks.includes(nextWeekKey)) {
+    const label = formatWeekLabel(nextWeekKey);
+    nextWeekDiv.innerHTML = `
+      <div class="week-item" onclick="switchToWeek('${nextWeekKey}')">
+        <span>${label}</span>
+      </div>
+    `;
+  } else {
+    nextWeekDiv.innerHTML = `
+      <div style="padding: 10px 20px; color: rgba(0,0,0,0.2); font-size: 0.75rem;">
+        No next week yet
+      </div>
+    `;
+  }
+}
+
+function updateSidebarCurrentWeek() {
+  const cw = localStorage.getItem('currentWeek');
+  const label = document.getElementById('currentWeekLabel');
+  if (label && cw) {
+    label.textContent = formatWeekLabel(cw);
+  }
+}
+
+function switchToWeek(weekKey) {
+  const confirmed = confirm(`Switch to week: ${formatWeekLabel(weekKey)}?`);
+  if (confirmed) {
+    localStorage.setItem('currentWeek', weekKey);
+    localStorage.setItem("currentDay", "monday");
+    location.reload();
+  }
+}
+
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const mainContent = document.getElementById('mainContent');
+  sidebar.classList.remove('expanded');
+  sidebar.classList.add('collapsed');
+  mainContent.classList.remove('sidebar-open');
+}
+
 
   </script>
   
