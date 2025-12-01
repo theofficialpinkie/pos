@@ -1059,29 +1059,25 @@
     /* Right Sidebar - White Minimal */
     /* Navigation Sidebar - Sleek & Transparent */
     .sidebar {
-      position: fixed;
-      left: 0;
-      top: 0;
-      height: 100vh;
-      width: 280px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-right: 1px solid rgba(0,0,0,0.06);
-      transform: translateX(-230px);
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
-      z-index: 1000;
-      overflow-y: auto;
-      box-shadow: 2px 0 20px rgba(0,0,0,0.03);
-    }
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100%;
+    background: white;
+    border-right: 1px solid #ddd;
+    transform: translateX(-260px);   /* HIDDEN by default */
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    } 
 
     .sidebar.expanded {
-      transform: translateX(0);
-    }
+    transform: translateX(0);        /* VISIBLE when expanded */
+  }
 
     .sidebar.collapsed {
-      pointer-events: none;
-      transform: translateX(-230px);
+      pointer-events: auto;
+      transform: translateX(-260px);
       background: transparent;
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
@@ -1090,23 +1086,18 @@
     }
 
     .sidebar-toggle {
-      position: absolute;
-      right: 12px;
-      top: 18px;
-      width: 36px;
-      height: 36px;
-      border: none;
-      background: rgba(0,0,0,0.04);
-      cursor: pointer;
-      font-size: 1.3rem;
-      border-radius: 8px;
-      transition: all 0.2s;
-      z-index: 10;
-      color: rgba(0,0,0,0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1100;
+    background: black;
+    color: white;
+    font-size: 18px;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
 
     .sidebar-toggle:hover {
       background: rgba(0,0,0,0.08);
@@ -1114,9 +1105,8 @@
     }
 
     .sidebar-content {
-      padding: 70px 0 40px 0;
-      opacity: 0;
-      transition: opacity 0.3s ease 0.15s;
+    margin-top: 70px;
+    padding: 20px;
     }
 
     .sidebar.expanded .sidebar-content {
@@ -1798,50 +1788,40 @@
 <body>
   
   <!-- Navigation Sidebar -->
-   <div class="sidebar">
-    <div class="sidebar-scroll">
-  <div id="sidebar" class="sidebar collapsed">
-    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
-    
-    <div class="sidebar-content">
-      <!-- Top Section: Main Navigation -->
-      <div class="sidebar-section-top">
-        <div class="sidebar-item" onclick="openVision()">
-          <span class="sidebar-icon">🎯</span>
-          <span>Vision</span>
-        </div>
-        
-        <div class="sidebar-item" onclick="openMilestones()">
-          <span class="sidebar-icon">🏆</span>
-          <span>Milestones</span>
-        </div>
-        
-        <div class="sidebar-item active" onclick="closeSidebar()">
-          <span class="sidebar-icon">📊</span>
-          <div style="flex: 1;">
-            <div>Dashboard</div>
-            <div style="font-size: 0.7rem; color: rgba(0,0,0,0.4); margin-top: 2px;" id="currentWeekLabel">
-              <!-- Populated by JS -->
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Gap -->
-      <div style="height: 40px;"></div>
-      
-      <!-- Previous Weeks Section -->
-      <div class="sidebar-section">
-        <div class="sidebar-header">PREVIOUS WEEKS</div>
-        <div id="weeksList">
-          <!-- Populated by JavaScript -->
-        </div>
-      </div>
-    </div>
-  </div>
-  </div>
-</div>
+ 
+<!-- Hamburger -->
+<button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
 
+<!-- Sidebar Panel -->
+<div id="sidebar" class="sidebar collapsed">
+
+    <div class="sidebar-content">
+
+        <!-- Current Week Section -->
+        <div class="sidebar-section-top">
+            <div class="sidebar-header">Current Week</div>
+            <div id="currentWeekLabel" class="sidebar-item active">
+                Loading…
+            </div>
+        </div>
+
+        <!-- Next Week Section -->
+      <div class="sidebar-section">
+      <div class="sidebar-header">Next Week</div>
+      <div id="nextWeekLabel"></div>
+      </div>
+
+        <!-- Previous Weeks Section -->
+        <div class="sidebar-section">
+            <div class="sidebar-header">Previous Weeks</div>
+            <div id="weeksList">
+                <!-- Weeks will be inserted here -->
+            </div>
+        </div>
+
+    </div>
+
+</div>
   <!-- Main Content Wrapper -->
   <div id="mainContent" class="main-content">
   
@@ -2037,244 +2017,314 @@
     <div class="celebration-subtext" id="celebrationSubtext">Amazing work!</div>
   </div>
 
-  <script>
-    // Load questionnaire data
-    const savedData = JSON.parse(localStorage.getItem('weeklyPlanData') || '{}');
-    const questionnaireData = savedData.formData || savedData;
-    
-    // Load or initialize dashboard state
-    let dashboardState = JSON.parse(localStorage.getItem('dashboardState') || 'null');
+  
+<script>
+// ===============================
+// 1. DETERMINE CURRENT WEEK FOR DASHBOARD
+// ===============================
+const params = new URLSearchParams(window.location.search);
+const overrideWeek = params.get("week");
 
-    // Vision board images
-    const visionImages = [
-      "badass.jpg", "b.jpg", "stick-to-your-plan.jpg", "powerfulenergy.jpg",
-      "goddess.jpg", "gold-flow.jpg", "goodthings.jpg", "pexels-photo-15448063.webp", "spirit.jpg"
-    ];
+if (overrideWeek) {
+  // When coming from sidebar (?week=YYYY-MM-DD)
+  localStorage.setItem("currentWeek", overrideWeek);
+}
 
-    // State
-    let currentTab = 'goals';
-    let currentDay = getCurrentDayOfWeek();
-    
-    function getCurrentDayOfWeek() {
-      const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-      const today = new Date();
-      return days[today.getDay()];
+let currentWeek = localStorage.getItem("currentWeek");
+
+// Fallback: derive current week (MON start) only if nothing is set
+if (!currentWeek) {
+  const today = new Date();
+  const dow = today.getDay(); // 0 = Sun, 1 = Mon, ...
+  const mondayOffset = dow === 0 ? -6 : 1 - dow;
+  const monday = new Date(today);
+  monday.setDate(today.getDate() + mondayOffset);
+  currentWeek = monday.toISOString().split("T")[0]; // YYYY-MM-DD
+  localStorage.setItem("currentWeek", currentWeek);
+}
+
+const weekKey = `week-${currentWeek}`;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const weekLabelEl = document.getElementById("weekRangeLabel");
+  if (weekLabelEl) {
+    weekLabelEl.textContent = formatWeekLabel(currentWeek);
+  }
+  updateDayLabel();
+  initializeDashboard();
+});
+
+
+// ===============================
+// 2. LOAD QUESTIONNAIRE FOR THIS WEEK
+// ===============================
+const weekData = JSON.parse(localStorage.getItem(weekKey) || "{}");
+const questionnaireData = weekData.formData || {};
+
+// ===============================
+// 3. LOAD DASHBOARD STATE FOR THIS WEEK
+// ===============================
+let dashboardState = JSON.parse(
+  localStorage.getItem(`dashboardState-${weekKey}`) || "null"
+);
+
+// (One–time migration from old global dashboardState, if it exists)
+if (!dashboardState) {
+  const legacy = JSON.parse(localStorage.getItem("dashboardState") || "null");
+  if (legacy) {
+    dashboardState = legacy;
+    localStorage.setItem(`dashboardState-${weekKey}`, JSON.stringify(legacy));
+    console.log("🔄 Migrated old dashboardState →", `dashboardState-${weekKey}`);
+  }
+}
+
+// Always save per-week
+function saveDashboard() {
+  localStorage.setItem(`dashboardState-${weekKey}`, JSON.stringify(dashboardState));
+}
+
+
+
+  // ===============================
+  // 4. WEEK LABEL HELPERS
+  // ===============================
+function formatWeekLabel(weekStartISO) {
+  const start = new Date(weekStartISO + "T00:00:00");
+  const end = new Date(start);
+  end.setDate(end.getDate() + 6);
+
+  const M = ["JAN","FEB","MAR","APR","MAY","JUN",
+             "JUL","AUG","SEP","OCT","NOV","DEC"];
+
+  const sm = M[start.getMonth()];
+  const em = M[end.getMonth()];
+  const sd = start.getDate();
+  const ed = end.getDate();
+
+  if (sm === em) return `${sm} ${sd}-${ed}`;
+  return `${sm} ${sd} - ${em} ${ed}`;
+}
+
+
+
+  // ===============================
+  // 5. VISION IMAGES (UNCHANGED)
+  // ===============================
+  const visionImages = [
+    "badass.jpg", "b.jpg", "stick-to-your-plan.jpg", "powerfulenergy.jpg",
+    "goddess.jpg", "gold-flow.jpg", "goodthings.jpg",
+    "pexels-photo-15448063.webp", "spirit.jpg"
+  ];
+
+  // ===============================
+  // 6. STATE
+  // ===============================
+  let currentTab = 'goals';
+
+  function getCurrentDayOfWeek() {
+    const days = ['sunday', 'monday', 'tuesday', 'wednesday',
+                  'thursday', 'friday', 'saturday'];
+    const today = new Date();
+    return days[today.getDay()];
+  }
+
+function getWeekStart(weekISO) {
+  return new Date(weekISO + "T00:00:00");
+}
+
+function getDayOfWeekFromDate(date) {
+  const days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+  return days[date.getDay()];
+}
+
+// FIX: initialize currentDay from the week start, not from today
+const weekStartDate = getWeekStart(currentWeek);
+let currentDay = getDayOfWeekFromDate(weekStartDate);
+
+  let currentGoalForImage = null;
+  let selectedGoalImage = null;
+
+  function generateId() {
+    return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  }
+
+  function parseGoalsFromQuestionnaire(goalsText) {
+    if (!goalsText) return [];
+
+    if (Array.isArray(goalsText)) {
+      return goalsText.map(g => ({
+        id: generateId(),
+        name: typeof g === 'string' ? g : g.name || 'Untitled Goal',
+        image: (typeof g === 'object' && g.image) || null,
+        description: '',
+        tasks: []
+      }));
     }
-    let currentGoalForImage = null;
-    let selectedGoalImage = null;
 
-    function generateId() {
-      return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-    }
+    return goalsText.split('\n')
+      .filter(g => g.trim())
+      .map(name => ({
+        id: generateId(),
+        name: name.trim(),
+        image: null,
+        description: '',
+        tasks: []
+      }));
+  }
 
-    function parseGoalsFromQuestionnaire(goalsText) {
-      if (!goalsText) return [];
-      
-      if (Array.isArray(goalsText)) {
-        return goalsText.map(g => ({
-          id: generateId(),
-          name: typeof g === 'string' ? g : g.name || 'Untitled Goal',
-          image: (typeof g === 'object' && g.image) || null,
-          description: '',
-          tasks: []
-        }));
+
+  // ===============================
+  // 7. SIDEBAR HELPERS
+  // ===============================
+  function getNextWeekKey() {
+    const cw = localStorage.getItem('currentWeek');
+    const currentDate = new Date(cw + 'T00:00:00');
+    const nextWeekDate = new Date(currentDate);
+    nextWeekDate.setDate(nextWeekDate.getDate() + 7);
+
+    const year = nextWeekDate.getFullYear();
+    const month = String(nextWeekDate.getMonth() + 1).padStart(2, '0');
+    const day = String(nextWeekDate.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+  function getAllWeeks() {
+    const weeks = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith("week-")) {
+        weeks.push(key.replace("week-", ""));
       }
-      
-      return goalsText.split('\n')
-        .filter(g => g.trim())
-        .map(name => ({
-          id: generateId(),
-          name: name.trim(),
-          image: null,
-          description: '',
-          tasks: []
-        }));
+    }
+    return weeks.sort((a, b) => new Date(b) - new Date(a)); // newest → oldest
+  }
+
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+
+    if (sidebar.classList.contains('expanded')) {
+      sidebar.classList.remove('expanded');
+      sidebar.classList.add('collapsed');
+      mainContent.classList.remove('sidebar-open');
+    } else {
+      sidebar.classList.add('expanded');
+      sidebar.classList.remove('collapsed');
+      mainContent.classList.add('sidebar-open');
+
+      updateSidebarCurrentWeek();
+      renderWeeksList();
+      renderNextWeek();
+    }
+  }
+
+  function renderWeeksList() {
+    const weeksList = document.getElementById('weeksList');
+    if (!weeksList) return;
+
+    const allWeeks = getAllWeeks();
+    const cw = localStorage.getItem('currentWeek');
+
+    const previousWeeks = allWeeks
+      .filter(w => new Date(w) < new Date(cw))
+      .sort((a, b) => new Date(b) - new Date(a));
+
+    if (previousWeeks.length === 0) {
+      weeksList.innerHTML =
+        '<div style="padding:20px;text-align:center;color:rgba(0,0,0,0.3);font-size:0.75rem;">No previous weeks yet</div>';
+      return;
     }
 
-    // ===== WEEK HELPER FUNCTIONS =====
+    let html = '';
+    previousWeeks.forEach(weekKey => {
+      html += `
+        <div class="week-item" onclick="switchToWeek('${weekKey}')">
+          <span>${formatWeekLabel(weekKey)}</span>
+        </div>
+      `;
+    });
 
-    function formatWeekLabel(weekKey) {
-      // weekKey format: "2025-11-24" (Sunday)
-      const startDate = new Date(weekKey + 'T00:00:00');
-      const endDate = new Date(startDate);
-      endDate.setDate(endDate.getDate() + 6); // Saturday
-      
-      const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-      
-      const startMonth = months[startDate.getMonth()];
-      const endMonth = months[endDate.getMonth()];
-      const startDay = startDate.getDate();
-      const endDay = endDate.getDate();
-      
-      if (startMonth === endMonth) {
-        return `${startMonth} ${startDay}-${endDay}`;
-      } else {
-        return `${startMonth} ${startDay} - ${endMonth} ${endDay}`;
-      }
+    weeksList.innerHTML = html;
+  }
+
+  function renderNextWeek() {
+    const nextWeekDiv = document.getElementById("nextWeekLabel");
+    if (!nextWeekDiv) return;
+
+    const nextWeekKey = getNextWeekKey();
+    const allWeeks = getAllWeeks();
+
+    if (allWeeks.includes(nextWeekKey)) {
+      const label = formatWeekLabel(nextWeekKey);
+      nextWeekDiv.innerHTML = `
+        <div class="week-item" onclick="switchToWeek('${nextWeekKey}')">
+          <span>${label}</span>
+        </div>
+      `;
+    } else {
+      nextWeekDiv.innerHTML = `
+        <div style="padding: 10px 20px; color: rgba(0,0,0,0.2); font-size: 0.75rem;">
+          No next week yet
+        </div>
+      `;
     }
+  }
 
-    function getNextWeekKey() {
-      const currentWeek = localStorage.getItem('currentWeek');
-      const currentDate = new Date(currentWeek + 'T00:00:00');
-      const nextWeekDate = new Date(currentDate);
-      nextWeekDate.setDate(nextWeekDate.getDate() + 7);
-      
-      const year = nextWeekDate.getFullYear();
-      const month = String(nextWeekDate.getMonth() + 1).padStart(2, '0');
-      const day = String(nextWeekDate.getDate()).padStart(2, '0');
-      
-      return `${year}-${month}-${day}`;
+  function updateSidebarCurrentWeek() {
+    const cw = localStorage.getItem('currentWeek');
+    const label = document.getElementById('currentWeekLabel');
+    if (label && cw) {
+      label.textContent = formatWeekLabel(cw);
     }
+  }
 
-    function getWeekEnd(weekKey) {
-      const startDate = new Date(weekKey + 'T00:00:00');
-      const endDate = new Date(startDate);
-      endDate.setDate(endDate.getDate() + 6);
-      
-      const year = endDate.getFullYear();
-      const month = String(endDate.getMonth() + 1).padStart(2, '0');
-      const day = String(endDate.getDate()).padStart(2, '0');
-      
-      return `${year}-${month}-${day}`;
+  function switchToWeek(weekKey) {
+    const confirmed = confirm(`Switch to week: ${formatWeekLabel(weekKey)}?`);
+    if (confirmed) {
+      localStorage.setItem('currentWeek', weekKey);
+      localStorage.setItem("currentDay", "monday");
+      location.reload();
     }
+  }
 
-    // ===== SIDEBAR NAVIGATION FUNCTIONS =====
-
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const mainContent = document.getElementById('mainContent');
-      
-      if (sidebar.classList.contains('expanded')) {
-        sidebar.classList.remove('expanded');
-        sidebar.classList.add('collapsed');
-        mainContent.classList.remove('sidebar-open');
-      } else {
-        sidebar.classList.add('expanded');
-        sidebar.classList.remove('collapsed');
-        mainContent.classList.add('sidebar-open');
-        renderWeeksList();
-        updateSidebarCurrentWeek();
-      }
+  function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    if (sidebar && mainContent) {
+      sidebar.classList.remove('expanded');
+      sidebar.classList.add('collapsed');
+      mainContent.classList.remove('sidebar-open');
     }
+  }
 
-    function renderWeeksList() {
-      const weeksList = document.getElementById('weeksList');
-      if (!weeksList) return;
-      
-      const allWeeks = getAllWeeks();
-      const currentWeek = localStorage.getItem('currentWeek');
-      
-      // Filter to show ONLY weeks BEFORE current week (past weeks only)
-      const previousWeeks = allWeeks.filter(w => w !== currentWeek && w < currentWeek);
-      
-      if (previousWeeks.length === 0) {
-        weeksList.innerHTML = '<div style="padding: 20px; text-align: center; color: rgba(0,0,0,0.3); font-size: 0.75rem;">No previous weeks yet</div>';
-        return;
-      }
-      
-      let html = '';
-      previousWeeks.forEach(weekKey => {
-        const weekLabel = formatWeekLabel(weekKey);
-        
-        html += `
-          <div class="week-item" onclick="switchToWeek('${weekKey}')">
-            <span>${weekLabel}</span>
-          </div>
-        `;
-      });
-      
-      weeksList.innerHTML = html;
-    }
+  function openVision() {
+    window.location.href = 'questionnaire.html#vision';
+  }
 
-    function updateSidebarCurrentWeek() {
-      const currentWeek = localStorage.getItem('currentWeek');
-      const label = document.getElementById('currentWeekLabel');
-      if (label && currentWeek) {
-        label.textContent = formatWeekLabel(currentWeek);
-      }
-    }
+  function openMilestones() {
+    window.location.href = 'questionnaire.html#milestones';
+  }
 
-    function switchToWeek(weekKey) {
-      const confirmed = confirm(`Switch to week: ${formatWeekLabel(weekKey)}?`);
-      if (confirmed) {
-        localStorage.setItem('currentWeek', weekKey);
-        location.reload();
-      }
-    }
 
-    function closeSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const mainContent = document.getElementById('mainContent');
-      if (sidebar && mainContent) {
-        sidebar.classList.remove('expanded');
-        sidebar.classList.add('collapsed');
-        mainContent.classList.remove('sidebar-open');
-      }
-    }
+  // ===============================
+  // 8. DASHBOARD INITIALIZATION
+  // ===============================
+  function initializeDashboard() {
+    const needsReset = dashboardState && (
+      !dashboardState.goals ||
+      !dashboardState.weeklyTasks ||
+      dashboardState.weeklyBlocks
+    );
 
-    function openVision() {
-      window.location.href = 'questionnaire.html#vision';
-    }
-
-    function openMilestones() {
-      window.location.href = 'questionnaire.html#milestones';
-    }
-
-    // Initialize
-    function initializeDashboard() {
-      // Check if we need to migrate or reset
-      const needsReset = dashboardState && (
-        !dashboardState.goals || 
-        !dashboardState.weeklyTasks || 
-        dashboardState.weeklyBlocks // Old structure detected
-      );
-      
-      if (!dashboardState || needsReset) {
-        console.log('Initializing fresh dashboard state');
-        dashboardState = {
-          goals: [
-            ...parseGoalsFromQuestionnaire(questionnaireData.workGoals),
-            ...parseGoalsFromQuestionnaire(questionnaireData.lifeGoals)
-          ],
-          weeklyTasks: {
-            monday: [],
-            tuesday: [],
-            wednesday: [],
-            thursday: [],
-            friday: [],
-            saturday: [],
-            sunday: []
-          }
-        };
-        saveDashboard();
-      }
-      
-      // Ensure all goals have tasks array
-      if (dashboardState.goals) {
-        dashboardState.goals = dashboardState.goals.map(goal => ({
-          ...goal,
-          tasks: goal.tasks || []
-        }));
-        
-        // Ensure backlog goal exists
-        const backlogGoal = dashboardState.goals.find(g => g.id === 'backlog');
-        if (!backlogGoal) {
-          dashboardState.goals.push({
-            id: 'backlog',
-            name: 'Backlog',
-            description: 'Tasks to do later',
-            image: '', // User can set this
-            completed: false,
-            tasks: [],
-            isBacklog: true
-          });
-          saveDashboard();
-        }
-      }
-      
-      // Ensure weeklyTasks exists and has all days
-      if (!dashboardState.weeklyTasks) {
-        dashboardState.weeklyTasks = {
+    if (!dashboardState || needsReset) {
+      console.log('Initializing fresh dashboard state for', weekKey);
+      dashboardState = {
+        goals: [
+          ...parseGoalsFromQuestionnaire(questionnaireData.workGoals),
+          ...parseGoalsFromQuestionnaire(questionnaireData.lifeGoals)
+        ],
+        weeklyTasks: {
           monday: [],
           tuesday: [],
           wednesday: [],
@@ -2282,16 +2332,52 @@
           friday: [],
           saturday: [],
           sunday: []
-        };
+        }
+      };
+      saveDashboard();
+    }
+
+    if (dashboardState.goals) {
+      dashboardState.goals = dashboardState.goals.map(goal => ({
+        ...goal,
+        tasks: goal.tasks || []
+      }));
+
+      const backlogGoal = dashboardState.goals.find(g => g.id === 'backlog');
+      if (!backlogGoal) {
+        dashboardState.goals.push({
+          id: 'backlog',
+          name: 'Backlog',
+          description: 'Tasks to do later',
+          image: '',
+          completed: false,
+          tasks: [],
+          isBacklog: true
+        });
         saveDashboard();
       }
-
-      console.log('Dashboard initialized:', dashboardState);
-      renderTasks();
-      initializeInlineTaskInput();
-      initializeEmptyStateInput();
-      initializeQuickActions();
     }
+
+    if (!dashboardState.weeklyTasks) {
+      dashboardState.weeklyTasks = {
+        monday: [],
+        tuesday: [],
+        wednesday: [],
+        thursday: [],
+        friday: [],
+        saturday: [],
+        sunday: []
+      };
+      saveDashboard();
+    }
+
+    console.log('Dashboard initialized:', weekKey, dashboardState);
+    renderTasks();
+    initializeInlineTaskInput();
+    initializeEmptyStateInput();
+    initializeQuickActions();
+  }
+
 
     // QUICK ACTIONS
     function initializeQuickActions() {
@@ -3869,89 +3955,51 @@ function handleDragOver(e) {
         weekEndContainer.style.display = 'none';
       }
     }
+    
 
     function updateDayLabel() {
-      const dayNames = {
-        monday: 'Monday',
-        tuesday: 'Tuesday',
-        wednesday: 'Wednesday',
-        thursday: 'Thursday',
-        friday: 'Friday',
-        saturday: 'Saturday',
-        sunday: 'Sunday'
-      };
-      
-      const dayIndexes = {
-        monday: 0,
-        tuesday: 1,
-        wednesday: 2,
-        thursday: 3,
-        friday: 4,
-        saturday: 5,
-        sunday: 6
-      };
-      
-      const headerDay = document.getElementById('currentDayHeader');
-      const weekRangeLabel = document.getElementById('weekRangeLabel');
-      
-      if (headerDay) {
-        const dayName = dayNames[currentDay] || 'Monday';
-        const currentDate = getCurrentDate(dayIndexes[currentDay]);
-        
-        headerDay.innerHTML = `
-          <div class="day-name">${dayName}</div>
-          <div class="current-date">${currentDate}</div>
-        `;
-      }
-      
-      if (weekRangeLabel) {
-        const dateRange = getWeekDateRange();
-        weekRangeLabel.textContent = dateRange;
-      }
-    }
+  const dayHeader = document.getElementById("currentDayHeader");
 
-    function getCurrentDate(dayIndex) {
-      const today = new Date();
-      const dayOfWeek = today.getDay();
-      const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Monday is start
-      
-      const monday = new Date(today);
-      monday.setDate(today.getDate() + diff);
-      
-      const targetDate = new Date(monday);
-      targetDate.setDate(monday.getDate() + dayIndex);
-      
-      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      const month = monthNames[targetDate.getMonth()];
-      const day = targetDate.getDate();
-      
-      return `${month} ${day}`.toUpperCase();
-    }
+  // Correct Monday-based order
+  const days = [
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+    'sunday'
+  ];
 
-    function getWeekDateRange() {
-      const today = new Date();
-      const dayOfWeek = today.getDay();
-      const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Monday is start
-      
-      const monday = new Date(today);
-      monday.setDate(today.getDate() + diff);
-      
-      const sunday = new Date(monday);
-      sunday.setDate(monday.getDate() + 6);
-      
-      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      
-      const startMonth = monthNames[monday.getMonth()];
-      const endMonth = monthNames[sunday.getMonth()];
-      const startDay = monday.getDate();
-      const endDay = sunday.getDate();
-      
-      if (startMonth === endMonth) {
-        return `${startMonth} ${startDay}-${endDay}`.toUpperCase();
-      } else {
-        return `${startMonth} ${startDay}-${endMonth} ${endDay}`.toUpperCase();
-      }
-    }
+  // Week start (Monday)
+  const monday = new Date(currentWeek + "T00:00:00");
+
+  // Get index of the chosen day (0–6)
+  const dayIndex = days.indexOf(currentDay);
+
+  // Compute the actual date in the selected week
+  const date = new Date(monday);
+  date.setDate(monday.getDate() + dayIndex);
+
+  // Format for display (DEC 2)
+  const monthNames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  const formattedDate = `${monthNames[date.getMonth()]} ${date.getDate()}`;
+
+  // Update left-side day header
+  if (dayHeader) {
+    dayHeader.innerHTML = `
+      <div class="day-name">${currentDay.charAt(0).toUpperCase() + currentDay.slice(1)}</div>
+      <div class="current-date">${formattedDate}</div>
+    `;
+  }
+
+  // Update week-range label EX: NOV 24–30
+  const weekRange = document.getElementById("weekRangeLabel");
+  if (weekRange) {
+    weekRange.textContent = formatWeekLabel(currentWeek);
+  }
+}
+
 
     function getNextWeekDates() {
       const today = new Date();
@@ -4408,11 +4456,45 @@ function handleDragOver(e) {
     function saveDashboard() {
       localStorage.setItem('dashboardState', JSON.stringify(dashboardState));
     }
+    
+      
 
     // Initialize
     initializeDashboard();
     initializeDropZone();
   </script>
+ 
+<script>
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const backBtn = document.querySelector(".back-btn");
+  if (!backBtn) return;
+
+  backBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    const week = localStorage.getItem("dashboardWeek");
+
+    if (!week) {
+      console.warn("No dashboardWeek found — falling back to currentWeek");
+      window.location.href = "questionnaire.html";
+      return;
+    }
+
+    window.location.href = `questionnaire.html?week=${week}`;
+  });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    updateSidebarCurrentWeek();
+    renderWeeksList();
+});
+</script>
+
+
 
   <!-- Goal Details Sidebar (Different from Navigation Sidebar) -->
   <div id="goalSidebar" class="sidebar-overlay" style="display: none;">

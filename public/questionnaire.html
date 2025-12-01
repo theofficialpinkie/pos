@@ -1304,6 +1304,44 @@
 
   <script>
 
+    
+
+    // === LOAD CORRECT WEEK & FORMDATA (MUST RUN FIRST) ===
+
+// 1. Load currentWeek
+// Allow URL ?week=YYYY-MM-DD override
+const urlParams = new URLSearchParams(window.location.search);
+let currentWeek = urlParams.get("week") || localStorage.getItem("currentWeek");
+
+// If STILL no currentWeek → auto-detect
+if (!currentWeek) {
+  const today = new Date();
+  const dow = today.getDay();
+  const mondayOffset = dow === 0 ? -6 : 1 - dow;
+  const monday = new Date(today);
+  monday.setDate(today.getDate() + mondayOffset);
+  currentWeek = monday.toISOString().split("T")[0];
+}
+
+localStorage.setItem("currentWeek", currentWeek);
+console.log("🗓️ Current week:", currentWeek, formatWeekLabel(currentWeek));
+
+// 3. Load the week data from localStorage
+const weekKey = `week-${currentWeek}`;
+let weekData = JSON.parse(localStorage.getItem(weekKey) || "{}");
+
+// 4. Ensure the shape exists
+if (!weekData.formData) {
+  weekData.formData = {};
+  // DO NOT SAVE YET — wait until the user actually writes data
+}
+
+// 5. THIS is the real formData the questionnaire uses
+let formData = weekData.formData;
+
+console.log("📄 Loaded formData for", weekKey, formData);
+
+
     function getNextWeekDates() {
   const today = new Date();
   
@@ -1663,15 +1701,14 @@ const celebrationQuotes = [
     };
 
     let currentSection = 'reality';
-    let formData = {};
     let recommendedActions = [];
 
     // Load saved data
-    const savedData = localStorage.getItem('weeklyPlanData');
-    if (savedData) {
-      const parsed = JSON.parse(savedData);
-      formData = parsed.formData || parsed;
-    }
+   const savedData = localStorage.getItem('weeklyPlanData');
+if (savedData) {
+  const parsed = JSON.parse(savedData);
+  formData = parsed.formData || parsed;
+}
 
     // Load yearly goals completion state
     const savedYearlyGoals = localStorage.getItem('yearlyGoalsCompletion');
@@ -2190,31 +2227,36 @@ const celebrationQuotes = [
         if (el.id) formData[el.id] = el.value;
       });
       
-      // Save to localStorage
-      // Get current week
-const currentWeek = localStorage.getItem('currentWeek');
+     // ===== SAVE WEEKLY FORM DATA =====
+const currentWeek = localStorage.getItem("currentWeek");
+
 if (currentWeek) {
-  // Load existing week data
-  const weekKey = `week-${currentWeek}`;
-  const weekData = JSON.parse(localStorage.getItem(weekKey) || '{}');
-  
-  // Update formData
-  weekData.formData = formData;
-  
-  // Save back
-  localStorage.setItem(weekKey, JSON.stringify(weekData));
-  console.log('Saved questionnaire to week:', currentWeek);
-} else {
-  // Fallback to old method
-  localStorage.setItem('weeklyPlanData', JSON.stringify({ formData }));
+    const weekKey = `week-${currentWeek}`;
+    let weekData = JSON.parse(localStorage.getItem(weekKey) || "{}");
+
+    // Ensure weekData exists
+    if (!weekData) weekData = {};
+
+    // IMPORTANT:
+    // Merge — do NOT overwrite the whole formData object
+    weekData.formData = { ...(weekData.formData || {}), ...(formData || {}) };
+
+    // Save back
+    localStorage.setItem(weekKey, JSON.stringify(weekData));
+    console.log("💾 Saved MERGED formData to", weekKey, weekData.formData);
+} 
+else {
+    // Legacy fallback — should rarely be needed now
+    localStorage.setItem("weeklyPlanData", JSON.stringify({ formData }));
 }
-      // Save current goals for next week
-      if (formData.workGoals || formData.lifeGoals) {
-        localStorage.setItem('lastWeekGoals', JSON.stringify({
-          workGoals: formData.workGoals,
-          lifeGoals: formData.lifeGoals
-        }));
-      }
+
+// Save last week's goals
+if (formData.workGoals || formData.lifeGoals) {
+    localStorage.setItem("lastWeekGoals", JSON.stringify({
+        workGoals: formData.workGoals,
+        lifeGoals: formData.lifeGoals
+    }));
+}
     }
 
     function navigateNext() {
@@ -2237,10 +2279,16 @@ if (currentWeek) {
       }
     }
 
-    function generateDashboard() {
-      saveFormData();
-      window.location.href = 'dashboard.html';
-    }
+function generateDashboard() {
+  saveFormData();
+
+  const week = localStorage.getItem("currentWeek");
+
+  // Save which week this dashboard is for
+  localStorage.setItem("dashboardWeek", week);
+
+  window.location.href = 'dashboard.html';
+}
 
     // Don't auto-render on load - wait for ritual
 
