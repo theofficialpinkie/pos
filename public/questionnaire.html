@@ -2352,23 +2352,62 @@ function setToggle(id, value) {
 // ===== INPUT + UI EVENT LISTENERS =====
 function attachEventListeners() {
 
-  // Slider live-display
-  document.querySelectorAll('.slider').forEach(slider => {
-    slider.oninput = e => {
-      const valueDisplay = document.getElementById(e.target.id + "-value");
-      if (valueDisplay) valueDisplay.textContent = e.target.value;
-    };
-  });
-
-
-  // Auto-save for toggle action fields (challengeEatingAction, etc.)
-  document.querySelectorAll('input[id$="Action"]').forEach(el => {
-    el.addEventListener("input", () => {
-      formData[el.id] = el.value.trim();
+  // =============================
+  // 1. Auto-save for all TEXT INPUTS
+  // =============================
+  document.querySelectorAll('input.input-field').forEach(input => {
+    input.addEventListener("input", () => {
+      formData[input.id] = input.value;
       saveFormData();
     });
   });
+
+  // =============================
+  // 2. Auto-save for TEXTAREAS
+  // (if you ever add them later)
+  // =============================
+  document.querySelectorAll('textarea').forEach(area => {
+    area.addEventListener("input", () => {
+      formData[area.id] = area.value;
+      saveFormData();
+    });
+  });
+
+  // =============================
+  // 3. CHECKBOXES
+  // =============================
+  document.querySelectorAll('.checkbox-group input[type="checkbox"]').forEach(box => {
+    box.addEventListener("change", () => {
+      const id = box.name;
+      const selected = [...document.querySelectorAll(`input[name="${id}"]:checked`)]
+        .map(b => b.value);
+      formData[id] = selected;
+      saveFormData();
+    });
+  });
+
+  // =============================
+  // 4. RADIO GROUPS
+  // =============================
+  document.querySelectorAll('.radio-group input[type="radio"]').forEach(radio => {
+    radio.addEventListener("change", () => {
+      formData[radio.name] = radio.value;
+      saveFormData();
+    });
+  });
+
+  // =============================
+  // 5. SLIDERS
+  // =============================
+  document.querySelectorAll('input[type="range"]').forEach(range => {
+    range.addEventListener("input", () => {
+      formData[range.id] = range.value;
+      saveFormData();
+    });
+  });
+
 }
+
 
 // ===== FIX TOGGLE BUTTONS =====
 function attachToggleListeners() {
@@ -2403,6 +2442,8 @@ function attachToggleListeners() {
       saveFormData();
     });
   });
+
+
 }
 
 
@@ -2446,7 +2487,18 @@ function saveFormData() {
   // 5️⃣ — TOGGLE ACTION FIELDS (challengeEatingAction)
   document.querySelectorAll('#contentArea input[id$="Action"]').forEach(el => {
     newData[el.id] = el.value.trim();
+
+  
+
   });
+
+  document.querySelectorAll('input.input-field').forEach(input => {
+  input.addEventListener("input", (e) => {
+    const id = e.target.id;
+    formData[id] = e.target.value.trim();
+    saveFormData();
+  });
+});
 
   // 6️⃣ — MERGE WITH EXISTING WEEK DATA
   const currentWeek = localStorage.getItem("currentWeek");
