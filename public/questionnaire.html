@@ -1780,8 +1780,8 @@ const celebrationQuotes = [
         questions: [
           { type: 'goalsCheckoff' },
           { type: 'celebrationBanner' },
-          { label: "What are 3-5 specific wins from last week?", sublabel: "Things you shipped, decisions you made, moments you're proud of", type: "textarea", placeholder: "Shipped feature X\nHad difficult conversation with Y\nMaintained meditation streak", id: "proudWins" },
-          { label: "What patterns or behaviors gave you energy last week?", sublabel: "These become habits to repeat", type: "textarea", placeholder: "Working from cafe mornings\nNot checking phone first thing\nEvening walks", id: "whatWorked" },
+          { label: "What are 3-5 specific wins from last week?", sublabel: "Things you shipped, decisions you made, moments you're proud of", type: "input", placeholder: "Shipped feature X\nHad difficult conversation with Y\nMaintained meditation streak", id: "proudWins" },
+          { label: "What patterns or behaviors gave you energy last week?", sublabel: "These become habits to repeat", type: "input", placeholder: "Working from cafe mornings\nNot checking phone first thing\nEvening walks", id: "whatWorked" },
           { type: 'kpis' },
           { label: "What pattern keeps showing up?", type: "input", placeholder: "What do you keep noticing?", id: "pattern" },
           { label: "What drained your energy last week?", type: "input", placeholder: "Activities, people, situations...", id: "whatDrained" },
@@ -1794,7 +1794,7 @@ const celebrationQuotes = [
         subtitle: "What did I learn? What's shifting inside me?",
         questions: [
           { label: "What was your biggest emotional breakthrough or shift?", sublabel: "One sentence", type: "input", placeholder: "I realized I don't need permission to...", id: "emotionalBreakthrough" },
-          { label: "What was the biggest learning or surprise?", type: "textarea", placeholder: "What clicked? What became clear?", id: "biggestLearning" },
+          { label: "What was the biggest learning or surprise?", type: "input", placeholder: "What clicked? What became clear?", id: "biggestLearning" },
           { label: "What's your biggest fear right now?", type: "input", placeholder: "What are you most afraid of?", id: "biggestFear" },
           { label: "Any fear or scarcity mindset to clear?", type: "input", placeholder: "What limiting belief needs to go?", id: "fearMindset" },
           { label: "Anything to release before next week?", type: "input", placeholder: "What do you need to let go of?", id: "toRelease" }
@@ -1817,19 +1817,19 @@ const celebrationQuotes = [
         subtitle: "What am I building next week? Who am I becoming?",
         questions: [
           { type: 'contextDisplay' },
-          { label: "Vision: If you're living your ideal life in 3 years, what does this week look like?", type: "textarea", placeholder: "Paint the picture...", id: "visionWeek" }
+          { label: "Vision: If you're living your ideal life in 3 years, what does this week look like?", type: "input", placeholder: "Paint the picture...", id: "visionWeek" }
         ]
       },
       execution: {
         title: "Execution Map",
         subtitle: "Your strategy for winning the week.",
         questions: [
-          { label: "The ONE big move", sublabel: "What is the one thing you can do such that by doing it, everything else will be easier or unnecessary?", type: "textarea", placeholder: "The single highest-impact priority this week...", id: "oneBigMove" },
-          { label: "Work goals (3-5 max)", sublabel: "Toward your 6-week sprint milestone", type: "textarea", placeholder: "One goal per line...", id: "workGoals" },
-          { label: "Life goals (3-5 max)", sublabel: "Include any auto-triggered goals from thresholds", type: "textarea", placeholder: "One goal per line...", id: "lifeGoals" },
+          { label: "The ONE big move", sublabel: "What is the one thing you can do such that by doing it, everything else will be easier or unnecessary?", type: "input", placeholder: "The single highest-impact priority this week...", id: "oneBigMove" },
+          { label: "Work goals (3-5 max)", sublabel: "Toward your 6-week sprint milestone", type: "input", placeholder: "One goal per line...", id: "workGoals" },
+          { label: "Life goals (3-5 max)", sublabel: "Include any auto-triggered goals from thresholds", type: "input", placeholder: "One goal per line...", id: "lifeGoals" },
           { type: 'goalDisplay' },
-          { label: "Evidence I'll create this week", sublabel: "2-3 actions that prove who you're becoming", type: "textarea", placeholder: "Ship X\nMaintain Y streak\nHave Z conversation", id: "evidence" },
-          { label: "My key routines this week", sublabel: "What are your non-negotiable rituals?", type: "textarea", placeholder: "Morning: Wake → Meditate → Cafe\nEvening: 9pm workspace reset\nMovement: Mon/Wed/Fri", id: "routines" },
+          { label: "Evidence I'll create this week", sublabel: "2-3 actions that prove who you're becoming", type: "input", placeholder: "Ship X\nMaintain Y streak\nHave Z conversation", id: "evidence" },
+          { label: "My key routines this week", sublabel: "What are your non-negotiable rituals?", type: "input", placeholder: "Morning: Wake → Meditate → Cafe\nEvening: 9pm workspace reset\nMovement: Mon/Wed/Fri", id: "routines" },
           { label: "Long-term identity upleveling", type: "checkbox", options: ["Badass builder (10 min)","Flexibility (10 min)","Dark feminine (10 min)","$2.5k/mo biz (5 min)","Social media fun (5 min)"], id: "uplevelingIdentity" },
           { label: "Fun learning", type: "checkbox", options: ["Physics (10 min)","Balinese (5 min)","English vocab (5 min)"], id: "uplevelingLearning" },
           { label: "Meditation streak", type: "input", placeholder: "__/60", id: "meditationStreak" },
@@ -1852,11 +1852,12 @@ const celebrationQuotes = [
     let recommendedActions = [];
 
     // Load saved data
-   const savedData = localStorage.getItem('weeklyPlanData');
-if (savedData) {
-  const parsed = JSON.parse(savedData);
-  formData = parsed.formData || parsed;
-}
+    const savedData = localStorage.getItem('weeklyPlanData');
+  if (savedData) {
+    const parsed = JSON.parse(savedData);
+    formData = parsed.formData || parsed;
+  }
+  
 
     // Load yearly goals completion state
     const savedYearlyGoals = localStorage.getItem('yearlyGoalsCompletion');
@@ -2000,6 +2001,7 @@ if (savedData) {
 
       contentArea.innerHTML = html;
       attachEventListeners();
+      attachToggleListeners(); 
     }
 
     function renderQuestion(q) {
@@ -2029,25 +2031,38 @@ if (savedData) {
       const value = formData[q.id] || '';
 
       switch (q.type) {
-        case 'input':
-          html += `<input class="input-field" id="${q.id}" placeholder="${q.placeholder || ''}" value="${value}" />`;
-          break;
-        case 'textarea':
-          html += `<textarea class="input-field" id="${q.id}" placeholder="${q.placeholder || ''}">${value}</textarea>`;
-          break;
+     case 'input':
+  html += `
+    <input 
+      type="text"
+      class="input-field"
+      id="${q.id}"
+      name="${q.id}"
+      placeholder="${q.placeholder || ''}"
+      value="${value || ''}"
+    />
+  `;
+  break;
+
         case 'toggle':
-          const currentValue = formData[q.id] || 'good';
-          html += `
-            <div class="toggle-group">
-              <button class="toggle-btn good ${currentValue === 'good' ? 'active' : ''}" onclick="setToggle('${q.id}', 'good')">✓ Good</button>
-              <button class="toggle-btn bad ${currentValue === 'bad' ? 'active' : ''}" onclick="setToggle('${q.id}', 'bad')">✗ Needs Work</button>
-            </div>
-            <div class="action-input-wrapper ${currentValue === 'bad' ? 'visible' : ''}" id="${q.id}ActionWrapper">
-              <div class="question-sublabel" style="margin-top: 15px;">→ What will you do about this?</div>
-              <input class="input-field" id="${q.id}Action" placeholder="Your action plan..." value="${formData[q.id + 'Action'] || ''}" />
-            </div>
-          `;
-          break;
+  const currentValue = formData[q.id] || 'good';
+  html += `
+    <div class="toggle-group" data-id="${q.id}">
+      <button class="toggle-btn good ${currentValue === 'good' ? 'active' : ''}">✓ Good</button>
+      <button class="toggle-btn bad ${currentValue === 'bad' ? 'active' : ''}">✗ Needs Work</button>
+    </div>
+
+    <div class="action-input-wrapper ${currentValue === 'bad' ? 'visible' : ''}" 
+         id="${q.id}ActionWrapper">
+      <div class="question-sublabel" style="margin-top: 15px;">→ What will you do about this?</div>
+      <input class="input-field"
+             id="${q.id}Action"
+             placeholder="Your action plan..."
+             value="${formData[q.id + 'Action'] || ''}" />
+    </div>
+  `;
+  break;
+
         case 'radio':
           html += `<div class="radio-group">`;
           q.options.forEach(opt => {
@@ -2327,85 +2342,134 @@ if (savedData) {
       renderAll();
     }
 
-    function setToggle(id, value) {
-      formData[id] = value;
+    // ===== TOGGLE HANDLER =====
+function setToggle(id, value) {
+  formData[id] = value;
+  saveFormData();
+  updateRecommendedActions();
+}
+
+// ===== INPUT + UI EVENT LISTENERS =====
+function attachEventListeners() {
+
+  // Slider live-display
+  document.querySelectorAll('.slider').forEach(slider => {
+    slider.oninput = e => {
+      const valueDisplay = document.getElementById(e.target.id + "-value");
+      if (valueDisplay) valueDisplay.textContent = e.target.value;
+    };
+  });
+
+
+  // Auto-save for toggle action fields (challengeEatingAction, etc.)
+  document.querySelectorAll('input[id$="Action"]').forEach(el => {
+    el.addEventListener("input", () => {
+      formData[el.id] = el.value.trim();
       saveFormData();
-      renderAll();
-    }
-
-    function attachEventListeners() {
-      // Sliders
-      document.querySelectorAll('.slider').forEach(slider => {
-        slider.oninput = e => {
-          const valueDisplay = document.getElementById(e.target.id + "-value");
-          if (valueDisplay) valueDisplay.textContent = e.target.value;
-        };
-      });
-
-      // All inputs
-      document.querySelectorAll('input, textarea, select').forEach(el => {
-        el.addEventListener('blur', saveFormData);
-        el.addEventListener('change', saveFormData);
-      });
-    }
-
-    function saveFormData() {
-      // Save all inputs
-      document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => {
-        if (el.id) formData[el.id] = el.value;
-      });
-      
-      // Save radios
-      document.querySelectorAll('input[type="radio"]:checked').forEach(el => {
-        formData[el.name] = el.value;
-      });
-      
-      // Save checkboxes
-      const checkboxGroups = {};
-      document.querySelectorAll('input[type="checkbox"][name]').forEach(el => {
-        if (!checkboxGroups[el.name]) checkboxGroups[el.name] = [];
-        if (el.checked) checkboxGroups[el.name].push(el.value);
-      });
-      Object.keys(checkboxGroups).forEach(name => {
-        formData[name] = checkboxGroups[name];
-      });
-      
-      // Save sliders
-      document.querySelectorAll('.slider').forEach(el => {
-        if (el.id) formData[el.id] = el.value;
-      });
-      
-     // ===== SAVE WEEKLY FORM DATA =====
-const currentWeek = localStorage.getItem("currentWeek");
-
-if (currentWeek) {
-    const weekKey = `week-${currentWeek}`;
-    let weekData = JSON.parse(localStorage.getItem(weekKey) || "{}");
-
-    // Ensure weekData exists
-    if (!weekData) weekData = {};
-
-    // IMPORTANT:
-    // Merge — do NOT overwrite the whole formData object
-    weekData.formData = { ...(weekData.formData || {}), ...(formData || {}) };
-
-    // Save back
-    localStorage.setItem(weekKey, JSON.stringify(weekData));
-    console.log("💾 Saved MERGED formData to", weekKey, weekData.formData);
-} 
-else {
-    // Legacy fallback — should rarely be needed now
-    localStorage.setItem("weeklyPlanData", JSON.stringify({ formData }));
+    });
+  });
 }
 
-// Save last week's goals
-if (formData.workGoals || formData.lifeGoals) {
-    localStorage.setItem("lastWeekGoals", JSON.stringify({
-        workGoals: formData.workGoals,
-        lifeGoals: formData.lifeGoals
-    }));
+// ===== FIX TOGGLE BUTTONS =====
+function attachToggleListeners() {
+  // Toggle buttons
+  document.querySelectorAll('.toggle-group').forEach(group => {
+    const id = group.getAttribute('data-id');
+
+    group.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const value = btn.classList.contains('good') ? 'good' : 'bad';
+
+        // Save selection
+        formData[id] = value;
+        saveFormData();
+
+        // Update button UI
+        group.querySelectorAll('.toggle-btn')
+             .forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Show/hide action input
+        const wrapper = document.getElementById(id + 'ActionWrapper');
+        if (wrapper) wrapper.classList.toggle('visible', value === 'bad');
+      });
+    });
+  });
+
+  // Auto-save for toggle action fields (challengeEatingAction, etc.)
+  document.querySelectorAll('input[id$="Action"]').forEach(el => {
+    el.addEventListener("input", () => {
+      formData[el.id] = el.value.trim();
+      saveFormData();
+    });
+  });
 }
+
+
+
+
+  
+
+ // ===== UNIVERSAL SAVE ENGINE =====
+function saveFormData() {
+  console.log("Saving form data…");
+
+  const newData = {};
+
+  // 1️⃣ — TEXT INPUTS + NUMBER INPUTS + TEXTAREAS
+  document.querySelectorAll('#contentArea input[type="textarea"], #contentArea input[type="number"], #contentArea textarea')
+    .forEach(el => {
+      if (el.id) newData[el.id] = el.value.trim();
+    });
+
+  // 2️⃣ — RADIO BUTTONS (use 'name', not ID)
+  document.querySelectorAll('#contentArea input[type="radio"]').forEach(el => {
+    if (el.checked) {
+      if (el.name) newData[el.name] = el.value;
     }
+  });
+
+  // 3️⃣ — CHECKBOX GROUPS
+  const checkboxGroups = {};
+  document.querySelectorAll('#contentArea input[type="checkbox"]').forEach(el => {
+    const group = el.name || el.id;
+    if (!checkboxGroups[group]) checkboxGroups[group] = [];
+    if (el.checked) checkboxGroups[group].push(el.value);
+  });
+  Object.assign(newData, checkboxGroups);
+
+  // 4️⃣ — SLIDERS
+  document.querySelectorAll('#contentArea input[type="range"]').forEach(el => {
+    if (el.id) newData[el.id] = el.value;
+  });
+
+  // 5️⃣ — TOGGLE ACTION FIELDS (challengeEatingAction)
+  document.querySelectorAll('#contentArea input[id$="Action"]').forEach(el => {
+    newData[el.id] = el.value.trim();
+  });
+
+  // 6️⃣ — MERGE WITH EXISTING WEEK DATA
+  const currentWeek = localStorage.getItem("currentWeek");
+  const weekKey = `week-${currentWeek}`;
+  let weekData = JSON.parse(localStorage.getItem(weekKey) || "{}");
+
+  if (!weekData.formData) weekData.formData = {};
+
+  weekData.formData = {
+    ...weekData.formData, // existing persisted values
+    ...formData,          // in-memory values
+    ...newData            // latest user edits
+  };
+
+  // Update memory
+  formData = weekData.formData;
+
+  // Save to localStorage
+  localStorage.setItem(weekKey, JSON.stringify(weekData));
+
+  console.log("💾 Saved:", weekData.formData);
+}
+
 
     function navigateNext() {
       const currentIndex = sections.findIndex(s => s.id === currentSection);
@@ -2458,6 +2522,8 @@ function generateDashboard() {
     renderNextWeek();
   }
 }
+
+
 
 function renderWeeksList() {
   const weeksList = document.getElementById('weeksList');
