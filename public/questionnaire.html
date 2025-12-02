@@ -1431,6 +1431,7 @@
 
       <!-- Main Content -->
       <div class="content-area" id="contentArea"></div>
+      
     </div>
   </div>
 
@@ -1780,10 +1781,10 @@ const celebrationQuotes = [
         questions: [
           { type: 'goalsCheckoff' },
           { type: 'celebrationBanner' },
-          { label: "What are 3-5 specific wins from last week?", sublabel: "Things you shipped, decisions you made, moments you're proud of", type: "input", placeholder: "Shipped feature X\nHad difficult conversation with Y\nMaintained meditation streak", id: "proudWins" },
-          { label: "What patterns or behaviors gave you energy last week?", sublabel: "These become habits to repeat", type: "input", placeholder: "Working from cafe mornings\nNot checking phone first thing\nEvening walks", id: "whatWorked" },
+          { label: "What are 3-5 specific wins from last week?", sublabel: "Things you shipped, decisions you made, moments you're proud of", type: "textarea", placeholder: "Shipped feature X\nHad difficult conversation with Y\nMaintained meditation streak", id: "proudWins" },
+          { label: "What patterns or behaviors gave you energy last week?", sublabel: "These become habits to repeat", type: "textarea", placeholder: "Working from cafe mornings\nNot checking phone first thing\nEvening walks", id: "whatWorked" },
           { type: 'kpis' },
-          { label: "What pattern keeps showing up?", type: "input", placeholder: "What do you keep noticing?", id: "pattern" },
+          { label: "What pattern keeps showing up?", type: "textarea", placeholder: "What do you keep noticing?", id: "pattern" },
           { label: "What drained your energy last week?", type: "input", placeholder: "Activities, people, situations...", id: "whatDrained" },
           { label: "Energy baseline", type: "radio", options: ["Stable","Scattered","Creative","Low"], id: "energyBaseline" },
           { label: "Momentum score last week (0-10)", type: "slider", min: 0, max: 10, id: "momentumScore" }
@@ -1793,11 +1794,11 @@ const celebrationQuotes = [
         title: "Breakthroughs + Intelligence",
         subtitle: "What did I learn? What's shifting inside me?",
         questions: [
-          { label: "What was your biggest emotional breakthrough or shift?", sublabel: "One sentence", type: "input", placeholder: "I realized I don't need permission to...", id: "emotionalBreakthrough" },
-          { label: "What was the biggest learning or surprise?", type: "input", placeholder: "What clicked? What became clear?", id: "biggestLearning" },
-          { label: "What's your biggest fear right now?", type: "input", placeholder: "What are you most afraid of?", id: "biggestFear" },
-          { label: "Any fear or scarcity mindset to clear?", type: "input", placeholder: "What limiting belief needs to go?", id: "fearMindset" },
-          { label: "Anything to release before next week?", type: "input", placeholder: "What do you need to let go of?", id: "toRelease" }
+          { label: "What was your biggest emotional breakthrough or shift?", sublabel: "One sentence", type: "textarea", placeholder: "I realized I don't need permission to...", id: "emotionalBreakthrough" },
+          { label: "What was the biggest learning or surprise?", type: "textarea", placeholder: "What clicked? What became clear?", id: "biggestLearning" },
+          { label: "What's your biggest fear right now?", type: "textarea", placeholder: "What are you most afraid of?", id: "biggestFear" },
+          { label: "Any fear or scarcity mindset to clear?", type: "textarea", placeholder: "What limiting belief needs to go?", id: "fearMindset" },
+          { label: "Anything to release before next week?", type: "textarea", placeholder: "What do you need to let go of?", id: "toRelease" }
         ],
         pause: "⏸️ Close your eyes. Take three deep breaths. Feel yourself releasing what no longer serves you. You're making space for what's next."
       },
@@ -1817,7 +1818,7 @@ const celebrationQuotes = [
         subtitle: "What am I building next week? Who am I becoming?",
         questions: [
           { type: 'contextDisplay' },
-          { label: "Vision: If you're living your ideal life in 3 years, what does this week look like?", type: "input", placeholder: "Paint the picture...", id: "visionWeek" }
+          { label: "Vision: If you're living your ideal life in 3 years, what does this week look like?", type: "textarea", placeholder: "Paint the picture...", id: "visionWeek" }
         ]
       },
       execution: {
@@ -1825,16 +1826,16 @@ const celebrationQuotes = [
         subtitle: "Your strategy for winning the week.",
         questions: [
           { label: "The ONE big move", sublabel: "What is the one thing you can do such that by doing it, everything else will be easier or unnecessary?", type: "input", placeholder: "The single highest-impact priority this week...", id: "oneBigMove" },
-          { label: "Work goals (3-5 max)", sublabel: "Toward your 6-week sprint milestone", type: "input", placeholder: "One goal per line...", id: "workGoals" },
-          { label: "Life goals (3-5 max)", sublabel: "Include any auto-triggered goals from thresholds", type: "input", placeholder: "One goal per line...", id: "lifeGoals" },
-          { type: 'goalDisplay' },
-          { label: "Evidence I'll create this week", sublabel: "2-3 actions that prove who you're becoming", type: "input", placeholder: "Ship X\nMaintain Y streak\nHave Z conversation", id: "evidence" },
-          { label: "My key routines this week", sublabel: "What are your non-negotiable rituals?", type: "input", placeholder: "Morning: Wake → Meditate → Cafe\nEvening: 9pm workspace reset\nMovement: Mon/Wed/Fri", id: "routines" },
-          { label: "Long-term identity upleveling", type: "checkbox", options: ["Badass builder (10 min)","Flexibility (10 min)","Dark feminine (10 min)","$2.5k/mo biz (5 min)","Social media fun (5 min)"], id: "uplevelingIdentity" },
-          { label: "Fun learning", type: "checkbox", options: ["Physics (10 min)","Balinese (5 min)","English vocab (5 min)"], id: "uplevelingLearning" },
-          { label: "Meditation streak", type: "input", placeholder: "__/60", id: "meditationStreak" },
-          { label: "48 Laws of Power", type: "input", placeholder: "page ___", id: "lawsProgress" },
-          { label: "Portfolio status", type: "input", placeholder: "status ___", id: "portfolioStatus" }
+          { label: "Work goals (3-5 max)", sublabel: "Toward your 6-week sprint milestone", type: "textarea", placeholder: "One goal per line...", id: "workGoals" },
+          { label: "Life goals (3-5 max)", sublabel: "Include any auto-triggered goals from thresholds", type: "textarea", placeholder: "One goal per line...", id: "lifeGoals" },
+          {label: "What 1–2 things will add joy or ease into my week?",
+            sublabel: "Pick something small, beautiful, or comforting — or add one from the dropdown below.",
+            type: "textarea",
+            placeholder: "Cafe morning\nSunset walk\nRooftop scening\nCreative hour…",
+            id: "alivenessPlan"
+            },
+            { type: 'goalDisplay' },
+          
         ],
         pause: "⏸️ Read your goals and upleveling plan out loud. Do they light you up? If not, go back and make them bigger."
       },
@@ -1848,8 +1849,10 @@ const celebrationQuotes = [
       }
     };
 
+
     let currentSection = 'reality';
     let recommendedActions = [];
+     let rerenderTimer = null;
 
     // Load saved data
     const savedData = localStorage.getItem('weeklyPlanData');
@@ -1929,6 +1932,12 @@ const celebrationQuotes = [
       }, 4000);
     }
 
+    function safeRenderAll() {
+  clearTimeout(rerenderTimer);
+  rerenderTimer = setTimeout(() => {
+    renderCurrentSection();
+  }, 250);
+}
     
     // Main render function
     function renderAll() {
@@ -2019,7 +2028,7 @@ const celebrationQuotes = [
       }
       if (q.type === 'contextDisplay') {
         return renderContextDisplay();
-      }
+    }
       if (q.type === 'goalDisplay') {
         return renderGoalDisplay();
       }
@@ -2090,15 +2099,35 @@ const celebrationQuotes = [
           });
           html += `</div>`;
           break;
-        case 'slider':
-          const sliderValue = value || 5;
-          html += `
-            <div class="slider-wrapper">
-              <input type="range" min="${q.min}" max="${q.max}" value="${sliderValue}" class="slider" id="${q.id}" />
-              <div class="slider-value" id="${q.id}-value">${sliderValue}</div>
-            </div>
-          `;
-          break;
+   case 'slider':
+  const sliderValue = (value !== undefined && value !== null) ? value : q.min;
+  html += `
+    <div class="slider-wrapper">
+      <input 
+        type="range" 
+        min="${q.min}" 
+        max="${q.max}" 
+        value="${sliderValue}" 
+        class="slider" 
+        id="${q.id}" 
+      />
+      <div class="slider-value" id="${q.id}-value">${sliderValue}</div>
+    </div>
+  `;
+  break;
+
+          case 'textarea':
+  html += `
+    <textarea
+      class="input-field"
+      id="${q.id}"
+      name="${q.id}"
+      placeholder="${q.placeholder || ''}"
+      style="min-height: 80px;"
+    >${value || ''}</textarea>
+  `;
+  break;
+
       }
 
       html += `</div>`;
@@ -2189,21 +2218,7 @@ const celebrationQuotes = [
 
     function renderContextDisplay() {
       let html = `<div class="context-box">`;
-      
-      // Challenges
-      html += `<div class="context-section"><div class="context-title">📌 Key challenges from last week</div>`;
-      const challenges = [
-        { key: 'challengeEating', label: 'Eating', action: 'challengeEatingAction' },
-        { key: 'challengeRoutines', label: 'Routines', action: 'challengeRoutinesAction' },
-        { key: 'challengeIncome', label: 'Income', action: 'challengeIncomeAction' },
-        { key: 'challengeAbandon', label: 'Self-abandonment', action: 'challengeAbandonAction' }
-      ];
-      challenges.forEach(c => {
-        if (formData[c.key] === 'bad' && formData[c.action]) {
-          html += `<div class="context-item"><strong>${c.label}:</strong> ${formData[c.action]}</div>`;
-        }
-      });
-      html += `</div>`;
+
       
       // Recommended actions
       if (recommendedActions.length > 0) {
@@ -2221,17 +2236,11 @@ const celebrationQuotes = [
       const completedGoals = formData.completedGoals || [];
       const uncompletedGoals = allGoals.filter(g => !completedGoals.includes(g));
       
-      if (uncompletedGoals.length > 0) {
-        html += `<div class="context-section"><div class="context-title">⚠️ Uncompleted goals to address</div>`;
-        uncompletedGoals.forEach(g => {
-          html += `<div class="context-item">${g}</div>`;
-        });
-        html += `</div>`;
-      }
       
       html += `</div>`;
       return html;
     }
+
 
     function renderGoalDisplay() {
       const workGoals = (formData.workGoals || '').split('\n').filter(g => g.trim());
@@ -2273,13 +2282,24 @@ const celebrationQuotes = [
 
     function updateRecommendedActions() {
       recommendedActions = [];
+updateRecommendedActions._seen = new Set();
+
+function pushUnique(label, action) {
+  const key = `${label}||${action}`.trim().toLowerCase();
+  if (updateRecommendedActions._seen.has(key)) return;  // skip duplicates
+  updateRecommendedActions._seen.add(key);
+  recommendedActions.push({ label, action });
+}
       
       // From what worked
-      if (formData.whatWorked) {
-        formData.whatWorked.split('\n').filter(l => l.trim()).forEach(line => {
-          recommendedActions.push({ label: "Continue Doing", action: line });
-        });
-      }
+    if (formData.whatWorked) {
+  formData.whatWorked
+    .split('\n')
+    .filter(l => l.trim())
+    .forEach(line => {
+      pushUnique("Continue Doing", line);
+    });
+}
       
       // From challenges
       const challenges = [
@@ -2288,26 +2308,29 @@ const celebrationQuotes = [
         { key: 'challengeIncome', label: 'Income' },
         { key: 'challengeAbandon', label: 'Self-Care' }
       ];
-      challenges.forEach(c => {
-        if (formData[c.key] === 'bad' && formData[c.key + 'Action']) {
-          recommendedActions.push({ label: c.label + ' Fix', action: formData[c.key + 'Action'] });
-        }
-      });
+challenges.forEach(c => {
+  if (formData[c.key] === 'bad' && formData[c.key + 'Action']) {
+    pushUnique(c.label + ' Fix', formData[c.key + 'Action']);
+  }
+});
       
       // From uncompleted goals
       const workGoals = (formData.lastWeekWorkGoals || '').split('\n').filter(g => g.trim());
       const lifeGoals = (formData.lastWeekLifeGoals || '').split('\n').filter(g => g.trim());
       const allGoals = [...workGoals, ...lifeGoals];
       const completedGoals = formData.completedGoals || [];
-      allGoals.filter(g => !completedGoals.includes(g)).forEach(goal => {
-        recommendedActions.push({ label: "Carry Forward", action: goal });
-      });
+     allGoals
+  .filter(g => !completedGoals.includes(g))
+  .forEach(goal => {
+    pushUnique("Carry Forward", goal);
+  });
       
       // From thresholds
-      checkThresholds().forEach(alert => {
-        recommendedActions.push({ label: "Threshold Alert", action: alert.replace('⚠️', '').trim() });
-      });
-      
+    checkThresholds().forEach(alert => {
+  pushUnique("Threshold Alert", alert.replace('⚠️', '').trim());
+});
+      console.log("FINAL RECOMMENDED ACTIONS", recommendedActions);
+
       // Show recommended actions after challenges section
       const currentIndex = sections.findIndex(s => s.id === currentSection);
       if (currentIndex >= 2 && recommendedActions.length > 0) {
@@ -2339,7 +2362,7 @@ const celebrationQuotes = [
       }
       
       saveFormData();
-      renderAll();
+      safeRenderAll();
     }
 
     // ===== TOGGLE HANDLER =====
@@ -2399,13 +2422,20 @@ function attachEventListeners() {
   // =============================
   // 5. SLIDERS
   // =============================
-  document.querySelectorAll('input[type="range"]').forEach(range => {
-    range.addEventListener("input", () => {
-      formData[range.id] = range.value;
-      saveFormData();
-    });
-  });
+  document.querySelectorAll('input.slider').forEach(slider => {
+  slider.addEventListener("input", () => {
+    const id = slider.id;
+    const val = slider.value;
 
+    // Save live slider value
+    formData[id] = val;
+    saveFormData();
+
+    // Update the display number
+    const label = document.getElementById(`${id}-value`);
+    if (label) label.textContent = val;
+  });
+});
 }
 
 
@@ -2446,8 +2476,19 @@ function attachToggleListeners() {
 
 }
 
+function addJoy(option) {
+  const field = document.getElementById('alivenessPlan');
+  if (!field) return;
 
+  let current = field.value.trim();
+  const appendText = current ? `${current}\n${option}` : option;
 
+  field.value = appendText;
+
+  // Update formData + save
+  formData['alivenessPlan'] = appendText;
+  saveFormData();
+}
 
   
 
@@ -2492,13 +2533,6 @@ function saveFormData() {
 
   });
 
-  document.querySelectorAll('input.input-field').forEach(input => {
-  input.addEventListener("input", (e) => {
-    const id = e.target.id;
-    formData[id] = e.target.value.trim();
-    saveFormData();
-  });
-});
 
   // 6️⃣ — MERGE WITH EXISTING WEEK DATA
   const currentWeek = localStorage.getItem("currentWeek");
