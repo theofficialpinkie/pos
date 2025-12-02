@@ -2582,8 +2582,8 @@ function generateDashboard() {
 
   const week = localStorage.getItem("currentWeek");
 
-  // Save which week this dashboard is for
-  localStorage.setItem("dashboardWeek", week);
+  // CLEAR the old dashboard state to force a fresh one
+  localStorage.removeItem(`dashboardState-week-${week}`);
 
   window.location.href = 'dashboard.html';
 }

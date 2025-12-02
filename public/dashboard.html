@@ -2023,17 +2023,16 @@
 // ===============================
 // 1. DETERMINE CURRENT WEEK FOR DASHBOARD
 // ===============================
+
+
 const params = new URLSearchParams(window.location.search);
-const overrideWeek = params.get("week");
 
-if (overrideWeek) {
-  // When coming from sidebar (?week=YYYY-MM-DD)
-  localStorage.setItem("currentWeek", overrideWeek);
-}
+// Priority:
+// 1) ?week=YYYY-MM-DD in URL (from questionnaire or sidebar)
+// 2) existing currentWeek in localStorage
+let currentWeek = params.get("week") || localStorage.getItem("currentWeek");
 
-let currentWeek = localStorage.getItem("currentWeek");
-
-// Fallback: derive current week (MON start) only if nothing is set
+// Final fallback: derive "this" week's Monday only if truly nothing is set
 if (!currentWeek) {
   const today = new Date();
   const dow = today.getDay(); // 0 = Sun, 1 = Mon, ...
@@ -2041,11 +2040,14 @@ if (!currentWeek) {
   const monday = new Date(today);
   monday.setDate(today.getDate() + mondayOffset);
   currentWeek = monday.toISOString().split("T")[0]; // YYYY-MM-DD
-  localStorage.setItem("currentWeek", currentWeek);
-
 }
 
-const weekKey = localStorage.getItem("currentWeek"); 
+// Persist whichever week we resolved to
+localStorage.setItem("currentWeek", currentWeek);
+
+// Consistent key for this week's data
+const weekKey = `week-${currentWeek}`;
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const weekLabelEl = document.getElementById("weekRangeLabel");
@@ -2062,7 +2064,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // ===============================
 // 2. LOAD QUESTIONNAIRE FOR THIS WEEK
 // ===============================
-const weekData = JSON.parse(localStorage.getItem(`week-${weekKey}`) || "{}");
+const weekData = JSON.parse(localStorage.getItem(weekKey) || "{}");
 const questionnaireData = weekData.formData || {};
 
 // ===============================
