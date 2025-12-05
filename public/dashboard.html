@@ -2377,60 +2377,52 @@ function initializeDashboard() {
     }
 
     function handleTherapy() {
-      // Get breakthrough answers from questionnaire weeklyPlanData
-      let breakthroughData = {
-        emotional: '',
-        learning: '',
-        fear: '',
-        fearMindset: '',
-        release: ''
-      };
-      
-      const savedData = localStorage.getItem('weeklyPlanData');
-      if (savedData) {
-        const parsed = JSON.parse(savedData);
-        const formData = parsed.formData || parsed;
-        
-        breakthroughData = {
-          emotional: formData.emotionalBreakthrough || '',
-          learning: formData.biggestLearning || '',
-          fear: formData.biggestFear || '',
-          fearMindset: formData.fearMindset || '',
-          release: formData.toRelease || ''
-        };
-      }
-      
-      // Build breakthrough text
-      let breakthroughText = '**BREAKTHROUGHS FROM QUESTIONNAIRE:**\n\n';
-      let hasData = false;
-      
-      if (breakthroughData.emotional) {
-        breakthroughText += `**What was your biggest emotional breakthrough or shift?**\n${breakthroughData.emotional}\n\n`;
-        hasData = true;
-      }
-      if (breakthroughData.learning) {
-        breakthroughText += `**What was the biggest learning or surprise?**\n${breakthroughData.learning}\n\n`;
-        hasData = true;
-      }
-      if (breakthroughData.fear) {
-        breakthroughText += `**What's your biggest fear right now?**\n${breakthroughData.fear}\n\n`;
-        hasData = true;
-      }
-      if (breakthroughData.fearMindset) {
-        breakthroughText += `**Any fear or scarcity mindset to clear?**\n${breakthroughData.fearMindset}\n\n`;
-        hasData = true;
-      }
-      if (breakthroughData.release) {
-        breakthroughText += `**Anything to release before next week?**\n${breakthroughData.release}\n\n`;
-        hasData = true;
-      }
-      
-      if (!hasData) {
-        breakthroughText += '(No breakthrough data found - complete the Breakthroughs section in your weekly planner)\n\n';
-      }
-      
-      breakthroughText += '\n---\n\n**NEW BREAKTHROUGHS THIS WEEK:**\n(Add here - will auto-populate in next week\'s planner)\n\n';
-      
+  // 1️⃣ Get correct weekKey
+  const currentWeek = localStorage.getItem("currentWeek");
+  const weekKey = `week-${currentWeek}`;
+  const weekData = JSON.parse(localStorage.getItem(weekKey) || "{}");
+  const formData = weekData.formData || {};
+
+  // 2️⃣ Extract breakthrough fields EXACTLY as saved in saveFormData()
+  const breakthroughData = {
+    emotional: formData.emotionalBreakthrough || "",
+    learning: formData.biggestLearning || "",
+    fear: formData.biggestFear || "",
+    fearMindset: formData.fearMindset || "",
+    release: formData.toRelease || ""
+  };
+
+  // 3️⃣ Build text
+  let breakthroughText = `**BREAKTHROUGHS FROM QUESTIONNAIRE:**\n\n`;
+  let hasData = false;
+
+  if (breakthroughData.emotional) {
+    breakthroughText += `**What was your biggest emotional breakthrough or shift?**\n${breakthroughData.emotional}\n\n`;
+    hasData = true;
+  }
+  if (breakthroughData.learning) {
+    breakthroughText += `**What was the biggest learning or surprise?**\n${breakthroughData.learning}\n\n`;
+    hasData = true;
+  }
+  if (breakthroughData.fear) {
+    breakthroughText += `**What's your biggest fear right now?**\n${breakthroughData.fear}\n\n`;
+    hasData = true;
+  }
+  if (breakthroughData.fearMindset) {
+    breakthroughText += `**Any fear or scarcity mindset to clear?**\n${breakthroughData.fearMindset}\n\n`;
+    hasData = true;
+  }
+  if (breakthroughData.release) {
+    breakthroughText += `**Anything to release before next week?**\n${breakthroughData.release}\n\n`;
+    hasData = true;
+  }
+
+  if (!hasData) {
+    breakthroughText += "(No breakthrough data found — complete the Breakthroughs section in your weekly planner)\n\n";
+  }
+
+  breakthroughText += `\n---\n\n**NEW BREAKTHROUGHS THIS WEEK:**\n(Add here — will auto-populate in next week's planner)\n\n`;
+
       // Create therapy task
       const therapyTask = {
         id: generateId(),
@@ -3302,6 +3294,7 @@ function handleTaskDragEnd(e) {
 
     // Goal card drop handlers (for backlog)
     function handleGoalCardDragOver(e) {
+      console.log('📥 DRAG OVER GOAL CARD');
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
       e.currentTarget.classList.add('drag-over-goal');
@@ -3312,39 +3305,66 @@ function handleTaskDragEnd(e) {
     }
 
     function handleGoalCardDrop(e, goalId) {
-      e.preventDefault();
-      e.stopPropagation();
-      e.currentTarget.classList.remove('drag-over-goal');
+  console.log('🎯 GOAL CARD DROP TRIGGERED!', goalId);
+  console.log('  draggedWeeklyTaskData:', draggedWeeklyTaskData);
+  
+  e.preventDefault();
+  e.stopPropagation();
+  e.currentTarget.classList.remove('drag-over-goal');
+  
+  if (!draggedWeeklyTaskData) {
+    console.log('❌ No draggedWeeklyTaskData!');
+    return;
+  }
+  
+  const { taskId, weekDay } = draggedWeeklyTaskData;
+  const tasks = dashboardState.weeklyTasks[weekDay];
+  const taskIndex = tasks.findIndex(t => t.id === taskId);
+  
+  if (taskIndex === -1) return;
+  
+  const task = tasks[taskIndex];
+  
+  console.log('📋 Task being moved:', task);
+  console.log('   Has goalId?', task.goalId);
+  console.log('   Has goalTaskIndex?', task.goalTaskIndex);
+  
+  // Remove from weekly planner
+  tasks.splice(taskIndex, 1);
+  
+  // If this task came FROM this goal, just update its scheduledDay
+  if (task.goalId === goalId && task.goalTaskIndex !== undefined) {
+    const goal = dashboardState.goals.find(g => g.id === goalId);
+    if (goal && goal.tasks[task.goalTaskIndex]) {
+      goal.tasks[task.goalTaskIndex].scheduledDay = 'none';
+      console.log('✅ Task returned to original goal, no duplicate created');
+    }
+  } else {
+    // Task is from a different goal or has no goal - add it to this goal
+    const goal = dashboardState.goals.find(g => g.id === goalId);
+    if (goal) {
+      if (!goal.tasks) goal.tasks = [];
       
-      if (!draggedWeeklyTaskData) return;
-      
-      const { taskId, weekDay } = draggedWeeklyTaskData;
-      const tasks = dashboardState.weeklyTasks[weekDay];
-      const taskIndex = tasks.findIndex(t => t.id === taskId);
-      
-      if (taskIndex === -1) return;
-      
-      const task = tasks[taskIndex];
-      
-      // Remove from weekly planner
-      tasks.splice(taskIndex, 1);
-      
-      // Add to goal's task list
-      const goal = dashboardState.goals.find(g => g.id === goalId);
-      if (goal) {
-        if (!goal.tasks) goal.tasks = [];
+      // Check if a task with this name already exists
+      const existingTask = goal.tasks.find(t => t.name === task.name);
+      if (!existingTask) {
         goal.tasks.push({
           id: generateId(),
           name: task.name,
-          completed: false,
+          completed: task.completed || false,
           scheduledDay: 'none'
         });
+        console.log('✅ New task added to goal');
+      } else {
+        console.log('⚠️ Task already exists in goal, not creating duplicate');
       }
-      
-      draggedWeeklyTaskData = null;
-      saveDashboard();
-      renderTasks();
     }
+  }
+  
+  draggedWeeklyTaskData = null;
+  saveDashboard();
+  renderTasks();
+}
 
     // Prevent default dragover and drop on empty input
 
@@ -3522,11 +3542,22 @@ function handleDragOver(e) {
         return;
       }
       
-      const task = goal.tasks[taskIndex];
-      console.log('  ✅ Task found:', task.name);
-      
-      // Update the task's scheduled day
-      task.scheduledDay = currentDay;
+  const task = goal.tasks[taskIndex];
+console.log('  ✅ Task found:', task.name);
+
+// Check if this task is already scheduled for the current day
+const existingWeeklyTask = dashboardState.weeklyTasks[currentDay]?.find(
+  t => t.goalId === goalId && t.goalTaskIndex === taskIndex
+);
+
+if (existingWeeklyTask) {
+  console.log('  ⚠️ Task already scheduled for this day, skipping duplicate');
+  draggedTaskData = null;
+  return;
+}
+
+// Update the task's scheduled day
+task.scheduledDay = currentDay;
       
       // Create task in weekly planner
       const weeklyTask = {
