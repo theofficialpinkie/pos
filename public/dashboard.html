@@ -2131,11 +2131,21 @@ function getDayOfWeekFromDate(date) {
 }
 
 // FIX: initialize currentDay from the week start, not from today
+// Initialize currentDay to today if within current week, otherwise start of selected week
 const weekStartDate = getWeekStart(currentWeek);
-let currentDay = getDayOfWeekFromDate(weekStartDate);
+const today = new Date();
+const todayStr = today.toISOString().split("T")[0];
+const weekEndDate = new Date(weekStartDate);
+weekEndDate.setDate(weekStartDate.getDate() + 6);
 
-  let currentGoalForImage = null;
-  let selectedGoalImage = null;
+let currentDay;
+if (todayStr >= currentWeek && todayStr <= weekEndDate.toISOString().split("T")[0]) {
+  // Today is within the selected week - show today
+  currentDay = getDayOfWeekFromDate(today);
+} else {
+  // Viewing a past/future week - show Monday
+  currentDay = getDayOfWeekFromDate(weekStartDate);
+}
 
   function generateId() {
     return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -3556,16 +3566,6 @@ function handleDragOver(e) {
   const task = goal.tasks[taskIndex];
 console.log('  ✅ Task found:', task.name);
 
-// Check if this task is already scheduled for the current day
-const existingWeeklyTask = dashboardState.weeklyTasks[currentDay]?.find(
-  t => t.goalId === goalId && t.goalTaskIndex === taskIndex
-);
-
-if (existingWeeklyTask) {
-  console.log('  ⚠️ Task already scheduled for this day, skipping duplicate');
-  draggedTaskData = null;
-  return;
-}
 
 // Update the task's scheduled day
 task.scheduledDay = currentDay;
@@ -3700,7 +3700,7 @@ task.scheduledDay = currentDay;
       closeGoalSidebar();
     }
 
-    function deleteGoalTask(goalId, taskIndex) {
+ function deleteGoalTask(goalId, taskIndex) {
   if (!confirm('Delete this task?')) return;
   
   const goal = dashboardState.goals.find(g => g.id === goalId);
@@ -3708,19 +3708,19 @@ task.scheduledDay = currentDay;
   
   const task = goal.tasks[taskIndex];
   
-  // Remove from weekly planner if scheduled
-  if (task.scheduledDay && task.scheduledDay !== 'none') {
-    dashboardState.weeklyTasks[task.scheduledDay] = dashboardState.weeklyTasks[task.scheduledDay].filter(
+  // Remove from ALL days in weekly planner if scheduled
+  Object.keys(dashboardState.weeklyTasks).forEach(day => {
+    dashboardState.weeklyTasks[day] = dashboardState.weeklyTasks[day].filter(
       t => !(t.goalId === goalId && t.goalTaskIndex === taskIndex)
     );
     
-    // Update task indices for remaining tasks
-    dashboardState.weeklyTasks[task.scheduledDay].forEach(t => {
+    // Update task indices for remaining tasks from this goal
+    dashboardState.weeklyTasks[day].forEach(t => {
       if (t.goalId === goalId && t.goalTaskIndex > taskIndex) {
         t.goalTaskIndex--;
       }
     });
-  }
+  });
   
   // Remove from goal
   goal.tasks.splice(taskIndex, 1);
@@ -3729,7 +3729,7 @@ task.scheduledDay = currentDay;
   renderGoalTasks(goal);
   renderTasks();
   
-  console.log('🗑️ Task deleted from goal');
+  console.log('🗑️ Task deleted from goal and weekly planner');
 }
 
     function openAnchorSidebar(anchorId) {
