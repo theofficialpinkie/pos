@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Weekly Dashboard</title>
@@ -948,7 +949,411 @@
       margin-right: 10px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+
+/*Celebration Modal*/
+
+/* Celebration Modal - Complete Styles */
+.celebration-modal-content {
+  position: relative;
+  max-width: 500px;
+  width: 90vw;
+  padding: 60px 40px 40px;
+  background: white;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  z-index: 1000000;
+}
+
+.celebration-confetti-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(255, 193, 7, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+  animation: confettiFloat 3s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes confettiFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.celebration-icon {
+  position: relative;
+  z-index: 1;
+  font-size: 4rem;
+  margin-bottom: 20px;
+  animation: celebrationPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes celebrationPop {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.celebration-title {
+  position: relative;
+  z-index: 1;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.celebration-subtitle {
+  position: relative;
+  z-index: 1;
+  font-size: 1.1rem;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0 0 40px 0;
+}
+
+.celebration-stats {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  margin-bottom: 40px;
+  padding: 30px;
+  background: rgba(102, 126, 234, 0.05);
+  border-radius: 16px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #667eea;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: rgba(0, 0, 0, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.celebration-buttons {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.celebration-btn-primary {
+  width: 100%;
+  padding: 18px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.celebration-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.celebration-btn-secondary {
+  width: 100%;
+  padding: 18px;
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.celebration-btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+
     }
+/*JustDoItButton*/
+/*JustDoItButton*/
+.jdi-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000; /* Changed from 10000 to 100000 */
+}
+
+.jdi-modal-content {
+  position: relative;
+  max-width: 600px;
+  width: 90vw;
+  height: 80vh;
+  max-height: 700px;
+  padding: 0;
+  background: #ffffff;
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.just-do-it-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s ease;
+  z-index: 10;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.just-do-it-btn:hover {
+  transform: translateY(-50%) scale(1.15);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.task-item {
+  position: relative;
+}
+
+.task-item:hover .just-do-it-btn {
+  opacity: 1;
+}
+
+.jdi-gradient-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(135deg, 
+    #667eea 0%, 
+    #764ba2 50%, 
+    #f093fb 100%);
+  animation: gradientShift 10s ease infinite;
+  z-index: 0;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  }
+  50% {
+    background: linear-gradient(135deg, #f093fb 0%, #667eea 50%, #764ba2 100%);
+  }
+}
+
+.jdi-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.jdi-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.jdi-timer-display {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 60px 20px 40px;
+  color: white;
+}
+
+.timer-text {
+  font-size: 5rem;
+  font-weight: 200;
+  letter-spacing: -2px;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+}
+
+.timer-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.jdi-content {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  background: white;
+  border-radius: 24px 24px 0 0;
+  margin-top: -24px;
+}
+
+.original-task-pill {
+  display: inline-block;
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 30px;
+  align-self: center;
+}
+
+.action-display {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.action-text {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.4;
+  max-width: 500px;
+}
+
+.jdi-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.jdi-loading p {
+  margin-top: 16px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.spinner {
+  border: 3px solid rgba(102, 126, 234, 0.1);
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+.jdi-later-btn {
+  position: relative;
+  z-index: 10;
+  margin: 0 40px 40px;
+  padding: 16px;
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jdi-later-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.jdi-buttons {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  gap: 12px;
+  margin: 0 40px 40px;
+}
+
+.jdi-done-btn {
+  flex: 1;
+  padding: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jdi-done-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.jdi-later-btn {
+  padding: 16px 24px;
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jdi-later-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.2);
+}
 
     /* Quick Action Icons */
     .quick-actions {
@@ -1841,6 +2246,10 @@ body.dark-bg .sidebar-toggle {
  
   <!-- Main Content Wrapper -->
   <div id="mainContent" class="main-content">
+    <!-- Add this anywhere in the body, maybe near the top 
+<button onclick="testAPIKey()" style="position: fixed; top: 10px; right: 10px; z-index: 99999; padding: 10px; background: #4CAF50; color: white; border: none; border-radius: 4px;">
+  Test API Key Storage
+</button> -->
   
   <!-- Header -->
   <div class="dashboard-header">
@@ -2036,6 +2445,64 @@ body.dark-bg .sidebar-toggle {
 
   
 <script>
+
+  // API Key Management with Encryption
+// API Key Management with Encryption
+const API_KEY_STORAGE = 'pos_openai_key';
+const ENCRYPTION_SECRET = 'priyanka-pos-2024-secure';
+
+function encryptAPIKey(apiKey) {
+  return CryptoJS.AES.encrypt(apiKey, ENCRYPTION_SECRET).toString();
+}
+
+function decryptAPIKey(encryptedKey) {
+  try {
+    const bytes = CryptoJS.AES.decrypt(encryptedKey, ENCRYPTION_SECRET);
+    return bytes.toString(CryptoJS.enc.Utf8);
+  } catch (e) {
+    console.error('Failed to decrypt API key');
+    return null;
+  }
+}
+
+function saveAPIKey(apiKey) {
+  const encrypted = encryptAPIKey(apiKey);
+  localStorage.setItem(API_KEY_STORAGE, encrypted);
+  console.log('✅ API key saved securely');
+}
+
+function getAPIKey() {
+  const encrypted = localStorage.getItem(API_KEY_STORAGE);
+  if (!encrypted) return null;
+  return decryptAPIKey(encrypted);
+}
+
+function promptForAPIKey() {
+  const existingKey = getAPIKey();
+  
+  if (existingKey) {
+    const masked = existingKey.substring(0, 7) + '...' + existingKey.substring(existingKey.length - 4);
+    const useExisting = confirm(`Use existing API key (${masked})?\n\nClick OK to use it, or Cancel to enter a new one.`);
+    if (useExisting) return existingKey;
+  }
+  
+  const newKey = prompt('Enter your OpenAI API key:\n\n(It will be encrypted and stored locally)');
+  if (newKey && newKey.trim()) {
+    saveAPIKey(newKey.trim());
+    return newKey.trim();
+  }
+  
+  return null;
+}
+
+function testAPIKey() {
+  const key = promptForAPIKey();
+  if (key) {
+    alert(`✅ API Key stored!\n\nFirst 7 chars: ${key.substring(0, 7)}\nLast 4 chars: ${key.substring(key.length - 4)}`);
+  } else {
+    alert('❌ No API key provided');
+  }
+}
  
 // ===============================
 // 1. DETERMINE CURRENT WEEK FOR DASHBOARD
@@ -2396,6 +2863,281 @@ function initializeDashboard() {
   initializeQuickActions();
 }
 
+    let currentJDITask = null;
+let jdiActionCount = 0;
+let jdiTimerInterval = null;
+let jdiTimeRemaining = 120; // 2 minutes in seconds
+
+async function justDoIt(taskId, event) {
+  event.stopPropagation();
+  console.log('🔥 Just Do It clicked! Task ID:', taskId);
+  
+  // Find the task
+  const task = dashboardState.weeklyTasks[currentDay]?.find(t => t.id === taskId);
+  console.log('📋 Found task:', task);
+  if (!task) {
+    alert('Task not found');
+    return;
+  }
+  
+  currentJDITask = task;
+  jdiActionCount = 0;
+  
+  // Show modal
+  const modal = document.getElementById('justDoItModal');
+  console.log('🎭 Modal element:', modal);
+  const originalTaskEl = document.getElementById('jdiOriginalTask');
+  const actionEl = document.getElementById('jdiAction');
+  const loadingEl = document.getElementById('jdiLoading');
+  
+  originalTaskEl.textContent = task.originalName || task.name;
+  actionEl.textContent = '';
+  loadingEl.style.display = 'flex';
+  modal.style.display = 'flex';
+
+  console.log('✅ Modal should be visible now');
+  
+  // Generate first action
+  await generateNextAction(task);
+  
+  // Start timer immediately after action loads
+  startJDITimer();
+}
+
+function startJDITimer() {
+  jdiTimeRemaining = 120; // Reset to 2 minutes
+  updateTimerDisplay();
+  
+  // Clear any existing timer
+  if (jdiTimerInterval) {
+    clearInterval(jdiTimerInterval);
+  }
+  
+  jdiTimerInterval = setInterval(() => {
+    jdiTimeRemaining--;
+    updateTimerDisplay();
+    
+    if (jdiTimeRemaining <= 0) {
+      clearInterval(jdiTimerInterval);
+      onTimerComplete();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const minutes = Math.floor(jdiTimeRemaining / 60);
+  const seconds = jdiTimeRemaining % 60;
+  const timerEl = document.getElementById('jdiTimer');
+  if (timerEl) {
+    timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
+}
+
+async function onTimerComplete() {
+  console.log('⏰ Timer complete triggered!');
+  console.log('📍 Stack trace:', new Error().stack);
+  
+  // Stop the timer
+  if (jdiTimerInterval) {
+    clearInterval(jdiTimerInterval);
+    jdiTimerInterval = null;
+  }
+  
+  // Mark progress
+  if (!currentJDITask.jdiProgress) currentJDITask.jdiProgress = 0;
+  currentJDITask.jdiProgress++;
+  saveDashboard();
+  
+  console.log('📊 Progress saved:', currentJDITask.jdiProgress);
+  console.log('🚫 PREVENTING any renders or closes');
+  
+  // Show celebration immediately - NO setTimeout
+  showCelebrationModal();
+}
+
+function showCelebrationModal() {
+  // Hide JDI modal
+  const jdiModal = document.getElementById('justDoItModal');
+  if (jdiModal) {
+    jdiModal.style.display = 'none';
+  }
+  
+  // Simple confirmation dialog
+  const keepGoing = confirm(`🔥 You crushed it! ${currentJDITask.jdiProgress} actions completed!\n\nKeep the momentum going?\n\nOK = Next 2-min action\nCancel = I'm done`);
+  
+  if (keepGoing) {
+    // Show JDI modal again
+    jdiModal.style.display = 'flex';
+    jdiModal.style.visibility = 'visible';
+    
+    // Generate next action
+    generateNextAction(currentJDITask);
+    startJDITimer();
+  } else {
+    closeJDIModal();
+    renderTasks();
+  }
+}
+function closeCelebrationModal() {
+  console.log('close celebration is being caused');
+  const celebModal = document.getElementById('celebrationModal');
+  celebModal.style.display = 'none';
+}
+
+async function generateNextAction(task) {
+  const actionEl = document.getElementById('jdiAction');
+  const loadingEl = document.getElementById('jdiLoading');
+  
+  actionEl.style.display = 'none';
+  loadingEl.style.display = 'flex';
+  
+  // Get API key
+  const apiKey = getAPIKey();
+  if (!apiKey) {
+    alert('OpenAI API key not found. Please set it up first.');
+    closeJDIModal();
+    return;
+  }
+  
+  try {
+    jdiActionCount++;
+    
+    const prompt = jdiActionCount === 1 
+      ? `Given this task: "${task.originalName || task.name}"${task.description ? ` with context: "${task.description}"` : ''}, create ONE specific 2-minute action that would help someone get started immediately. Return ONLY the action as a short phrase, no explanation or preamble.`
+      : `The user just completed a 2-minute action for: "${task.originalName || task.name}". They want to keep going. Give them the NEXT logical 2-minute action to continue momentum. Return ONLY the action as a short phrase.`;
+    
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: 'You are a productivity assistant that breaks tasks into tiny, actionable 2-minute steps to help people build momentum.' },
+          { role: 'user', content: prompt }
+        ],
+        max_tokens: 100,
+        temperature: 0.7
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    const action = data.choices[0].message.content.trim();
+    
+    loadingEl.style.display = 'none';
+    actionEl.style.display = 'block';
+    actionEl.textContent = action;
+    
+  } catch (error) {
+    console.error('Error calling OpenAI:', error);
+    alert('Failed to generate action. Check console for details.');
+    closeJDIModal();
+  }
+}
+
+function closeJDIModal() {
+  const modal = document.getElementById('justDoItModal');
+  modal.style.display = 'none';
+  
+  // Clear timer
+  if (jdiTimerInterval) {
+    clearInterval(jdiTimerInterval);
+    jdiTimerInterval = null;
+  }
+  
+  currentJDITask = null;
+  jdiActionCount = 0;
+  jdiTimeRemaining = 120;
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const doneBtn = document.getElementById('jdiDone');
+  const laterBtn = document.getElementById('jdiLater');
+  
+  if (doneBtn) {
+    doneBtn.addEventListener('click', async function() {
+      // Stop the timer
+      if (jdiTimerInterval) {
+        clearInterval(jdiTimerInterval);
+        jdiTimerInterval = null;
+      }
+      // Trigger the same flow as timer completion
+      onTimerComplete();
+    });
+  }
+  
+  if (laterBtn) {
+    laterBtn.addEventListener('click', function() {
+      // Get the current AI-generated action
+      const actionEl = document.getElementById('jdiAction');
+      const actionText = actionEl.textContent.trim();
+      
+      if (actionText) {
+        // Create new task with the 2-min action
+        const newTask = {
+          id: generateId(),
+          name: actionText,
+          originalName: actionText,
+          goalId: currentJDITask.goalId || null,
+          completed: false,
+          description: `2-min action from: ${currentJDITask.originalName || currentJDITask.name}`,
+          aiSimplified: true
+        };
+        
+        if (!dashboardState.weeklyTasks[currentDay]) {
+          dashboardState.weeklyTasks[currentDay] = [];
+        }
+        
+        dashboardState.weeklyTasks[currentDay].push(newTask);
+        saveDashboard();
+        renderTasks();
+      }
+      
+      closeJDIModal();
+    });
+  }
+  
+  // Close on outside click
+  const modal = document.getElementById('justDoItModal');
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) closeJDIModal();
+    });
+  }
+  
+  // Celebration modal buttons
+  const keepGoingBtn = document.getElementById('celebrationKeepGoing');
+  const finishBtn = document.getElementById('celebrationFinish');
+  
+  if (keepGoingBtn) {
+    keepGoingBtn.addEventListener('click', async function() {
+      closeCelebrationModal();
+      
+      // Show JDI modal again
+      const jdiModal = document.getElementById('justDoItModal');
+      jdiModal.style.display = 'flex';
+      
+      // Generate next action
+      await generateNextAction(currentJDITask);
+      startJDITimer();
+    });
+  }
+  
+  if (finishBtn) {
+    finishBtn.addEventListener('click', function() {
+      closeCelebrationModal();
+      closeJDIModal();
+      renderTasks();
+    });
+  }
+});
 
     // QUICK ACTIONS
     function initializeQuickActions() {
@@ -2762,28 +3504,25 @@ function initializeDashboard() {
         dropdown.innerHTML = html;
       });
     }
-
-    function addQuickTask(taskName) {
-      const newTask = {
-        id: generateId(),
-        name: taskName,
-        goalId: null,
-        completed: false,
-        description: ''
-      };
-      
-      if (!dashboardState.weeklyTasks[currentDay]) {
-        dashboardState.weeklyTasks[currentDay] = [];
-      }
-      
-      dashboardState.weeklyTasks[currentDay].push(newTask);
-      
-      saveDashboard();
-      renderTasks();
-      
-      // Close dropdown
-      document.querySelectorAll('.quick-action-dropdown').forEach(d => d.classList.remove('active'));
-    }
+function addQuickTask(taskName) {
+  const newTask = {
+    id: generateId(),
+    name: taskName,
+    originalName: taskName, // NEW - same as name since no goal source
+    goalId: null,
+    completed: false,
+    description: '',
+    aiSimplified: false // NEW
+  };
+  if (!dashboardState.weeklyTasks[currentDay]) {
+    dashboardState.weeklyTasks[currentDay] = [];
+  }
+  dashboardState.weeklyTasks[currentDay].push(newTask);
+  saveDashboard();
+  renderTasks();
+  // Close dropdown
+  document.querySelectorAll('.quick-action-dropdown').forEach(d => d.classList.remove('active'));
+}
 
     // Inline Task Input - Tasks Column
     function initializeInlineTaskInput() {
@@ -2892,38 +3631,38 @@ function initializeDashboard() {
     }
 
     function addInlineTask(taskName, goalId) {
-      const newTask = {
+  const newTask = {
+    id: generateId(),
+    name: taskName,
+    originalName: taskName, // NEW
+    goalId: goalId || null,
+    completed: false,
+    description: '',
+    aiSimplified: false // NEW
+  };
+  
+  // Add to weekly tasks
+  dashboardState.weeklyTasks[currentDay].push(newTask);
+  
+  // If linked to goal, add to goal's task list
+  if (goalId) {
+    const goal = dashboardState.goals.find(g => g.id === goalId);
+    if (goal) {
+      if (!goal.tasks) goal.tasks = [];
+      const goalTask = {
         id: generateId(),
         name: taskName,
-        goalId: goalId || null,
         completed: false,
-        description: ''
+        scheduledDay: currentDay
       };
-      
-      // Add to weekly tasks
-      dashboardState.weeklyTasks[currentDay].push(newTask);
-      
-      // If linked to goal, add to goal's task list
-      if (goalId) {
-        const goal = dashboardState.goals.find(g => g.id === goalId);
-        if (goal) {
-          if (!goal.tasks) goal.tasks = [];
-          
-          const goalTask = {
-            id: generateId(),
-            name: taskName,
-            completed: false,
-            scheduledDay: currentDay
-          };
-          
-          goal.tasks.push(goalTask);
-          newTask.goalTaskIndex = goal.tasks.length - 1;
-        }
-      }
-      
-      saveDashboard();
-      renderTasks();
+      goal.tasks.push(goalTask);
+      newTask.goalTaskIndex = goal.tasks.length - 1;
     }
+  }
+  
+  saveDashboard();
+  renderTasks();
+}
 
     function toggleGoalComplete(goalId) {
       const goal = dashboardState.goals.find(g => g.id === goalId);
@@ -3518,13 +4257,15 @@ function handleDragOver(e) {
 
     // Create weekly task
     const weeklyTask = {
-      id: generateId(),
-      name: task.name,
-      goalId,
-      goalTaskIndex: taskIndex,
-      completed: false,
-      description: ""
-    };
+    id: generateId(),
+    name: task.name,
+    originalName: task.name, // NEW - preserve original goal task name
+    goalId,
+    goalTaskIndex: taskIndex,
+    completed: false,
+    description: "",
+    aiSimplified: false // NEW
+  };
 
     if (!dashboardState.weeklyTasks[currentDay]) {
       dashboardState.weeklyTasks[currentDay] = [];
@@ -3698,14 +4439,17 @@ task.scheduledDay = currentDay;
       task.scheduledDay = day;
       
       // Add to new day
+     // Add to new day
       if (day !== 'none') {
         dashboardState.weeklyTasks[day].push({
           id: generateId(),
           name: task.name,
+          originalName: task.name, // NEW
           goalId: goalId,
           goalTaskId: task.id,
           completed: task.completed,
-          description: ''
+          description: '',
+          aiSimplified: false // NEW
         });
       }
       
@@ -3817,6 +4561,7 @@ task.scheduledDay = currentDay;
 
     // WEEKLY PLAN
     function renderTasks() {
+      console.log('🔄 renderTasks() called - stack:', new Error().stack.substring(0, 200));
       const tasksList = document.getElementById('tasksList');
       const tasksColumn = document.getElementById('tasksColumn');
       const goalsColumn = document.getElementById('goalsColumn');
@@ -3871,23 +4616,27 @@ task.scheduledDay = currentDay;
       }
       
       tasks.forEach(task => {
-        const taskEl = document.createElement('div');
-        taskEl.className = 'task-item' + (task.completed ? ' completed' : '');
-        taskEl.draggable = true; // Enable dragging
-        taskEl.dataset.taskId = task.id;
-        taskEl.dataset.weekDay = currentDay;
-        
-        const goal = dashboardState.goals ? dashboardState.goals.find(g => g.id === task.goalId) : null;
-        
-        taskEl.innerHTML = `
-          <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} 
-                 onchange="toggleWeeklyTask('${task.id}')" />
-          <div class="task-content">
-            ${goal && goal.image ? `<div class="task-goal-badge" style="background-image: url('${goal.image}')"></div>` : ''}
-            <div class="task-name">${task.name}</div>
-          </div>
-        `;
-        
+  const taskEl = document.createElement('div');
+  taskEl.className = 'task-item' + (task.completed ? ' completed' : '');
+  taskEl.draggable = true;
+  taskEl.dataset.taskId = task.id;
+  taskEl.dataset.weekDay = currentDay;
+  
+  const goal = dashboardState.goals ? dashboardState.goals.find(g => g.id === task.goalId) : null;
+  
+  taskEl.innerHTML = `
+  <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} 
+         onchange="toggleWeeklyTask('${task.id}')" />
+  <div class="task-content">
+    ${goal && goal.image ? `<div class="task-goal-badge" style="background-image: url('${goal.image}')"></div>` : ''}
+    <div class="task-name">${task.name}</div>
+  </div>
+  ${!task.aiSimplified ? `
+    <button class="just-do-it-btn" onclick="justDoIt('${task.id}', event)" title="Break into 2-min action">
+      <img src="justdoit.png" alt="Just Do It" style="width: 100%; height: 100%; object-fit: contain;" />
+    </button>
+  ` : ''}
+`;
         // Drag handlers
         taskEl.addEventListener('dragstart', handleWeeklyTaskDragStart);
         taskEl.addEventListener('dragend', handleWeeklyTaskDragEnd);
@@ -4607,6 +5356,70 @@ document.addEventListener("DOMContentLoaded", () => {
   </div>
 
   </div> <!-- Close mainContent -->
+
+ <!-- Just Do It Popup -->
+<!-- Just Do It Popup -->
+<div id="justDoItModal" class="jdi-modal-overlay" style="display: none;">
+  <div class="jdi-modal-content">
+    <div class="jdi-gradient-bg"></div>
+    <button class="jdi-close-btn" onclick="closeJDIModal()">✕</button>
+    
+    <div class="jdi-timer-display">
+      <div id="jdiTimer" class="timer-text">2:00</div>
+      <div class="timer-label">Focus time</div>
+    </div>
+    
+    <div class="jdi-content">
+      <div class="original-task-pill">
+        <span id="jdiOriginalTask"></span>
+      </div>
+      
+      <div class="action-display">
+        <div id="jdiAction" class="action-text"></div>
+      </div>
+      
+      <div id="jdiLoading" class="jdi-loading" style="display: none;">
+        <div class="spinner"></div>
+        <p>Generating your next action...</p>
+      </div>
+    </div>
+    
+    <div class="jdi-buttons">
+      <button id="jdiDone" class="jdi-done-btn">Done! ✓</button>
+      <button id="jdiLater" class="jdi-later-btn">I'll do this later</button>
+    </div>
+  </div>
+
+<!-- Celebration Modal -->
+<div id="celebrationModal" class="jdi-modal-overlay" style="display: none;">
+  <div class="celebration-modal-content">
+    <div class="celebration-confetti-bg"></div>
+    
+    <div class="celebration-icon">🔥</div>
+    <h2 class="celebration-title">You crushed it!</h2>
+    <p class="celebration-subtitle">That's momentum in action</p>
+    
+    <div class="celebration-stats">
+      <div class="stat-item">
+        <div class="stat-number" id="celebrationActionCount">1</div>
+        <div class="stat-label">Actions completed</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">2:00</div>
+        <div class="stat-label">Focus time</div>
+      </div>
+    </div>
+    
+    <div class="celebration-buttons">
+      <button id="celebrationKeepGoing" class="celebration-btn-primary">
+        🚀 Keep Going!
+      </button>
+      <button id="celebrationFinish" class="celebration-btn-secondary">
+        ✓ I'm Done
+      </button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
