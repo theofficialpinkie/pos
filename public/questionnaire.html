@@ -856,6 +856,17 @@
 .sidebar-section-weeks {
     padding: 8px 0 0 0;
 }
+.sidebar-item.active,
+.week-item.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+}
+
+body.dark-bg .sidebar-item.active,
+body.dark-bg .week-item.active {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 1);
+}
 
 /* Unified item styling - works on light or dark */
 .sidebar-item,
@@ -1316,22 +1327,25 @@ body.dark-bg .sidebar-toggle {
         <button class="sidebar-close" onclick="toggleSidebar()">×</button>
 
         <!-- Vision & Milestones at top -->
-        <div class="sidebar-section-top">
-            <div class="sidebar-item" onclick="openVision()" style="cursor: pointer;">
-                Vision Board
-            </div>
-            <div class="sidebar-item" onclick="openMilestones()" style="cursor: pointer;">
-                Milestones
-            </div>
-        </div>
+        
+<div class="sidebar-section-top">
+    <div class="sidebar-item" id="sidebarVision" onclick="openVision()" style="cursor: pointer;">
+        Vision Board
+    </div>
+    <div class="sidebar-item" id="sidebarMilestones" onclick="openMilestones()" style="cursor: pointer;">
+        Milestones
+    </div>
+</div>
 
         <!-- Weeks Section -->
         <div class="sidebar-section-weeks">
-            <!-- Current Week -->
-            <div id="currentWeekLabel" class="week-item active">
-                Loading…
+        <!-- Current Week -->
+        <div class="sidebar-section">
+            <div class="sidebar-item" id="currentWeekLabel" onclick="openCurrentWeekDashboard()" style="cursor: pointer;">
+                Current Week
             </div>
-            
+        </div>
+                    
             <!-- Next Week -->
             <div id="nextWeekLabel"></div>
             
@@ -1647,12 +1661,43 @@ function getAllWeeks() {
   // Sort descending (newest first)
   return weeks.sort((a, b) => new Date(b) - new Date(a));
 }
+function updateSidebarActiveState() {
+  // Remove all active states
+  document.querySelectorAll('.sidebar-item, .week-item').forEach(item => {
+    item.classList.remove('active');
+  });
+  
+  // Check which step is currently active
+  const visionStep = document.getElementById('step-vision');
+  const milestonesStep = document.getElementById('step-milestones');
+  const bpExp = document.getElementById('biggerPictureExp');
+  
+  console.log('Vision active?', visionStep?.classList.contains('active'));
+  console.log('Milestones active?', milestonesStep?.classList.contains('active'));
+  console.log('BP showing?', bpExp?.style.display);
+  
+  // If bigger picture is showing, check which step
+  if (bpExp && bpExp.style.display !== 'none') {
+    if (visionStep && visionStep.classList.contains('active')) {
+      const visionItem = document.getElementById('sidebarVision');
+      console.log('Setting vision active', visionItem);
+      if (visionItem) visionItem.classList.add('active');
+    } else if (milestonesStep && milestonesStep.classList.contains('active')) {
+      const milestonesItem = document.getElementById('sidebarMilestones');
+      console.log('Setting milestones active', milestonesItem);
+      if (milestonesItem) milestonesItem.classList.add('active');
+    }
+  } else {
+    // We're in the questionnaire - highlight "Current Week"
+    const currentWeekItem = document.getElementById('currentWeekLabel');
+    console.log('Setting current week active', currentWeekItem);
+    if (currentWeekItem) currentWeekItem.classList.add('active');
+  }
+}
 
 function openVision() {
-    // Add dark-bg class for vision board
     document.body.classList.add('dark-bg');
     
-    // Close sidebar first
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('mainContent');
     if (sidebar) {
@@ -1663,7 +1708,6 @@ function openVision() {
         mainContent.classList.remove('sidebar-open');
     }
     
-    // Navigate to vision step
     const visionStep = document.getElementById('step-vision');
     if (visionStep) {
         document.querySelectorAll('.bp-step').forEach(s => s.classList.remove('active'));
@@ -1674,14 +1718,25 @@ function openVision() {
         if (bpExp) {
             bpExp.style.display = 'block';
         }
+        
+        const preLoading = document.getElementById('visionPreLoading');
+        if (preLoading) {
+            preLoading.classList.add('hidden');
+        }
+        
+        const overlay = document.getElementById('visionOverlay');
+        if (overlay) {
+            overlay.classList.add('visible');
+        }
+        
+        // Update sidebar active state
+        updateSidebarActiveState();
     }
 }
 
 function openMilestones() {
-    // Add dark-bg class for milestones
     document.body.classList.add('dark-bg');
     
-    // Close sidebar first
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('mainContent');
     if (sidebar) {
@@ -1692,20 +1747,26 @@ function openMilestones() {
         mainContent.classList.remove('sidebar-open');
     }
     
-    // Navigate to milestones step
     const milestonesStep = document.getElementById('step-milestones');
     if (milestonesStep) {
         document.querySelectorAll('.bp-step').forEach(s => s.classList.remove('active'));
         milestonesStep.classList.add('active');
         currentBPStep = 1;
-        
         initMilestones();
         
         const bpExp = document.getElementById('biggerPictureExp');
         if (bpExp) {
             bpExp.style.display = 'block';
         }
+        
+        // Update sidebar active state
+        updateSidebarActiveState();
     }
+}
+
+function openCurrentWeekDashboard() {
+    const currentWeek = localStorage.getItem('currentWeek') || getCurrentWeekMonday();
+    window.location.href = `dashboard.html?week=${currentWeek}`;
 }
 
 
@@ -2750,25 +2811,28 @@ function generateDashboard() {
 
     // Don't auto-render on load - wait for ritual
 
-    function toggleSidebar() {
+function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
   const mainContent = document.getElementById('mainContent');
 
   if (sidebar.classList.contains('expanded')) {
     sidebar.classList.remove('expanded');
     sidebar.classList.add('collapsed');
-    mainContent.classList.remove('sidebar-open');
+    if (mainContent) mainContent.classList.remove('sidebar-open');
   } else {
     sidebar.classList.add('expanded');
     sidebar.classList.remove('collapsed');
-    mainContent.classList.add('sidebar-open');
-
-    updateSidebarContent();
-    renderWeeksList();
-    renderNextWeek();
+    if (mainContent) mainContent.classList.add('sidebar-open');
+    
+    // Update sidebar content
+    if (typeof updateSidebarContent === 'function') updateSidebarContent();
+    if (typeof renderWeeksList === 'function') renderWeeksList();
+    if (typeof renderNextWeek === 'function') renderNextWeek();
+    
+    // Highlight the correct item based on current page/step
+    updateSidebarActiveState();
   }
 }
-
 
 
 function renderWeeksList() {
