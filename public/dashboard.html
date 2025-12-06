@@ -720,6 +720,135 @@
       50% { transform: translateY(-5px); }
     }
 
+
+    /* Overall Progress Bar */
+    .overall-progress {
+  flex: 1;
+  
+    }
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.progress-text {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.progress-count {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+  letter-spacing: -0.2px;
+}
+
+.progress-bar-track {
+  height: 4px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: #000000;
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-routines-row {
+  display: flex;
+  align-items: center;
+  gap: 100px;
+  margin-top: 20px;
+  padding-top: 20px;
+}
+
+    /* DAILY ROUTINES PILLS */
+
+.daily-routines {
+  display: flex;
+  gap: 8px;
+  
+} 
+
+.routine-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.routine-pill:hover {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.routine-pill.completed {
+  background: linear-gradient(135deg, rgba(0, 184, 122, 0.05) 0%, rgba(0, 184, 122, 0.05) 80%);
+  border-color: rgba(0, 182, 152, 0.25);
+  transform: scale(1.02);
+}
+
+.routine-name {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.5);
+  letter-spacing: -0.2px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+.routine-pill.completed .routine-name {
+  color: #555555;
+  font-weight: 500;
+}
+
+.routine-streak {
+  font-size: 0.65rem;
+  color: rgba(0, 0, 0, 0.3);
+  font-weight: 400;
+  padding-left: 6px;
+  border-left: 1px solid rgba(0, 0, 0, 0.06);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+.routine-pill.completed .routine-streak {
+  color: rgba(116, 116, 117, 0.6);
+  border-left-color: rgba(0, 0, 0, 0.15);
+  font-weight: 500;
+}
+
+
+@keyframes routineComplete {
+  0% { 
+    transform: scale(1);
+  }
+  50% { 
+    transform: scale(1.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  100% { 
+    transform: scale(1.02);
+  }
+}
+
+.routine-pill.completed {
+  animation: routineComplete 0.3s ease-out;
+}
     /* WEEKLY PLAN - Two Column Layout */
     .planner-section {
       max-width: 1200px;
@@ -2262,6 +2391,7 @@ body.dark-bg .sidebar-toggle {
 
   <!-- Main Container -->
   <div class="main-container">
+    <!-- Daily Routines -->
     
     <!-- Weekly Planner - Two Column Layout -->
     <div class="planner-section" id="plannerSection">
@@ -2323,11 +2453,43 @@ body.dark-bg .sidebar-toggle {
       </div>
 
       <!-- Right: Goals Grid (always visible) -->
-      <div class="goals-column" id="goalsColumn">
-        <!-- Goals Grid Container -->
-        <div id="goalsGridContainer">
-          <!-- Populated by JavaScript -->
-        </div>
+      <!-- Right: Goals Grid (always visible) -->
+<div class="goals-column" id="goalsColumn">
+  <!-- Goals Grid Container -->
+  <div id="goalsGridContainer">
+    <!-- Populated by JavaScript -->
+  </div>
+  
+  <!-- Progress + Routines Row -->
+  <div class="progress-routines-row">
+    <!-- Overall Progress Bar -->
+    <div class="overall-progress">
+      <div class="progress-label">
+        <span class="progress-text">Progress</span>
+        <span class="progress-count" id="overallProgressCount">0/0</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="overallProgressFill" style="width: 0%"></div>
+      </div>
+    </div>
+    
+    <!-- Daily Routines -->
+    <div class="daily-routines">
+      <div class="routine-pill" id="meditateRoutine" onclick="toggleRoutine('meditate')">
+        <span class="routine-name">Meditate</span>
+        <span class="routine-streak" id="meditateStreak">27 days</span>
+      </div>
+      
+      <div class="routine-pill" id="dietRoutine" onclick="toggleRoutine('diet')">
+        <span class="routine-name">Diet</span>
+        <span class="routine-streak" id="dietStreak">1 day</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Week-End Button (Sunday only, below goals) -->
+  <div id="weekEndButton" style="display: none;"></div>
+</div>
         
         <!-- Week-End Button (Sunday only, below goals) -->
         <div id="weekEndButton" style="display: none;"></div>
@@ -2857,6 +3019,7 @@ function initializeDashboard() {
 
   console.log("Dashboard initialized for week:", weekKey, dashboardState);
 
+  initializeRoutines();
   renderTasks();
   initializeInlineTaskInput();
   initializeEmptyStateInput();
@@ -3138,6 +3301,105 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+
+// Initialize routines with pre-loaded streaks
+function initializeRoutines() {
+  if (!dashboardState.routines) {
+    dashboardState.routines = {
+      meditate: {
+        currentStreak: 27,
+        lastCompleted: null,
+        weeklyLog: {}
+      },
+      diet: {
+        currentStreak: 1,
+        lastCompleted: null,
+        weeklyLog: {}
+      }
+    };
+    saveDashboard();
+  }
+  
+  updateRoutineDisplay();
+}
+
+function updateOverallProgress() {
+  let totalTasks = 0;
+  let completedTasks = 0;
+  
+  // Count all goal tasks
+  dashboardState.goals.forEach(goal => {
+    if (goal.tasks && goal.tasks.length > 0) {
+      totalTasks += goal.tasks.length;
+      completedTasks += goal.tasks.filter(t => t.completed).length;
+    }
+  });
+  
+  const percentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+  
+  // Update UI
+  const countEl = document.getElementById('overallProgressCount');
+  const fillEl = document.getElementById('overallProgressFill');
+  
+  if (countEl) countEl.textContent = `${completedTasks}/${totalTasks}`;
+  if (fillEl) fillEl.style.width = `${percentage}%`;
+}
+
+function toggleRoutine(routineType) {
+  const today = new Date().toISOString().split('T')[0];
+  const routine = dashboardState.routines[routineType];
+  const dayKey = `${currentWeek}-${currentDay}`;
+  
+  // Check if already completed today
+  const isCompleted = routine.weeklyLog[dayKey];
+  
+  if (isCompleted) {
+    // Uncomplete - decrease streak
+    routine.currentStreak--;
+    delete routine.weeklyLog[dayKey];
+    routine.lastCompleted = null;
+  } else {
+    // Complete - increase streak
+    routine.currentStreak++;
+    routine.weeklyLog[dayKey] = true;
+    routine.lastCompleted = today;
+    
+    // Show mini celebration
+    const pill = document.getElementById(`${routineType}Routine`);
+    showConfetti(pill);
+  }
+  
+  saveDashboard();
+  updateRoutineDisplay();
+}
+
+function updateRoutineDisplay() {
+  const dayKey = `${currentWeek}-${currentDay}`;
+  
+  // Meditate
+  const meditateRoutine = dashboardState.routines.meditate;
+  const meditatePill = document.getElementById('meditateRoutine');
+  const meditateStreak = document.getElementById('meditateStreak');
+  
+  if (meditateRoutine.weeklyLog[dayKey]) {
+    meditatePill.classList.add('completed');
+  } else {
+    meditatePill.classList.remove('completed');
+  }
+  meditateStreak.textContent = `${meditateRoutine.currentStreak} days`;
+  
+  // Diet
+  const dietRoutine = dashboardState.routines.diet;
+  const dietPill = document.getElementById('dietRoutine');
+  const dietStreak = document.getElementById('dietStreak');
+  
+  if (dietRoutine.weeklyLog[dayKey]) {
+    dietPill.classList.add('completed');
+  } else {
+    dietPill.classList.remove('completed');
+  }
+  dietStreak.textContent = `${dietRoutine.currentStreak} days`;
+}
 
     // QUICK ACTIONS
     function initializeQuickActions() {
@@ -4416,7 +4678,7 @@ task.scheduledDay = currentDay;
         }
       });
     });
-  
+  updateOverallProgress();
   saveDashboard();
   renderGoalTasks(goal);
   renderGoals();
@@ -4650,8 +4912,10 @@ task.scheduledDay = currentDay;
         tasksList.appendChild(taskEl);
       });
       
+      updateOverallProgress();
       updateDayLabel();
       renderWeekEndButton();
+      updateRoutineDisplay();
     }
 
     function renderGoalsGrid(isLarge = false) {
@@ -4714,6 +4978,7 @@ task.scheduledDay = currentDay;
       }, 0);
       
       return html;
+  
     }
 
     function renderWeekEndButton() {
@@ -4894,7 +5159,7 @@ task.scheduledDay = currentDay;
       if (task.completed) {
         showTaskCompleteCelebration(task, event.target);
       }
-      
+      updateOverallProgress();
       saveDashboard();
       renderTasks();
     }
