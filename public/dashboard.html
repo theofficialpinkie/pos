@@ -1222,7 +1222,37 @@
 }
 
 
-    }
+}
+.goal-jdi-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s ease;
+  z-index: 10;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.goal-empty-card:hover .goal-jdi-btn {
+  opacity: 1;
+}
+
+.goal-jdi-btn:hover {
+  transform: scale(1.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+
 /*JustDoItButton*/
 /*JustDoItButton*/
 .jdi-modal-overlay {
@@ -1483,6 +1513,44 @@
   background: rgba(0, 0, 0, 0.05);
   border-color: rgba(0, 0, 0, 0.2);
 }
+
+.goal-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.goal-jdi-btn {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: 12px;
+}
+
+.goal-jdi-btn:hover {
+  transform: scale(1.1);
+  background: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.goal-jdi-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 
     /* Quick Action Icons */
     .quick-actions {
@@ -1819,12 +1887,43 @@ body.dark-bg .sidebar-toggle {
       color: #000;
     }
 
-    .sidebar-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-      padding-right: 40px;
-    }
+   .sidebar-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.sidebar-title .goal-jdi-btn {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar-title .goal-jdi-btn:hover {
+  transform: scale(1.1);
+  background: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar-title .goal-jdi-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 
     .sidebar-section {
       margin-bottom: 25px;
@@ -3031,6 +3130,102 @@ let jdiActionCount = 0;
 let jdiTimerInterval = null;
 let jdiTimeRemaining = 120; // 2 minutes in seconds
 
+async function breakDownGoal(goalId) {
+  const goal = dashboardState.goals.find(g => g.id === goalId);
+  if (!goal) {
+    alert('Goal not found');
+    return;
+  }
+  
+  // Show loading state
+  const confirmed = confirm(`Break "${goal.name}" into 3 actionable milestones?\n\nThis will use AI to create concrete steps you can execute.`);
+  if (!confirmed) return;
+  
+  // Get API key
+  const apiKey = getAPIKey();
+  if (!apiKey) {
+    alert('OpenAI API key not found. Please set it up first.');
+    return;
+  }
+  
+  try {
+    const prompt = `Break this goal into exactly 3 concrete, actionable milestones: "${goal.name}"${goal.description ? ` (Context: ${goal.description})` : ''}
+
+Return ONLY a JSON array of 3 milestone objects with this exact format:
+[
+  {"name": "Brief milestone description", "timeEstimate": "30 mins"},
+  {"name": "Brief milestone description", "timeEstimate": "1 hour"},
+  {"name": "Brief milestone description", "timeEstimate": "45 mins"}
+]
+
+Each milestone should be:
+- Specific and actionable
+- Completable in one session
+- A clear step toward the goal
+- Include realistic time estimate
+
+Return ONLY the JSON array, no explanation.`;
+    
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { 
+            role: 'system', 
+            content: 'You are a strategic planning assistant that breaks goals into concrete, actionable milestones. Always return valid JSON arrays only.' 
+          },
+          { role: 'user', content: prompt }
+        ],
+        max_tokens: 300,
+        temperature: 0.7
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    let milestonesText = data.choices[0].message.content.trim();
+    
+    // Clean up response (remove markdown, etc)
+    milestonesText = milestonesText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    
+    const milestones = JSON.parse(milestonesText);
+    
+    // Add milestones as tasks to the goal
+    if (!goal.tasks) goal.tasks = [];
+    
+    milestones.forEach(milestone => {
+      goal.tasks.push({
+        id: generateId(),
+        name: `${milestone.name} (${milestone.timeEstimate})`,
+        completed: false,
+        scheduledDay: 'none'
+      });
+    });
+    
+    // Mark goal as having milestones generated
+    goal.milestones = true;
+    
+    saveDashboard();
+    renderTasks();
+    
+    // Show success + open goal sidebar
+    alert(`✓ Added 3 milestones to "${goal.name}"!\n\nDrag them to your planner when ready.`);
+    openGoalSidebar(goalId);
+    
+  } catch (error) {
+    console.error('Error breaking down goal:', error);
+    alert('Failed to generate milestones. Check console for details.');
+  }
+}
+
 async function justDoIt(taskId, event) {
   event.stopPropagation();
   console.log('🔥 Just Do It clicked! Task ID:', taskId);
@@ -4172,55 +4367,58 @@ function addQuickTask(taskName) {
     }
 
     function openGoalSidebar(goalId) {
-      const goal = dashboardState.goals.find(g => g.id === goalId);
-      if (!goal) return;
-      
-      const completedTasks = goal.tasks ? goal.tasks.filter(t => t.completed).length : 0;
-      const totalTasks = goal.tasks ? goal.tasks.length : 0;
-      
-      let html = `
-        <div class="sidebar-title">${goal.name}</div>
-        
-        ${goal.image ? `
-          <img src="${goal.image}" class="sidebar-image" onclick="showGoalImageModal('${goalId}')" style="cursor: pointer;" />
-        ` : `
-          <button class="add-task-input" onclick="showGoalImageModal('${goalId}')" style="text-align: center; cursor: pointer; margin-bottom: 20px;">+ Add Image</button>
-        `}
-        
-        <div class="sidebar-section">
-          <div class="sidebar-label">Description</div>
-          <textarea class="sidebar-textarea" id="goalDescription" placeholder="Add description...">${goal.description || ''}</textarea>
-        </div>
-        
-        <div class="sidebar-section">
-          <div class="sidebar-label">Progress</div>
-          <div class="sidebar-progress">${completedTasks}/${totalTasks} tasks complete</div>
-        </div>
-        
-        <div class="sidebar-section">
-          <div class="sidebar-label">Tasks</div>
-          <div class="sidebar-tasks" id="goalTasks"></div>
-          <input type="text" class="add-task-input" id="newGoalTaskInput" placeholder="+ Add task..." onkeypress="handleAddGoalTask(event, '${goalId}')" />
-        </div>
-        
-        <button class="delete-btn" onclick="deleteGoal('${goalId}')">Delete Goal</button>
-      `;
-      
-      document.getElementById('sidebarContent').innerHTML = html;
-      
-      // Render tasks
-      renderGoalTasks(goal);
-      
-      // Save description on blur
-      document.getElementById('goalDescription').onblur = () => {
-        goal.description = document.getElementById('goalDescription').value;
-        saveDashboard();
-      };
-      
-      // Show the goal sidebar overlay
-      document.getElementById('goalSidebar').style.display = 'flex';
-    }
-
+  const goal = dashboardState.goals.find(g => g.id === goalId);
+  if (!goal) return;
+  
+  const completedTasks = goal.tasks ? goal.tasks.filter(t => t.completed).length : 0;
+  const totalTasks = goal.tasks ? goal.tasks.length : 0;
+  
+  let html = `
+    <div class="sidebar-title">
+      ${goal.name}
+      ${!goal.milestones ? `
+        <button class="just-do-it-btn goal-jdi-btn" 
+                onclick="event.stopPropagation(); breakDownGoal('${goalId}')" 
+                title="Break into milestones">
+          <img src="justdoit.png" alt="Just Do It" />
+        </button>
+      ` : ''}
+    </div>
+    ${goal.image ? `
+      <img src="${goal.image}" class="sidebar-image" onclick="showGoalImageModal('${goalId}')" style="cursor: pointer;" />
+    ` : `
+      <button class="add-task-input" onclick="showGoalImageModal('${goalId}')" style="text-align: center; cursor: pointer; margin-bottom: 20px;">+ Add Image</button>
+    `}
+    <div class="sidebar-section">
+      <div class="sidebar-label">Description</div>
+      <textarea class="sidebar-textarea" id="goalDescription" placeholder="Add description...">${goal.description || ''}</textarea>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Progress</div>
+      <div class="sidebar-progress">${completedTasks}/${totalTasks} tasks complete</div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Tasks</div>
+      <div class="sidebar-tasks" id="goalTasks"></div>
+      <input type="text" class="add-task-input" id="newGoalTaskInput" placeholder="+ Add task..." onkeypress="handleAddGoalTask(event, '${goalId}')" />
+    </div>
+    <button class="delete-btn" onclick="deleteGoal('${goalId}')">Delete Goal</button>
+  `;
+  
+  document.getElementById('sidebarContent').innerHTML = html;
+  
+  // Render tasks
+  renderGoalTasks(goal);
+  
+  // Save description on blur
+  document.getElementById('goalDescription').onblur = () => {
+    goal.description = document.getElementById('goalDescription').value;
+    saveDashboard();
+  };
+  
+  // Show the goal sidebar overlay
+  document.getElementById('goalSidebar').style.display = 'flex';
+  }
     function closeGoalSidebar() {
       document.getElementById('goalSidebar').style.display = 'none';
     }
@@ -4919,67 +5117,82 @@ task.scheduledDay = currentDay;
     }
 
     function renderGoalsGrid(isLarge = false) {
-      if (!dashboardState.goals || dashboardState.goals.length === 0) {
-        console.log('No goals to render');
-        return '<div style="text-align: center; padding: 40px; color: rgba(0,0,0,0.3); font-size: 0.85rem;">No goals yet</div>';
-      }
-      
-      console.log('Rendering goals grid:', dashboardState.goals);
-      
-      const gridClass = isLarge ? 'goals-empty-grid-large' : 'goals-empty-grid';
-      let html = `<div class="${gridClass}">`;
-      
-      dashboardState.goals.forEach(goal => {
-        console.log('Goal:', goal.name, 'Image:', goal.image);
-        const isComplete = goal.completed || false;
-        const completedClass = isComplete ? ' completed' : '';
-        const hasActiveTasks = goal.tasks && goal.tasks.length > 0 && !isComplete;
-        
-        if (goal.image) {
-          html += `
-            <div class="goal-empty-card has-image${completedClass}" style="background-image: url('${goal.image}')" 
-                 onclick="openGoalSidebar('${goal.id}')">
-              <input type="checkbox" class="goal-empty-checkbox" ${isComplete ? 'checked' : ''} 
-                     onclick="event.stopPropagation(); toggleGoalComplete('${goal.id}')" />
-              ${hasActiveTasks ? '<div class="goal-in-progress-indicator"></div><div class="goal-in-progress-label">In Progress</div>' : ''}
-              <div class="goal-empty-content">
-                <div class="goal-empty-name">${goal.name}</div>
-              </div>
-            </div>
-          `;
-        } else {
-          html += `
-            <div class="goal-empty-card no-image${completedClass}" onclick="openGoalSidebar('${goal.id}')">
-              <input type="checkbox" class="goal-empty-checkbox" ${isComplete ? 'checked' : ''} 
-                     onclick="event.stopPropagation(); toggleGoalComplete('${goal.id}')" />
-              ${hasActiveTasks ? '<div class="goal-in-progress-indicator"></div><div class="goal-in-progress-label">In Progress</div>' : ''}
-              <div class="goal-empty-content">
-                <div class="goal-empty-placeholder-icon">+</div>
-                <div class="goal-empty-name">${goal.name}</div>
-                <div class="goal-empty-add-image" onclick="event.stopPropagation(); showGoalImageModal('${goal.id}')">Add image</div>
-              </div>
-            </div>
-          `;
-        }
-      });
-      
-      html += '</div>';
-      
-      // Add drop handlers after render
-      setTimeout(() => {
-        const goalCards = document.querySelectorAll('.goal-empty-card');
-        goalCards.forEach(card => {
-          const goalId = card.getAttribute('onclick').match(/'([^']+)'/)[1];
+  if (!dashboardState.goals || dashboardState.goals.length === 0) {
+    console.log('No goals to render');
+    return '<div style="text-align: center; padding: 40px; color: rgba(0,0,0,0.3); font-size: 0.85rem;">No goals yet</div>';
+  }
+
+  console.log('Rendering goals grid:', dashboardState.goals);
+  const gridClass = isLarge ? 'goals-empty-grid-large' : 'goals-empty-grid';
+  let html = `<div class="${gridClass}">`;
+
+  dashboardState.goals.forEach(goal => {
+    console.log('Goal:', goal.name, 'Image:', goal.image);
+    const isComplete = goal.completed || false;
+    const completedClass = isComplete ? ' completed' : '';
+    const hasActiveTasks = goal.tasks && goal.tasks.length > 0 && !isComplete;
+
+    if (goal.image) {
+      html += `
+        <div class="goal-empty-card has-image${completedClass}" style="background-image: url('${goal.image}')" 
+             onclick="openGoalSidebar('${goal.id}')">
+          <input type="checkbox" class="goal-empty-checkbox" ${isComplete ? 'checked' : ''} 
+                 onclick="event.stopPropagation(); toggleGoalComplete('${goal.id}')" />
           
-          card.addEventListener('dragover', handleGoalCardDragOver);
-          card.addEventListener('dragleave', handleGoalCardDragLeave);
-          card.addEventListener('drop', (e) => handleGoalCardDrop(e, goalId));
-        });
-      }, 0);
-      
-      return html;
-  
+          ${!goal.milestones ? `
+            <button class="just-do-it-btn goal-jdi-btn" 
+                    onclick="event.stopPropagation(); breakDownGoal('${goal.id}')" 
+                    title="Break into milestones">
+              <img src="justdoit.png" alt="Just Do It" />
+            </button>
+          ` : ''}
+          
+          ${hasActiveTasks ? '<div class="goal-in-progress-indicator"></div><div class="goal-in-progress-label">In Progress</div>' : ''}
+          <div class="goal-empty-content">
+            <div class="goal-empty-name">${goal.name}</div>
+          </div>
+        </div>
+      `;
+    } else {
+      html += `
+        <div class="goal-empty-card no-image${completedClass}" onclick="openGoalSidebar('${goal.id}')">
+          <input type="checkbox" class="goal-empty-checkbox" ${isComplete ? 'checked' : ''} 
+                 onclick="event.stopPropagation(); toggleGoalComplete('${goal.id}')" />
+          
+          ${!goal.milestones ? `
+            <button class="just-do-it-btn goal-jdi-btn" 
+                    onclick="event.stopPropagation(); breakDownGoal('${goal.id}')" 
+                    title="Break into milestones">
+              <img src="justdoit.png" alt="Just Do It" />
+            </button>
+          ` : ''}
+          
+          ${hasActiveTasks ? '<div class="goal-in-progress-indicator"></div><div class="goal-in-progress-label">In Progress</div>' : ''}
+          <div class="goal-empty-content">
+            <div class="goal-empty-placeholder-icon">+</div>
+            <div class="goal-empty-name">${goal.name}</div>
+            <div class="goal-empty-add-image" onclick="event.stopPropagation(); showGoalImageModal('${goal.id}')">Add image</div>
+          </div>
+        </div>
+      `;
     }
+  });
+
+  html += '</div>';
+
+  // Add drop handlers after render
+  setTimeout(() => {
+    const goalCards = document.querySelectorAll('.goal-empty-card');
+    goalCards.forEach(card => {
+      const goalId = card.getAttribute('onclick').match(/'([^']+)'/)[1];
+      card.addEventListener('dragover', handleGoalCardDragOver);
+      card.addEventListener('dragleave', handleGoalCardDragLeave);
+      card.addEventListener('drop', (e) => handleGoalCardDrop(e, goalId));
+    });
+  }, 0);
+
+  return html;
+}
 
     function renderWeekEndButton() {
       const weekEndContainer = document.getElementById('weekEndButton');
