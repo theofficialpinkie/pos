@@ -21,15 +21,16 @@
     }
 
     /* Bigger Picture Experience Container */
-    .bigger-picture-experience {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 10000;
-      background: #ffffff;
-    }
+    /* Bigger Picture Experience Container */
+.bigger-picture-experience {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;  /* ← Lower than sidebar's 1000 */
+  background: #ffffff;
+}
 
     .bp-step {
       position: absolute;
@@ -809,108 +810,179 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Navigation Sidebar */
+   /* Navigation Sidebar - Adaptive translucent */
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 260px;
-  height: 100%;
-  background: white;
-  border-right: 1px solid #ddd;
-  transform: translateX(-260px);
-  transition: transform 0.3s ease;
-  z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);  /* Very light tint */
+    backdrop-filter: blur(20px) saturate(180%);  /* Strong blur effect */
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-right: 1px solid rgba(255, 255, 255, 0.18);
+    transform: translateX(-260px);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar.collapsed:hover {
+    transform: translateX(-230px);
 }
 
 .sidebar.expanded {
-  transform: translateX(0);
+    transform: translateX(0);
 }
 
-.sidebar.collapsed {
-  pointer-events: auto;
-  transform: translateX(-260px);
-  background: transparent;
-  border-right: none;
-  box-shadow: none;
+.sidebar-content {
+    margin-top: 50px;
+    padding: 0;
 }
 
-/* Toggle Button */
+.sidebar.expanded .sidebar-content {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Top section - Vision & Milestones */
+.sidebar-section-top {
+    padding: 60% 0 16px 0;
+    border-bottom: none;
+}
+
+/* Weeks section */
+.sidebar-section-weeks {
+    padding: 8px 0 0 0;
+}
+
+/* Unified item styling - works on light or dark */
+.sidebar-item,
+.week-item {
+    padding: 11px 18px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.88rem;
+    color: rgba(0, 0, 0, 0.85);  /* Dark text for light backgrounds */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 400;
+    border-left: 2px solid transparent;
+}
+
+/* For dark backgrounds (vision/milestones pages) */
+body.dark-bg .sidebar-item,
+body.dark-bg .week-item {
+    color: rgba(255, 255, 255, 0.85);  /* Light text for dark backgrounds */
+}
+
+.sidebar-item:hover,
+.week-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(0, 0, 0, 0.95);
+}
+
+body.dark-bg .sidebar-item:hover,
+body.dark-bg .week-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.week-item.active {
+    background: rgba(255, 255, 255, 0.15);
+    font-weight: 500;
+    color: #000000;
+    border-left-color: #000000;
+}
+
+body.dark-bg .week-item.active {
+    color: #ffffff;
+    border-left-color: #ffffff;
+}
+
+.sidebar-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    display: none;
+    transition: all 0.2s;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    line-height: 1;
+}
+
+body.dark-bg .sidebar-close {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.sidebar.expanded .sidebar-close {
+    display: block;
+}
+
+.sidebar-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(0, 0, 0, 0.7);
+}
+
+body.dark-bg .sidebar-close:hover {
+    color: rgba(255, 255, 255, 0.7);
+}
+
 .sidebar-toggle {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 1100;
-  background: black;
-  color: white;
-  font-size: 18px;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 11000;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 16px;
+    padding: 6px 11px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+body.dark-bg .sidebar-toggle {
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .sidebar-toggle:hover {
-  background: rgba(0,0,0,0.08);
-  transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
 }
 
-/* Content inside sidebar */
-.sidebar-content {
-  margin-top: 70px;
-  padding: 20px;
+.sidebar.expanded + .sidebar-toggle {
+    opacity: 0;
+    pointer-events: none;
 }
 
-.sidebar-section-top {
-  padding: 10px 0 20px;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+.sidebar::-webkit-scrollbar {
+    width: 3px;
 }
 
-.sidebar-section {
-  padding: 20px 0;
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
 }
 
-.sidebar-header {
-  padding: 10px 20px;
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: rgba(0,0,0,0.3);
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
 }
 
-.sidebar-item {
-  padding: 12px 20px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 0.9rem;
-  color: rgba(0,0,0,0.7);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border-left: 3px solid transparent;
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
-
-.sidebar-item.active {
-  background: rgba(0,0,0,0.04);
-  font-weight: 500;
-  color: #000;
-  border-left-color: #000;
-}
-
-.week-item {
-  padding: 12px 20px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 0.85rem;
-  color: rgba(0,0,0,0.7);
-}
-
-.week-item:hover {
-  background: rgba(0,0,0,0.04);
-}
-
-
 
 
     /* Main Container */
@@ -1231,35 +1303,47 @@
   </style>
 </head>
 
-<body>
+<body class="dark-bg">
 
-  <!-- Sidebar Toggle Button -->
-<button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+  <!-- Hamburger -->
+<button class="sidebar-toggle" onclick="toggleSidebar()" id="sidebarToggle">☰</button>
 
-<!-- Navigation Sidebar -->
+<!-- Sidebar Panel -->
 <div id="sidebar" class="sidebar collapsed">
-  <div class="sidebar-content">
+    <div class="sidebar-content">
+        
+        <!-- Close button when expanded -->
+        <button class="sidebar-close" onclick="toggleSidebar()">×</button>
 
-    <!-- Current Week -->
-    <div class="sidebar-section-top">
-      <div class="sidebar-header">Current Week</div>
-      <div id="currentWeekLabel" class="sidebar-item active">Loading…</div>
+        <!-- Vision & Milestones at top -->
+        <div class="sidebar-section-top">
+            <div class="sidebar-item" onclick="openVision()" style="cursor: pointer;">
+                Vision Board
+            </div>
+            <div class="sidebar-item" onclick="openMilestones()" style="cursor: pointer;">
+                Milestones
+            </div>
+        </div>
+
+        <!-- Weeks Section -->
+        <div class="sidebar-section-weeks">
+            <!-- Current Week -->
+            <div id="currentWeekLabel" class="week-item active">
+                Loading…
+            </div>
+            
+            <!-- Next Week -->
+            <div id="nextWeekLabel"></div>
+            
+            <!-- Previous Weeks -->
+            <div id="weeksList">
+                <!-- Weeks will be inserted here -->
+            </div>
+        </div>
+
     </div>
-
-    <!-- Next Week -->
-    <div class="sidebar-section">
-      <div class="sidebar-header">Next Week</div>
-      <div id="nextWeekLabel"></div>
-    </div>
-
-    <!-- Previous Weeks -->
-    <div class="sidebar-section">
-      <div class="sidebar-header">Previous Weeks</div>
-      <div id="weeksList"></div>
-    </div>
-
-  </div>
 </div>
+ 
     
   <!-- Main Content Wrapper -->
   <div id="mainContent" class="main-content">
@@ -1564,7 +1648,65 @@ function getAllWeeks() {
   return weeks.sort((a, b) => new Date(b) - new Date(a));
 }
 
+function openVision() {
+    // Add dark-bg class for vision board
+    document.body.classList.add('dark-bg');
+    
+    // Close sidebar first
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    if (sidebar) {
+        sidebar.classList.remove('expanded');
+        sidebar.classList.add('collapsed');
+    }
+    if (mainContent) {
+        mainContent.classList.remove('sidebar-open');
+    }
+    
+    // Navigate to vision step
+    const visionStep = document.getElementById('step-vision');
+    if (visionStep) {
+        document.querySelectorAll('.bp-step').forEach(s => s.classList.remove('active'));
+        visionStep.classList.add('active');
+        currentBPStep = 0;
+        
+        const bpExp = document.getElementById('biggerPictureExp');
+        if (bpExp) {
+            bpExp.style.display = 'block';
+        }
+    }
+}
 
+function openMilestones() {
+    // Add dark-bg class for milestones
+    document.body.classList.add('dark-bg');
+    
+    // Close sidebar first
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    if (sidebar) {
+        sidebar.classList.remove('expanded');
+        sidebar.classList.add('collapsed');
+    }
+    if (mainContent) {
+        mainContent.classList.remove('sidebar-open');
+    }
+    
+    // Navigate to milestones step
+    const milestonesStep = document.getElementById('step-milestones');
+    if (milestonesStep) {
+        document.querySelectorAll('.bp-step').forEach(s => s.classList.remove('active'));
+        milestonesStep.classList.add('active');
+        currentBPStep = 1;
+        
+        initMilestones();
+        
+        const bpExp = document.getElementById('biggerPictureExp');
+        if (bpExp) {
+            bpExp.style.display = 'block';
+        }
+    }
+}
 
 
     // Yearly goals data
@@ -1882,7 +2024,7 @@ const celebrationQuotes = [
     }
 
     // Bigger Picture step navigation
-  function nextBPStep() {
+function nextBPStep() {
   if (currentBPStep < bpSteps.length - 1) {
     document.getElementById(bpSteps[currentBPStep]).classList.remove('active');
     currentBPStep++;
@@ -1890,16 +2032,31 @@ const celebrationQuotes = [
     
     // Initialize milestones when reaching that step
     if (currentBPStep === 1) {
-      initMilestones();  // ← CHANGE renderMilestones() TO initMilestones()
+      initMilestones();
+      document.body.classList.add('dark-bg'); // Milestones is dark
+    }
+    
+    // Remove dark-bg for sprint (white background)
+    if (currentBPStep === 2) {
+      document.body.classList.remove('dark-bg');
+    }
+    
+    // Add dark-bg for vision (if going back)
+    if (currentBPStep === 0) {
+      document.body.classList.add('dark-bg');
     }
   }
 }
 
-    function closeBiggerPicture() {
-      document.getElementById('biggerPictureExp').style.display = 'none';
-      document.body.style.overflow = 'auto';
-      renderAll();
-    }
+function closeBiggerPicture() {
+    document.getElementById('biggerPictureExp').style.display = 'none';
+    document.body.style.overflow = 'auto';
+    
+    // Remove dark-bg class for questionnaire (white background)
+    document.body.classList.remove('dark-bg');
+    
+    renderAll();
+}
 
     function showCelebration(goalName) {
       const overlay = document.getElementById('celebrationOverlay');
@@ -1939,12 +2096,15 @@ const celebrationQuotes = [
   }, 250);
 }
     
-    // Main render function
-    function renderAll() {
-      renderProgressBar();
-      renderCurrentSection();
-      updateRecommendedActions();
-    }
+  // Main render function
+function renderAll() {
+    renderProgressBar();
+    renderCurrentSection();
+    updateRecommendedActions();
+    
+    // Update sidebar when rendering
+    updateSidebarContent();
+}
 
     function renderProgressBar() {
       const currentIndex = sections.findIndex(s => s.id === currentSection);
@@ -2603,7 +2763,7 @@ function generateDashboard() {
     sidebar.classList.remove('collapsed');
     mainContent.classList.add('sidebar-open');
 
-    updateSidebarCurrentWeek();
+    updateSidebarContent();
     renderWeeksList();
     renderNextWeek();
   }
@@ -2684,26 +2844,21 @@ function renderNextWeek() {
 
     nextWeekDiv.innerHTML = `
       <div class="week-item" onclick="switchToWeek('${nextWeekKey}')">
-        <span>${label}</span>
+        <span>Next Week</span>
       </div>
     `;
   } else {
-    nextWeekDiv.innerHTML = `
-      <div style="padding: 10px 20px; color: rgba(0,0,0,0.2); font-size: 0.75rem;">
-        No next week yet
-      </div>
-    `;
-      
+    nextWeekDiv.innerHTML = '';  // ← Just empty, no message
   }
 }
 
 
-function updateSidebarCurrentWeek() {
-  const cw = localStorage.getItem('currentWeek');
-  const label = document.getElementById('currentWeekLabel');
-  if (label && cw) {
-    label.textContent = formatWeekLabel(cw);
-  }
+function updateSidebarContent() {
+    // Update current week
+    const label = document.getElementById('currentWeekLabel');
+    if (label) {
+        label.textContent = 'Current Week';
+    }
 }
 
 function switchToWeek(weekKey) {
@@ -2737,10 +2892,54 @@ function closeSidebar() {
   mainContent.classList.remove('sidebar-open');
 }
 
+// Check for step parameter in URL on page load
+// Check for step parameter in URL on page load
+(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const step = urlParams.get('step');
+    const skipPreload = urlParams.get('skipPreload') === 'true';
+    
+    if (step === 'milestones') {
+        setTimeout(() => {
+            openMilestones();
+        }, 100);
+    } else if (step === 'vision') {
+        setTimeout(() => {
+            if (skipPreload) {
+                // Skip preload - load vision immediately
+                document.body.classList.add('dark-bg');
+                document.querySelectorAll('.bp-step').forEach(s => s.classList.remove('active'));
+                document.getElementById('step-vision').classList.add('active');
+                currentBPStep = 0;
+                
+                const bpExp = document.getElementById('biggerPictureExp');
+                if (bpExp) bpExp.style.display = 'block';
+                
+                // Hide preload, show content immediately
+                const preLoading = document.getElementById('visionPreLoading');
+                if (preLoading) preLoading.classList.add('hidden');
+                
+                const overlay = document.getElementById('visionOverlay');
+                if (overlay) overlay.classList.add('visible');
+                
+                // Load images immediately (already happens from initVisionBoard)
+                const collage = document.querySelector('.vision-collage');
+                if (collage) {
+                    collage.querySelectorAll('.collage-img').forEach(img => {
+                        img.classList.add('loaded');
+                    });
+                }
+            } else {
+                // Normal flow - let initVisionBoard run naturally
+            }
+        }, 100);
+    }
+})();
 
   </script>
   
   <script>
+    
 const visionImagePool = [
   "badass.jpg",
   "b.jpg",
@@ -2806,12 +3005,49 @@ function initVisionBoard() {
 }
 
 // Run initialization when DOM is ready
+// Run initialization when DOM is ready
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initVisionBoard);
+  document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const step = urlParams.get('step');
+    
+    // Only init vision if not navigating to a specific step from sidebar
+    if (!step || step !== 'vision') {
+      initVisionBoard();
+    } else {
+      // Still create the images, just skip the delays
+      const collageContainer = document.querySelector('.vision-collage');
+      if (collageContainer) {
+        collageContainer.innerHTML = '';
+        visionImagePool.forEach((imageSrc) => {
+          const imgDiv = document.createElement('div');
+          imgDiv.className = 'collage-img loaded'; // Add 'loaded' immediately
+          imgDiv.style.backgroundImage = `url('${imageSrc}')`;
+          collageContainer.appendChild(imgDiv);
+        });
+      }
+    }
+  });
 } else {
-  initVisionBoard();
+  const urlParams = new URLSearchParams(window.location.search);
+  const step = urlParams.get('step');
+  
+  if (!step || step !== 'vision') {
+    initVisionBoard();
+  } else {
+    // Still create the images, just skip the delays
+    const collageContainer = document.querySelector('.vision-collage');
+    if (collageContainer) {
+      collageContainer.innerHTML = '';
+      visionImagePool.forEach((imageSrc) => {
+        const imgDiv = document.createElement('div');
+        imgDiv.className = 'collage-img loaded';
+        imgDiv.style.backgroundImage = `url('${imageSrc}')`;
+        collageContainer.appendChild(imgDiv);
+      });
+    }
+  }
 }
-
 </script>
 
   </div> <!-- Close mainContent -->
