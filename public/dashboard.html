@@ -3767,54 +3767,40 @@ function updateRoutineDisplay() {
     function scheduleHairAppointment() {
       window.open('https://www.fresha.com/a/lush-bali-beauty-salon-umalas-bali-jl-tengah-no-8-kerobokan-badung-regency-jalan-tengah-no-8-jag4ep7n/booking?bookingId=1473368882&offerItems=sv%3A16699163&rebook=true&appointmentId=1092704254%3A1473368882&cartId=ea8710fa-fd62-4a34-a4a5-f986ed6c0620', '_blank');
     }
+function generateNextWeek() {
+  console.log("➡️ generateNextWeek() called");
 
-    function generateNextWeek() {
-      // Save current week first
-      const currentWeek = localStorage.getItem('currentWeek') || getCurrentWeekKey();
-      console.log('Saving current week:', currentWeek);
-      saveDashboard();
-      
-      // Calculate next week
-      const nextWeek = getNextWeekKey();
-      const weekLabel = formatWeekLabel(nextWeek);
-      console.log('Next week will be:', nextWeek);
-      
-      // Confirm
-      const confirmed = confirm(`Complete this week and start planning:\n${weekLabel}\n\nThis will save your current week and open the questionnaire for next week.`);
-      if (!confirmed) return;
-      
-      // Create fresh next week
-      const newWeekData = {
-        weekStart: nextWeek,
-        weekEnd: getWeekEnd(nextWeek),
-        weeklyTasks: {
-          monday: [],
-          tuesday: [],
-          wednesday: [],
-          thursday: [],
-          friday: [],
-          saturday: [],
-          sunday: []
-        },
-        formData: {}  // Fresh questionnaire data
-      };
-      
-      // Save the fresh week
-      saveWeekData(nextWeek, newWeekData);
-      
-      // Switch to new week
-      localStorage.setItem('currentWeek', nextWeek);
-      
-      // Clear old questionnaire data so it starts fresh
-      localStorage.removeItem('weeklyPlanData');
-      
-      console.log('✅ Saved week:', currentWeek);
-      console.log('✅ Created fresh week:', nextWeek);
-      console.log('✅ Opening questionnaire for new week...');
-      
-      // Redirect to questionnaire for new week
-      window.location.href = 'questionnaire.html';
-    }
+  // 1. Get the current week from localStorage
+  let currentWeek = localStorage.getItem("currentWeek");
+  if (!currentWeek) {
+    console.error("❌ No currentWeek found — cannot generate next week");
+    return;
+  }
+
+  // 2. Add 7 days
+  const curr = new Date(currentWeek + "T00:00:00");
+  const next = new Date(curr);
+  next.setDate(curr.getDate() + 7);
+
+  const nextWeekKey = next.toISOString().slice(0, 10);
+
+  console.log("🟦 Current week:", currentWeek);
+  console.log("🟩 Next week:", nextWeekKey);
+
+  // 3. Save it
+  localStorage.setItem("currentWeek", nextWeekKey);
+
+  // 4. Redirect
+  const exists = localStorage.getItem(`week-${nextWeekKey}`);
+  if (exists) {
+    window.location.href = `dashboard.html?week=${nextWeekKey}`;
+  } else {
+    window.location.href = `questionnaire.html?week=${nextWeekKey}`;
+  }
+}
+
+
+
 
     function handleRest() {
       // Create rest task with activity options
@@ -5311,33 +5297,21 @@ task.scheduledDay = currentDay;
 }
 
 
-    function getNextWeekDates() {
-      const today = new Date();
-      const dayOfWeek = today.getDay();
-      const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-      
-      const thisMonday = new Date(today);
-      thisMonday.setDate(today.getDate() + diff);
-      
-      const nextMonday = new Date(thisMonday);
-      nextMonday.setDate(thisMonday.getDate() + 7);
-      
-      const nextSunday = new Date(nextMonday);
-      nextSunday.setDate(nextMonday.getDate() + 6);
-      
-      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      
-      const startMonth = monthNames[nextMonday.getMonth()];
-      const endMonth = monthNames[nextSunday.getMonth()];
-      const startDay = nextMonday.getDate();
-      const endDay = nextSunday.getDate();
-      
-      if (startMonth === endMonth) {
-        return `${startMonth} ${startDay}-${endDay}`.toUpperCase();
-      } else {
-        return `${startMonth} ${startDay}-${endMonth} ${endDay}`.toUpperCase();
-      }
-    }
+function getNextWeekDates() {
+  // Use the planner's current week, NOT today's date
+  const currentWeek = localStorage.getItem("currentWeek");
+  const curr = new Date(currentWeek + "T00:00:00");
+
+  const nextMonday = new Date(curr);
+  nextMonday.setDate(curr.getDate() + 7);
+
+  const nextSunday = new Date(nextMonday);
+  nextSunday.setDate(nextMonday.getDate() + 6);
+
+  const options = { month: "short", day: "numeric" };
+  return `${nextMonday.toLocaleDateString("en-US", options)} — ${nextSunday.toLocaleDateString("en-US", options)}`;
+}
+
 
     function previousDay() {
       const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];

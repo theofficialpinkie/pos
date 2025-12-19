@@ -1541,33 +1541,52 @@ body.dark-bg .sidebar-toggle {
 
 // 1. Load currentWeek
 // Allow URL ?week=YYYY-MM-DD override
-const urlParams = new URLSearchParams(window.location.search);
-let currentWeek = urlParams.get("week") || localStorage.getItem("currentWeek");
 
-// If STILL no currentWeek → auto-detect
-if (!currentWeek) {
+  // 1. Load currentWeek safely
+// =======================================
+// SAFE currentWeek loader (final version)
+// =======================================
+
+const urlParams = new URLSearchParams(window.location.search);
+const urlWeek = urlParams.get("week");
+
+let currentWeek;
+
+// CASE 1: URL explicitly defines the week → use it, BUT DO NOT save it
+if (urlWeek) {
+  currentWeek = urlWeek;
+}
+
+// CASE 2: No URL week → use saved week
+else if (localStorage.getItem("currentWeek")) {
+  currentWeek = localStorage.getItem("currentWeek");
+}
+
+// CASE 3: First-ever visit → detect this week's Monday and save it
+else {
   const today = new Date();
   const dow = today.getDay();
   const mondayOffset = dow === 0 ? -6 : 1 - dow;
+
   const monday = new Date(today);
   monday.setDate(today.getDate() + mondayOffset);
+
   currentWeek = monday.toISOString().split("T")[0];
+
+  // FIRST AND ONLY TIME WE SAVE
+  localStorage.setItem("currentWeek", currentWeek);
 }
 
-localStorage.setItem("currentWeek", currentWeek);
 console.log("🗓️ Current week:", currentWeek, formatWeekLabel(currentWeek));
 
-// 3. Load the week data from localStorage
+// Load week data
 const weekKey = `week-${currentWeek}`;
 let weekData = JSON.parse(localStorage.getItem(weekKey) || "{}");
 
-// 4. Ensure the shape exists
-if (!weekData.formData) {
-  weekData.formData = {};
-  // DO NOT SAVE YET — wait until the user actually writes data
-}
+// Ensure structure
+if (!weekData.formData) weekData.formData = {};
 
-// 5. THIS is the real formData the questionnaire uses
+// This is the form data
 let formData = weekData.formData;
 
 console.log("📄 Loaded formData for", weekKey, formData);
@@ -1988,7 +2007,7 @@ const celebrationQuotes = [
           { label: "What patterns or behaviors gave you energy last week?", sublabel: "These become habits to repeat", type: "textarea", placeholder: "Working from cafe mornings\nNot checking phone first thing\nEvening walks", id: "whatWorked" },
           { type: 'kpis' },
           { label: "What pattern keeps showing up?", type: "textarea", placeholder: "What do you keep noticing?", id: "pattern" },
-          { label: "What drained your energy last week?", type: "input", placeholder: "Activities, people, situations...", id: "whatDrained" },
+          { label: "What drained your energy last week?", type: "textarea", placeholder: "Activities, people, situations...", id: "whatDrained" },
           { label: "Energy baseline", type: "radio", options: ["Stable","Scattered","Creative","Low"], id: "energyBaseline" },
           { label: "Momentum score last week (0-10)", type: "slider", min: 0, max: 10, id: "momentumScore" }
         ]
@@ -2057,12 +2076,10 @@ const celebrationQuotes = [
     let recommendedActions = [];
      let rerenderTimer = null;
 
-    // Load saved data
-    const savedData = localStorage.getItem('weeklyPlanData');
-  if (savedData) {
-    const parsed = JSON.parse(savedData);
-    formData = parsed.formData || parsed;
-  }
+if (Object.keys(formData).length === 0) {
+    console.warn("⚠️ EMPTY formData detected — using stored real formData only.");
+}
+
   
 
     // Load yearly goals completion state
@@ -2076,13 +2093,56 @@ const celebrationQuotes = [
       });
     }
 
-    // Load last week's goals
-    const lastWeekData = localStorage.getItem('lastWeekGoals');
-    if (lastWeekData) {
-      const parsed = JSON.parse(lastWeekData);
-      formData.lastWeekWorkGoals = parsed.workGoals || '';
-      formData.lastWeekLifeGoals = parsed.lifeGoals || '';
+// Load last week's goals from the actual previous week
+const params = new URLSearchParams(window.location.search);
+const currentWeekParam = params.get('week');
+
+console.log('=== LOADING LAST WEEK GOALS ===');
+console.log('Current week param:', currentWeekParam);
+
+if (currentWeekParam) {
+  // Calculate last week (7 days before current week)
+  const currentMonday = new Date(currentWeekParam + "T00:00:00");
+  const lastMonday = new Date(currentMonday);
+  lastMonday.setDate(currentMonday.getDate() - 7);
+  const lastWeekKey = lastMonday.toISOString().split('T')[0];
+  
+  console.log('Calculated last week key:', lastWeekKey);
+  console.log('Looking for:', `week-${lastWeekKey}`);
+  
+  // Load last week's dashboard data
+  const lastWeekData = localStorage.getItem(`week-${lastWeekKey}`);
+  
+  if (lastWeekData) {
+    const lastWeekState = JSON.parse(lastWeekData);
+    console.log('Found last week data!');
+    console.log('Goals:', lastWeekState.goals);
+    
+    // Store last week's goals for the goals checkoff section
+    if (lastWeekState.goals) {
+      formData.lastWeekGoals = lastWeekState.goals;
+      
+      // Also populate work/life goals text for context display
+      const workGoals = lastWeekState.goals
+        .filter(g => !g.category || g.category === 'work')
+        .map(g => g.name)
+        .join('\n');
+      
+      const lifeGoals = lastWeekState.goals
+        .filter(g => g.category === 'life')
+        .map(g => g.name)
+        .join('\n');
+      
+      formData.lastWeekWorkGoals = workGoals || '';
+      formData.lastWeekLifeGoals = lifeGoals || '';
+      
+      console.log('Loaded work goals:', formData.lastWeekWorkGoals);
+      console.log('Loaded life goals:', formData.lastWeekLifeGoals);
     }
+  } else {
+    console.log('NO DATA FOUND for:', `week-${lastWeekKey}`);
+  }
+}
 
     // Bigger Picture step navigation
 function nextBPStep() {
@@ -2715,24 +2775,34 @@ function addJoy(option) {
 
  // ===== UNIVERSAL SAVE ENGINE =====
 function saveFormData() {
-  console.log("Saving form data…");
+  console.log("💾 saveFormData() called");
 
+  // Load existing stored data
+  let storedWeek = JSON.parse(localStorage.getItem(weekKey) || "{}");
+  let storedForm = storedWeek.formData || {};
+
+  // Temporary collection of freshly-read values
   const newData = {};
 
-  // 1️⃣ — TEXT INPUTS + NUMBER INPUTS + TEXTAREAS
-  document.querySelectorAll('#contentArea input[type="textarea"], #contentArea input[type="number"], #contentArea textarea')
+  // 1️⃣ TEXT + NUMBER + TEXTAREAS
+  document.querySelectorAll('#contentArea input[type="number"], #contentArea textarea')
     .forEach(el => {
       if (el.id) newData[el.id] = el.value.trim();
     });
 
-  // 2️⃣ — RADIO BUTTONS (use 'name', not ID)
+  // Fix textarea type selector
+  document.querySelectorAll('#contentArea input[type="textarea"]').forEach(el => {
+    if (el.id) newData[el.id] = el.value.trim();
+  });
+
+  // 2️⃣ RADIO BUTTONS
   document.querySelectorAll('#contentArea input[type="radio"]').forEach(el => {
     if (el.checked) {
       if (el.name) newData[el.name] = el.value;
     }
   });
 
-  // 3️⃣ — CHECKBOX GROUPS
+  // 3️⃣ CHECKBOX GROUPS
   const checkboxGroups = {};
   document.querySelectorAll('#contentArea input[type="checkbox"]').forEach(el => {
     const group = el.name || el.id;
@@ -2741,40 +2811,34 @@ function saveFormData() {
   });
   Object.assign(newData, checkboxGroups);
 
-  // 4️⃣ — SLIDERS
+  // 4️⃣ SLIDERS
   document.querySelectorAll('#contentArea input[type="range"]').forEach(el => {
     if (el.id) newData[el.id] = el.value;
   });
 
-  // 5️⃣ — TOGGLE ACTION FIELDS (challengeEatingAction)
+  // 5️⃣ TOGGLE ACTION FIELDS
   document.querySelectorAll('#contentArea input[id$="Action"]').forEach(el => {
     newData[el.id] = el.value.trim();
-
-  
-
   });
 
+  // 🚫 PREVENT EMPTY OVERRIDE
+  const newKeys = Object.keys(newData);
+  const allEmpty = newKeys.every(k => newData[k] === "" || newData[k] === undefined);
 
-  // 6️⃣ — MERGE WITH EXISTING WEEK DATA
-  const currentWeek = localStorage.getItem("currentWeek");
-  const weekKey = `week-${currentWeek}`;
-  let weekData = JSON.parse(localStorage.getItem(weekKey) || "{}");
+  if (allEmpty) {
+    console.warn("🛑 Blocked save — All fields empty, likely page load overwrite.");
+    return;
+  }
 
-  if (!weekData.formData) weekData.formData = {};
+  // 🧩 MERGE WITH EXISTING DATA (critical)
+  const merged = { ...storedForm, ...newData };
 
-  weekData.formData = {
-    ...weekData.formData, // existing persisted values
-    ...formData,          // in-memory values
-    ...newData            // latest user edits
-  };
+  // SAVE BACK INTO THE WEEK OBJECT
+  storedWeek.formData = merged;
 
-  // Update memory
-  formData = weekData.formData;
+  localStorage.setItem(weekKey, JSON.stringify(storedWeek));
 
-  // Save to localStorage
-  localStorage.setItem(weekKey, JSON.stringify(weekData));
-
-  console.log("💾 Saved:", weekData.formData);
+  console.log("✅ Saved merged formData:", merged);
 }
 
 
