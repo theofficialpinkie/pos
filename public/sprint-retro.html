@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprint Retrospective – Your Operating System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+            color: #000000;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 60px 60px;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+            color: #000000;
+        }
+
+        .page-subtitle {
+            font-size: 0.95rem;
+            color: rgba(0, 0, 0, 0.4);
+            letter-spacing: 0.5px;
+            font-weight: 400;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 60px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 15px;
+        }
+
+        .section-description {
+            font-size: 0.85rem;
+            color: rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        /* Input Fields */
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            padding: 12px 0;
+            font-size: 0.95rem;
+            color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-bottom-color: #000000;
+        }
+
+        input[type="text"]::placeholder,
+        input[type="number"]::placeholder,
+        textarea::placeholder {
+            color: rgba(0, 0, 0, 0.2);
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        textarea.small {
+            min-height: 50px;
+        }
+
+        /* Form Groups */
+        .form-group {
+            padding: 20px;
+            background: #fafafa;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .form-group:hover {
+            background: #f5f5f5;
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        th {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        td input {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 8px 0;
+            margin-bottom: 0;
+        }
+
+        /* Sliders */
+        .slider-grid {
+            display: grid;
+            gap: 25px;
+        }
+
+        .slider-item {
+            background: #fafafa;
+            padding: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .slider-item:hover {
+            background: #f5f5f5;
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .slider-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #000000;
+        }
+
+        .slider-score {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(0, 0, 0, 0.1);
+            outline: none;
+            -webkit-appearance: none;
+            margin-bottom: 12px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #000000;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #000000;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* Checkboxes */
+        .checkbox-group {
+            margin-top: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            background: #fafafa;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkbox-item:hover {
+            background: #f5f5f5;
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #000000;
+        }
+
+        .checkbox-label {
+            font-size: 0.9rem;
+            color: rgba(0, 0, 0, 0.85);
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #000000;
+            border: none;
+            color: #ffffff;
+            padding: 14px 28px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 6px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+        }
+
+        button:hover {
+            background: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            color: rgba(0, 0, 0, 0.8);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.3);
+            color: #000000;
+            box-shadow: none;
+        }
+
+        .btn-danger {
+            background: transparent;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            color: rgba(255, 0, 0, 0.6);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 0, 0, 0.05);
+            border-color: rgba(255, 0, 0, 0.4);
+            color: rgba(255, 0, 0, 0.8);
+            box-shadow: none;
+        }
+
+        /* Save Status */
+        .save-status {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .save-status.visible {
+            opacity: 1;
+        }
+
+        /* Past Retros List */
+        .retros-list {
+            margin-top: 30px;
+        }
+
+        .retro-item {
+            padding: 20px;
+            background: #fafafa;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .retro-item:hover {
+            background: #f5f5f5;
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .retro-info {
+            flex: 1;
+        }
+
+        .retro-goal {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #000000;
+            margin-bottom: 6px;
+        }
+
+        .retro-meta {
+            font-size: 0.8rem;
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        .retro-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: rgba(0, 0, 0, 0.6);
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            min-width: auto;
+        }
+
+        .icon-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.2);
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 60px 30px 40px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Save Status -->
+    <div class="save-status" id="saveStatus">✓ Saved</div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Header -->
+        <div class="page-header">
+            <h1 class="page-title">Sprint Retrospective</h1>
+            <p class="page-subtitle">Reflect, learn, and iterate on your journey</p>
+        </div>
+
+        <!-- Form View -->
+        <div id="formView">
+            <form id="retroForm">
+                <!-- Sprint Overview -->
+                <div class="section">
+                    <div class="section-label">📊 Sprint Overview</div>
+                    <div class="section-description">The big picture of what this sprint was about</div>
+                    
+                    <label class="section-label" style="margin-top: 20px;">Sprint Goal</label>
+                    <input type="text" id="sprintGoal" placeholder="What were you trying to achieve?" required>
+                    
+                    <div class="form-row">
+                        <div>
+                            <label class="section-label">Start Date</label>
+                            <input type="date" id="startDate" required>
+                        </div>
+                        <div>
+                            <label class="section-label">End Date</label>
+                            <input type="date" id="endDate" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Objectives vs Outcomes -->
+                <div class="section">
+                    <div class="section-label">🎯 Objectives vs. Outcomes</div>
+                    <div class="section-description">What you planned versus what actually happened</div>
+                    
+                    <div class="form-group">
+                        <label class="section-label">What We Planned to Do</label>
+                        <input type="text" id="planned1" placeholder="Milestone 1">
+                        <input type="text" id="planned2" placeholder="Milestone 2">
+                        <input type="text" id="planned3" placeholder="Milestone 3">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="section-label">What We Actually Did</label>
+                        <input type="text" id="actual1" placeholder="Actual deliverable 1">
+                        <input type="text" id="actual2" placeholder="Actual deliverable 2">
+                        <input type="text" id="actual3" placeholder="Actual deliverable 3">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="section-label">Completion Rate (%)</label>
+                        <input type="number" id="completion1" min="0" max="100" placeholder="Milestone 1 completion %">
+                        <input type="number" id="completion2" min="0" max="100" placeholder="Milestone 2 completion %">
+                        <input type="number" id="completion3" min="0" max="100" placeholder="Milestone 3 completion %">
+                    </div>
+                </div>
+
+                <!-- Financial Scorecard -->
+                <div class="section">
+                    <div class="section-label">💰 Financial Scorecard</div>
+                    <div class="section-description">How you performed financially during this sprint</div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Target</th>
+                                    <th>Actual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Weekly Spend</td>
+                                    <td><input type="text" id="spendTarget" placeholder="e.g., <$150"></td>
+                                    <td><input type="text" id="spendActual" placeholder="Actual"></td>
+                                </tr>
+                                <tr>
+                                    <td>Revenue Generated</td>
+                                    <td><input type="text" id="revenueTarget" placeholder="Target $"></td>
+                                    <td><input type="text" id="revenueActual" placeholder="Actual $"></td>
+                                </tr>
+                                <tr>
+                                    <td>Cash in Bank</td>
+                                    <td><input type="text" id="cashTarget" placeholder="Target $"></td>
+                                    <td><input type="text" id="cashActual" placeholder="Actual $"></td>
+                                </tr>
+                                <tr>
+                                    <td>Runway Remaining</td>
+                                    <td><input type="text" id="runwayTarget" placeholder="Target date"></td>
+                                    <td><input type="text" id="runwayActual" placeholder="Actual date"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Energy & Alignment -->
+                <div class="section">
+                    <div class="section-label">⚡ Energy & Alignment Assessment</div>
+                    <div class="section-description">Rate 1-10 (1=terrible, 10=perfect)</div>
+                    
+                    <div class="slider-grid">
+                        <div class="slider-item">
+                            <div class="slider-header">
+                                <span class="slider-label">Energy levels</span>
+                                <span class="slider-score" id="energyScore">5/10</span>
+                            </div>
+                            <input type="range" id="energySlider" min="1" max="10" value="5">
+                            <textarea id="energyNotes" class="small" placeholder="Notes on energy..."></textarea>
+                        </div>
+
+                        <div class="slider-item">
+                            <div class="slider-header">
+                                <span class="slider-label">Alignment with goal</span>
+                                <span class="slider-score" id="alignmentScore">5/10</span>
+                            </div>
+                            <input type="range" id="alignmentSlider" min="1" max="10" value="5">
+                            <textarea id="alignmentNotes" class="small" placeholder="Notes on alignment..."></textarea>
+                        </div>
+
+                        <div class="slider-item">
+                            <div class="slider-header">
+                                <span class="slider-label">Enjoyment of work</span>
+                                <span class="slider-score" id="enjoymentScore">5/10</span>
+                            </div>
+                            <input type="range" id="enjoymentSlider" min="1" max="10" value="5">
+                            <textarea id="enjoymentNotes" class="small" placeholder="Notes on enjoyment..."></textarea>
+                        </div>
+
+                        <div class="slider-item">
+                            <div class="slider-header">
+                                <span class="slider-label">Clarity of direction</span>
+                                <span class="slider-score" id="clarityScore">5/10</span>
+                            </div>
+                            <input type="range" id="claritySlider" min="1" max="10" value="5">
+                            <textarea id="clarityNotes" class="small" placeholder="Notes on clarity..."></textarea>
+                        </div>
+
+                        <div class="slider-item">
+                            <div class="slider-header">
+                                <span class="slider-label">Execution consistency</span>
+                                <span class="slider-score" id="executionScore">5/10</span>
+                            </div>
+                            <input type="range" id="executionSlider" min="1" max="10" value="5">
+                            <textarea id="executionNotes" class="small" placeholder="Notes on execution..."></textarea>
+                        </div>
+
+                        <div class="slider-item">
+                            <div class="slider-header">
+                                <span class="slider-label">Trust in process</span>
+                                <span class="slider-score" id="trustScore">5/10</span>
+                            </div>
+                            <input type="range" id="trustSlider" min="1" max="10" value="5">
+                            <textarea id="trustNotes" class="small" placeholder="Notes on trust..."></textarea>
+                        </div>
+                    </div>
+
+                    <label class="section-label" style="margin-top: 30px;">Dominant emotional states</label>
+                    <textarea id="emotionalStates" placeholder="List the top 3 feelings that defined this sprint..."></textarea>
+
+                    <label class="section-label">Days in flow vs. forcing</label>
+                    <input type="text" id="flowPercentage" placeholder="e.g., 60% flow / 40% forcing">
+                </div>
+
+                <!-- What Went Well -->
+                <div class="section">
+                    <div class="section-label">🌟 What Went Well</div>
+                    <div class="section-description">Celebrate your wins and positive patterns</div>
+                    
+                    <label class="section-label" style="margin-top: 20px;">Wins (Big & Small)</label>
+                    <textarea id="wins" placeholder="List your achievements..."></textarea>
+
+                    <label class="section-label">Unexpected Positive Outcomes</label>
+                    <textarea id="positiveOutcomes" placeholder="Surprises that delighted you..."></textarea>
+
+                    <label class="section-label">Behaviors/Habits That Served Me</label>
+                    <textarea id="goodHabits" placeholder="What patterns supported your success?"></textarea>
+                </div>
+
+                <!-- What Didn't Go Well -->
+                <div class="section">
+                    <div class="section-label">🚧 What Didn't Go Well</div>
+                    <div class="section-description">Honest reflection on challenges and blockers</div>
+                    
+                    <label class="section-label" style="margin-top: 20px;">Blockers & Challenges</label>
+                    <textarea id="blockers" placeholder="What got in your way?"></textarea>
+
+                    <label class="section-label">Patterns That Emerged</label>
+                    <textarea id="badPatterns" placeholder="Recurring issues or tendencies..."></textarea>
+
+                    <label class="section-label">Unmet Expectations</label>
+                    <textarea id="unmetExpectations" placeholder="Where did reality differ from plans?"></textarea>
+
+                    <label class="section-label">Energy Drains</label>
+                    <textarea id="energyDrains" placeholder="What depleted you?"></textarea>
+                </div>
+
+                <!-- Key Learnings -->
+                <div class="section">
+                    <div class="section-label">💡 Key Learnings & Insights</div>
+                    <div class="section-description">Extract wisdom from the experience</div>
+                    
+                    <label class="section-label" style="margin-top: 20px;">About My Work</label>
+                    <textarea id="workLearnings" placeholder="What did you learn about your work?"></textarea>
+
+                    <label class="section-label">About My Process</label>
+                    <textarea id="processLearnings" placeholder="What did you learn about how you work?"></textarea>
+
+                    <label class="section-label">About Myself</label>
+                    <textarea id="selfLearnings" placeholder="What did you learn about yourself?"></textarea>
+
+                    <label class="section-label">Pivots/Direction Changes</label>
+                    <textarea id="pivotWhat" class="small" placeholder="What changed..."></textarea>
+                    <textarea id="pivotWhy" class="small" placeholder="Why it changed..."></textarea>
+                    <textarea id="pivotRightCall" class="small" placeholder="Was this the right call?"></textarea>
+                </div>
+
+                <!-- The Retro Questions -->
+                <div class="section">
+                    <div class="section-label">🔄 The Retro Questions</div>
+                    <div class="section-description">Actionable insights for the next iteration</div>
+                    
+                    <label class="section-label" style="margin-top: 20px;">What should I START doing?</label>
+                    <textarea id="start" placeholder="New behaviors, habits, or approaches..."></textarea>
+
+                    <label class="section-label">What should I STOP doing?</label>
+                    <textarea id="stop" placeholder="Things to eliminate or avoid..."></textarea>
+
+                    <label class="section-label">What should I CONTINUE doing?</label>
+                    <textarea id="continue" placeholder="What's working that you want to keep..."></textarea>
+
+                    <label class="section-label">What should I DO DIFFERENTLY?</label>
+                    <textarea id="doDifferently" placeholder="Adjustments and iterations..."></textarea>
+                </div>
+
+                <!-- Integration -->
+                <div class="section">
+                    <div class="section-label">🎓 Integration</div>
+                    <div class="section-description">Synthesize the experience into core principles</div>
+                    
+                    <label class="section-label" style="margin-top: 20px;">Core Principle Validated</label>
+                    <textarea id="principleValidated" placeholder="What belief about yourself/work was confirmed?"></textarea>
+
+                    <label class="section-label">Core Principle Challenged</label>
+                    <textarea id="principleChallenged" placeholder="What assumption needs updating?"></textarea>
+
+                    <label class="section-label">The One Thing</label>
+                    <textarea id="oneThingLesson" placeholder="If you could only take ONE lesson from this sprint into the next phase, what would it be?"></textarea>
+                </div>
+
+                <!-- Forward Look -->
+                <div class="section">
+                    <div class="section-label">🔮 Forward Look</div>
+                    <div class="section-description">Set yourself up for success in the next phase</div>
+                    
+                    <label class="section-label" style="margin-top: 20px;">Sprint Grade</label>
+                    <select id="sprintGrade">
+                        <option value="">Select grade...</option>
+                        <option value="A">A - Exceptional</option>
+                        <option value="B">B - Strong</option>
+                        <option value="C">C - Acceptable</option>
+                        <option value="D">D - Below expectations</option>
+                        <option value="F">F - Failed</option>
+                    </select>
+
+                    <label class="section-label">Why this grade?</label>
+                    <textarea id="gradeReason" class="small" placeholder="Explain your grade..."></textarea>
+
+                    <label class="section-label">Readiness for Next Phase</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="readyClear">
+                            <span class="checkbox-label">Clear on what to build next</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="readyEnergy">
+                            <span class="checkbox-label">Have energy/motivation to continue</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="readyFinancial">
+                            <span class="checkbox-label">Financially viable to proceed</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="readyEmotional">
+                            <span class="checkbox-label">Emotionally/mentally ready</span>
+                        </label>
+                    </div>
+
+                    <label class="section-label">Immediate Next Action</label>
+                    <textarea id="nextAction" class="small" placeholder="The single most important thing to do tomorrow..."></textarea>
+                </div>
+
+                <!-- Metadata -->
+                <div class="section">
+                    <label class="section-label">Time to Complete Retro (minutes)</label>
+                    <input type="number" id="completionTime" min="0" placeholder="Track for future sprints">
+                </div>
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <button type="submit">💾 Save Retrospective</button>
+                    <button type="button" class="btn-secondary" onclick="viewPastRetros()">📚 View Past Retros</button>
+                    <button type="button" class="btn-danger" onclick="clearForm()">🗑️ Clear Form</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Past Retros View -->
+        <div id="retrosList" style="display: none;">
+            <div class="section-label">📚 Past Retrospectives</div>
+            <div class="section-description">Review and learn from previous sprints</div>
+            
+            <div class="retros-list" id="retrosContainer"></div>
+            
+            <div class="button-group">
+                <button onclick="backToForm()">← Back to Form</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sprint retro data storage
+        let currentRetro = {};
+
+        // Initialize sliders
+        const sliders = ['energy', 'alignment', 'enjoyment', 'clarity', 'execution', 'trust'];
+        
+        sliders.forEach(slider => {
+            const sliderElement = document.getElementById(`${slider}Slider`);
+            const scoreElement = document.getElementById(`${slider}Score`);
+            
+            sliderElement.addEventListener('input', (e) => {
+                scoreElement.textContent = `${e.target.value}/10`;
+                autoSave();
+            });
+        });
+
+        // Auto-save functionality
+        const formInputs = document.querySelectorAll('input, textarea, select');
+        formInputs.forEach(input => {
+            input.addEventListener('input', autoSave);
+            input.addEventListener('change', autoSave);
+        });
+
+        function autoSave() {
+            saveCurrentRetro();
+            showSaveStatus();
+        }
+
+        function saveCurrentRetro() {
+            currentRetro = {
+                timestamp: new Date().toISOString(),
+                sprintGoal: document.getElementById('sprintGoal').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value,
+                planned: [
+                    document.getElementById('planned1').value,
+                    document.getElementById('planned2').value,
+                    document.getElementById('planned3').value
+                ],
+                actual: [
+                    document.getElementById('actual1').value,
+                    document.getElementById('actual2').value,
+                    document.getElementById('actual3').value
+                ],
+                completion: [
+                    document.getElementById('completion1').value,
+                    document.getElementById('completion2').value,
+                    document.getElementById('completion3').value
+                ],
+                financial: {
+                    spendTarget: document.getElementById('spendTarget').value,
+                    spendActual: document.getElementById('spendActual').value,
+                    revenueTarget: document.getElementById('revenueTarget').value,
+                    revenueActual: document.getElementById('revenueActual').value,
+                    cashTarget: document.getElementById('cashTarget').value,
+                    cashActual: document.getElementById('cashActual').value,
+                    runwayTarget: document.getElementById('runwayTarget').value,
+                    runwayActual: document.getElementById('runwayActual').value
+                },
+                energy: {
+                    energy: { score: document.getElementById('energySlider').value, notes: document.getElementById('energyNotes').value },
+                    alignment: { score: document.getElementById('alignmentSlider').value, notes: document.getElementById('alignmentNotes').value },
+                    enjoyment: { score: document.getElementById('enjoymentSlider').value, notes: document.getElementById('enjoymentNotes').value },
+                    clarity: { score: document.getElementById('claritySlider').value, notes: document.getElementById('clarityNotes').value },
+                    execution: { score: document.getElementById('executionSlider').value, notes: document.getElementById('executionNotes').value },
+                    trust: { score: document.getElementById('trustSlider').value, notes: document.getElementById('trustNotes').value }
+                },
+                emotionalStates: document.getElementById('emotionalStates').value,
+                flowPercentage: document.getElementById('flowPercentage').value,
+                wins: document.getElementById('wins').value,
+                positiveOutcomes: document.getElementById('positiveOutcomes').value,
+                goodHabits: document.getElementById('goodHabits').value,
+                blockers: document.getElementById('blockers').value,
+                badPatterns: document.getElementById('badPatterns').value,
+                unmetExpectations: document.getElementById('unmetExpectations').value,
+                energyDrains: document.getElementById('energyDrains').value,
+                workLearnings: document.getElementById('workLearnings').value,
+                processLearnings: document.getElementById('processLearnings').value,
+                selfLearnings: document.getElementById('selfLearnings').value,
+                pivotWhat: document.getElementById('pivotWhat').value,
+                pivotWhy: document.getElementById('pivotWhy').value,
+                pivotRightCall: document.getElementById('pivotRightCall').value,
+                start: document.getElementById('start').value,
+                stop: document.getElementById('stop').value,
+                continue: document.getElementById('continue').value,
+                doDifferently: document.getElementById('doDifferently').value,
+                principleValidated: document.getElementById('principleValidated').value,
+                principleChallenged: document.getElementById('principleChallenged').value,
+                oneThingLesson: document.getElementById('oneThingLesson').value,
+                sprintGrade: document.getElementById('sprintGrade').value,
+                gradeReason: document.getElementById('gradeReason').value,
+                readiness: {
+                    clear: document.getElementById('readyClear').checked,
+                    energy: document.getElementById('readyEnergy').checked,
+                    financial: document.getElementById('readyFinancial').checked,
+                    emotional: document.getElementById('readyEmotional').checked
+                },
+                nextAction: document.getElementById('nextAction').value,
+                completionTime: document.getElementById('completionTime').value
+            };
+
+            localStorage.setItem('currentSprintRetro', JSON.stringify(currentRetro));
+        }
+
+        function loadCurrentRetro() {
+            const saved = localStorage.getItem('currentSprintRetro');
+            if (!saved) return;
+
+            const data = JSON.parse(saved);
+            
+            document.getElementById('sprintGoal').value = data.sprintGoal || '';
+            document.getElementById('startDate').value = data.startDate || '';
+            document.getElementById('endDate').value = data.endDate || '';
+            
+            if (data.planned) {
+                document.getElementById('planned1').value = data.planned[0] || '';
+                document.getElementById('planned2').value = data.planned[1] || '';
+                document.getElementById('planned3').value = data.planned[2] || '';
+            }
+            
+            if (data.actual) {
+                document.getElementById('actual1').value = data.actual[0] || '';
+                document.getElementById('actual2').value = data.actual[1] || '';
+                document.getElementById('actual3').value = data.actual[2] || '';
+            }
+            
+            if (data.completion) {
+                document.getElementById('completion1').value = data.completion[0] || '';
+                document.getElementById('completion2').value = data.completion[1] || '';
+                document.getElementById('completion3').value = data.completion[2] || '';
+            }
+
+            if (data.financial) {
+                Object.keys(data.financial).forEach(key => {
+                    const element = document.getElementById(key);
+                    if (element) element.value = data.financial[key] || '';
+                });
+            }
+
+            if (data.energy) {
+                Object.keys(data.energy).forEach(key => {
+                    const slider = document.getElementById(`${key}Slider`);
+                    const notes = document.getElementById(`${key}Notes`);
+                    if (slider) {
+                        slider.value = data.energy[key].score || 5;
+                        document.getElementById(`${key}Score`).textContent = `${slider.value}/10`;
+                    }
+                    if (notes) notes.value = data.energy[key].notes || '';
+                });
+            }
+
+            const textFields = [
+                'emotionalStates', 'flowPercentage', 'wins', 'positiveOutcomes', 'goodHabits',
+                'blockers', 'badPatterns', 'unmetExpectations', 'energyDrains',
+                'workLearnings', 'processLearnings', 'selfLearnings',
+                'pivotWhat', 'pivotWhy', 'pivotRightCall',
+                'start', 'stop', 'continue', 'doDifferently',
+                'principleValidated', 'principleChallenged', 'oneThingLesson',
+                'sprintGrade', 'gradeReason', 'nextAction', 'completionTime'
+            ];
+
+            textFields.forEach(field => {
+                const element = document.getElementById(field);
+                if (element && data[field]) element.value = data[field];
+            });
+
+            if (data.readiness) {
+                document.getElementById('readyClear').checked = data.readiness.clear || false;
+                document.getElementById('readyEnergy').checked = data.readiness.energy || false;
+                document.getElementById('readyFinancial').checked = data.readiness.financial || false;
+                document.getElementById('readyEmotional').checked = data.readiness.emotional || false;
+            }
+        }
+
+        function showSaveStatus() {
+            const status = document.getElementById('saveStatus');
+            status.classList.add('visible');
+            setTimeout(() => status.classList.remove('visible'), 2000);
+        }
+
+        // Form submission
+        document.getElementById('retroForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = JSON.parse(localStorage.getItem('currentSprintRetro'));
+            formData.completedDate = new Date().toISOString();
+            
+            let completedRetros = JSON.parse(localStorage.getItem('completedSprintRetros') || '[]');
+            completedRetros.push(formData);
+            localStorage.setItem('completedSprintRetros', JSON.stringify(completedRetros));
+            
+            localStorage.removeItem('currentSprintRetro');
+            
+            alert('✓ Retrospective saved successfully!');
+            
+            if (confirm('Clear form for next sprint?')) {
+                document.getElementById('retroForm').reset();
+                sliders.forEach(slider => {
+                    document.getElementById(`${slider}Slider`).value = 5;
+                    document.getElementById(`${slider}Score`).textContent = '5/10';
+                });
+            }
+        });
+
+        function clearForm() {
+            if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+                document.getElementById('retroForm').reset();
+                localStorage.removeItem('currentSprintRetro');
+                sliders.forEach(slider => {
+                    document.getElementById(`${slider}Slider`).value = 5;
+                    document.getElementById(`${slider}Score`).textContent = '5/10';
+                });
+            }
+        }
+
+        function viewPastRetros() {
+            document.getElementById('formView').style.display = 'none';
+            document.getElementById('retrosList').style.display = 'block';
+            
+            const completedRetros = JSON.parse(localStorage.getItem('completedSprintRetros') || '[]');
+            const container = document.getElementById('retrosContainer');
+            
+            if (completedRetros.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; color: rgba(0, 0, 0, 0.4);">
+                        <p style="font-size: 1.1rem; margin-bottom: 10px;">No completed retrospectives yet</p>
+                        <p style="font-size: 0.9rem;">Complete your first sprint to see it here</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = completedRetros
+                .sort((a, b) => new Date(b.completedDate) - new Date(a.completedDate))
+                .map((retro, index) => {
+                    const startDate = new Date(retro.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    const endDate = new Date(retro.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    
+                    return `
+                        <div class="retro-item" onclick="loadRetro(${completedRetros.length - 1 - index})">
+                            <div class="retro-info">
+                                <div class="retro-goal">${retro.sprintGoal || 'Untitled Sprint'}</div>
+                                <div class="retro-meta">${startDate} - ${endDate} • Grade: ${retro.sprintGrade || 'Not graded'}</div>
+                            </div>
+                            <div class="retro-actions">
+                                <button class="icon-btn" onclick="event.stopPropagation(); deleteRetro(${completedRetros.length - 1 - index})">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                })
+                .join('');
+        }
+
+        function backToForm() {
+            document.getElementById('retrosList').style.display = 'none';
+            document.getElementById('formView').style.display = 'block';
+        }
+
+        function loadRetro(index) {
+            const completedRetros = JSON.parse(localStorage.getItem('completedSprintRetros') || '[]');
+            const retro = completedRetros[index];
+            
+            localStorage.setItem('currentSprintRetro', JSON.stringify(retro));
+            
+            backToForm();
+            loadCurrentRetro();
+        }
+
+        function deleteRetro(index) {
+            if (confirm('Are you sure you want to delete this retrospective?')) {
+                let completedRetros = JSON.parse(localStorage.getItem('completedSprintRetros') || '[]');
+                completedRetros.splice(index, 1);
+                localStorage.setItem('completedSprintRetros', JSON.stringify(completedRetros));
+                viewPastRetros();
+            }
+        }
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            loadCurrentRetro();
+        });
+    </script>
+</body>
+</html>

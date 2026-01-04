@@ -9,11 +9,39 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
     body {
-      background: #ffffff;
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
       font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
       color: #000000;
       overflow-x: hidden;
       min-height: 100vh;
+      position: relative;
+    }
+
+    /* Subtle animated background pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(33, 150, 243, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(66, 165, 245, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(100, 181, 246, 0.05) 0%, transparent 50%);
+      animation: patternFloat 20s ease-in-out infinite;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    @keyframes patternFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-20px) scale(1.05); }
+    }
+
+    .main-container {
+      position: relative;
+      z-index: 1;
     }
 
     /* Navigation Sidebar */
@@ -135,72 +163,1100 @@
 
     /* Main Container */
     .main-container {
-      max-width: 1000px;
+      max-width: 1600px;
       margin: 0 auto;
-      padding: 80px 60px 60px;
+      padding: 0;
       min-height: 100vh;
+      background: #fafbfc;
     }
 
-    /* Header */
-    .page-header {
+    /* Top Section - Simpler, Start with One-Liner */
+    .top-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 40px 40px;
+    }
+
+    .top-content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* One-Liner - Hero at Top */
+    .oneliner-card {
+      background: white;
+      border-radius: 12px;
+      padding: 32px 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       text-align: center;
-      margin-bottom: 60px;
     }
 
-    .page-title {
-      font-size: 2.5rem;
-      font-weight: 300;
-      letter-spacing: -1px;
+    .oneliner-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: rgba(0,0,0,0.4);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+    }
+
+    .oneliner-display-main {
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: #000000;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      padding: 8px;
+      border-radius: 6px;
+      line-height: 1.4;
+    }
+
+    .oneliner-display-main:hover {
+      background: rgba(0,0,0,0.02);
+    }
+
+    .oneliner-display-main.empty {
+      color: rgba(0,0,0,0.3);
+      font-style: italic;
+      font-size: 1.1rem;
+    }
+
+    .oneliner-input-main {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid rgba(0,0,0,0.1);
+      padding: 8px;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: #000000;
+      text-align: center;
+      display: none;
+    }
+
+    .oneliner-input-main:focus {
+      outline: none;
+      border-bottom-color: #2196F3;
+    }
+
+    .oneliner-exercise-btn-main {
+      background: rgba(33, 150, 243, 0.08);
+      color: rgba(33, 150, 243, 0.9);
+      border: 1px solid rgba(33, 150, 243, 0.2);
+      border-radius: 6px;
+      padding: 10px 24px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .oneliner-exercise-btn-main:hover {
+      background: rgba(33, 150, 243, 0.12);
+      border-color: rgba(33, 150, 243, 0.3);
+    }
+
+    /* Success Score & Top Insights - Side by Side */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .metrics-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Success Score - Compact Card */
+    .success-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    .success-score {
+      font-size: 3.5rem;
+      font-weight: 200;
+      color: #2196F3;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .success-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: rgba(0,0,0,0.4);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 6px;
+    }
+
+    .success-meaning {
+      font-size: 0.85rem;
+      color: rgba(0,0,0,0.6);
       margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .success-status {
+      font-size: 0.8rem;
+      color: rgba(0,0,0,0.5);
+      line-height: 1.4;
+      margin-bottom: 16px;
+      min-height: 40px;
+    }
+
+    .success-calculate {
+      width: 100%;
+      background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .success-calculate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+    }
+
+    /* Top 3 Insights - Cleaner Cards */
+    .top-suggestions {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .top-suggestions-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .top-suggestions-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(0,0,0,0.4);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .top-suggestions-generate {
+      background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 18px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .top-suggestions-generate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+    }
+
+    .top-suggestions-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 1100px) {
+      .top-suggestions-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .top-insight-card {
+      background: linear-gradient(135deg, rgba(33, 150, 243, 0.04) 0%, rgba(25, 118, 210, 0.04) 100%);
+      border: 1px solid rgba(33, 150, 243, 0.15);
+      border-radius: 10px;
+      padding: 20px;
+      transition: all 0.2s;
+    }
+
+    .top-insight-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(33, 150, 243, 0.15);
+      border-color: rgba(33, 150, 243, 0.3);
+    }
+
+    .top-insight-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+
+    .top-insight-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: rgba(0,0,0,0.85);
+      line-height: 1.3;
+      flex: 1;
+    }
+
+    .top-insight-impact {
+      background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      white-space: nowrap;
+      margin-left: 10px;
+    }
+
+    .top-insight-text {
+      font-size: 0.8rem;
+      color: rgba(0,0,0,0.7);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .top-insight-action-box {
+      background: white;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 12px;
+      border: 1px solid rgba(33, 150, 243, 0.15);
+    }
+
+    .top-insight-action-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #2196F3;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .top-insight-action-text {
+      font-size: 0.8rem;
+      color: rgba(0,0,0,0.85);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .top-suggestions-placeholder {
+      text-align: center;
+      padding: 40px;
+      color: rgba(0,0,0,0.3);
+      font-size: 0.85rem;
+      font-style: italic;
+    }
+
+    /* Vision Analysis - Compact */
+    .vision-analysis-top {
+      background: #ffffff;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding: 24px 40px;
+    }
+
+    .analysis-content-top {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .analysis-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: rgba(0,0,0,0.4);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .analysis-refresh-btn-top {
+      background: transparent;
+      color: rgba(0,0,0,0.5);
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 0.65rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .analysis-refresh-btn-top:hover {
+      background: rgba(0,0,0,0.04);
       color: #000000;
     }
 
-    .page-subtitle {
+    .analysis-box-top {
+      background: rgba(0,0,0,0.015);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 0.78rem;
+      line-height: 1.65;
+    }
+
+    .analysis-section-compact {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .analysis-section-compact:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .analysis-section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: rgba(0,0,0,0.8);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .analysis-section-icon {
+      font-size: 1rem;
+    }
+
+    .analysis-section-text {
+      font-size: 0.75rem;
+      color: rgba(0,0,0,0.7);
+      line-height: 1.5;
+    }
+
+    /* AI Actions Bar - Removed */
+    .ai-actions-bar {
+      display: none;
+    }
+
+    /* Vision Analysis - Top */
+    .vision-analysis-top {
+      background: #ffffff;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding: 30px 40px;
+    }
+
+    .analysis-content-top {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .analysis-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(0,0,0,0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .analysis-refresh-btn-top {
+      background: transparent;
+      color: rgba(0,0,0,0.5);
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .analysis-refresh-btn-top:hover {
+      background: rgba(0,0,0,0.04);
+      color: #000000;
+    }
+
+    .analysis-box-top {
+      background: rgba(0,0,0,0.015);
+      border-radius: 6px;
+      padding: 20px;
+      min-height: 80px;
+    }
+
+    /* AI Actions Bar */
+    .ai-actions-bar {
+      background: #f8f9fa;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding: 16px 40px;
+    }
+
+    .ai-actions-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .ai-actions-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: rgba(0,0,0,0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .ai-actions-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .ai-action-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #000000;
+      color: #ffffff;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 14px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.2px;
+    }
+
+    .ai-action-btn:hover {
+      background: #1a1a1a;
+      transform: translateY(-1px);
+    }
+
+    .ai-action-icon {
       font-size: 0.95rem;
-      color: rgba(0, 0, 0, 0.4);
+    }
+
+    .ai-action-text {
+      white-space: nowrap;
+    }
+
+    /* Comparison Layout */
+    .comparison-layout {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    @media (max-width: 1100px) {
+      .comparison-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .timeline-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .timeline-column.future {
+      border-left: 2px solid rgba(0,0,0,0.06);
+      padding-left: 40px;
+    }
+
+    .timeline-header {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: rgba(0,0,0,0.4);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 8px;
+    }
+
+    .timeline-section {
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .timeline-section.suggestion {
+      background: #f8fffe;
+      border-color: rgba(0,200,100,0.1);
+    }
+
+    .timeline-section.comprehensive {
+      padding: 20px;
+    }
+
+    .suggestions-categories {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 16px;
+    }
+
+    .suggestion-category {
+      padding-top: 16px;
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .suggestion-category:first-child {
+      padding-top: 0;
+      border-top: none;
+    }
+
+    .suggestion-category-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: rgba(0,0,0,0.6);
+      margin-bottom: 10px;
+      text-transform: uppercase;
       letter-spacing: 0.5px;
-      font-weight: 400;
     }
 
-    /* Vision Sections */
+    .timeline-section.growth-edges {
+      background: #fffef8;
+      border-color: rgba(255,150,0,0.15);
+    }
+
+    .timeline-section-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(0,0,0,0.6);
+      margin-bottom: 10px;
+    }
+
+    .timeline-add-btn {
+      width: 100%;
+      background: transparent;
+      border: 1px dashed rgba(0,0,0,0.15);
+      color: rgba(0,0,0,0.5);
+      border-radius: 4px;
+      padding: 6px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-top: 8px;
+    }
+
+    .timeline-add-btn:hover {
+      background: rgba(0,0,0,0.02);
+      border-color: rgba(0,0,0,0.25);
+      color: #000000;
+    }
+
+    /* Suggestions */
+    .suggestion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .suggestion-generate-btn {
+      background: #000000;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .suggestion-generate-btn:hover {
+      background: #1a1a1a;
+    }
+
+    .suggestion-list {
+      min-height: 60px;
+    }
+
+    .suggestion-placeholder {
+      color: rgba(0,0,0,0.3);
+      font-size: 0.72rem;
+      font-style: italic;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .suggestion-item {
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(0,0,0,0.05);
+      border-radius: 4px;
+      padding: 8px;
+      margin-bottom: 6px;
+      transition: all 0.15s;
+    }
+
+    .suggestion-item:hover {
+      background: rgba(255,255,255,0.9);
+      border-color: rgba(0,0,0,0.08);
+    }
+
+    .suggestion-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 5px;
+    }
+
+    .suggestion-text {
+      flex: 1;
+      font-size: 0.75rem;
+      color: rgba(0,0,0,0.8);
+      line-height: 1.35;
+    }
+
+    .suggestion-score-impact {
+      background: rgba(0,200,100,0.08);
+      color: rgb(0,130,70);
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .suggestion-actions {
+      display: flex;
+      gap: 4px;
+      justify-content: flex-end;
+    }
+
+    .suggestion-btn-add {
+      background: #000000;
+      color: #ffffff;
+      border: none;
+      border-radius: 3px;
+      padding: 3px 8px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .suggestion-btn-add:hover {
+      background: #1a1a1a;
+    }
+
+    .suggestion-btn-edge {
+      background: rgba(255,150,0,0.12);
+      color: rgb(200,100,0);
+      border: 1px solid rgba(255,150,0,0.2);
+      border-radius: 3px;
+      padding: 3px 8px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .suggestion-btn-edge:hover {
+      background: rgba(255,150,0,0.2);
+    }
+
+    .suggestion-btn-reject {
+      background: transparent;
+      color: rgba(0,0,0,0.3);
+      border: none;
+      border-radius: 3px;
+      padding: 3px 6px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .suggestion-btn-reject:hover {
+      color: rgba(255,0,0,0.6);
+    }
+
+    .growth-edges-note {
+      font-size: 0.7rem;
+      color: rgba(0,0,0,0.5);
+      font-style: italic;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    /* Growth Edges Section - Full Width */
+    .growth-edges-section {
+      max-width: 1400px;
+      margin: 0 auto 40px;
+      padding: 0 40px;
+    }
+
+    .growth-edges-section > div:first-child {
+      background: #fffef8;
+      border: 1px solid rgba(255,150,0,0.15);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .growth-edges-header {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: rgba(0,0,0,0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    /* Vision Analysis */
+    .vision-analysis-section {
+      max-width: 1400px;
+      margin: 0 auto 40px;
+      padding: 0 40px;
+    }
+
+    .vision-analysis-section > div:first-child {
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .analysis-header-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: rgba(0,0,0,0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .analysis-refresh-btn {
+      background: transparent;
+      color: rgba(0,0,0,0.5);
+      border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .analysis-refresh-btn:hover {
+      background: rgba(0,0,0,0.05);
+      color: #000000;
+    }
+
+    .analysis-placeholder {
+      color: rgba(0,0,0,0.3);
+      font-size: 0.8rem;
+      font-style: italic;
+      padding: 30px;
+      text-align: center;
+    }
+    /* Dashboard Grid */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+      max-width: 1400px;
+      margin: 24px auto;
+      padding: 0 40px;
+    }
+
+    @media (max-width: 900px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Vision Sections - Compact Cards */
     .vision-section {
-      margin-bottom: 60px;
-      animation: fadeIn 0.5s ease;
+      background: white;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 10px;
+      padding: 18px;
+      transition: all 0.3s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      position: relative;
+      overflow: hidden;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .vision-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, #2196F3 0%, #1976D2 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .vision-section:hover {
+      border-color: rgba(33, 150, 243, 0.3);
+      box-shadow: 0 6px 20px rgba(33, 150, 243, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .vision-section:hover::before {
+      opacity: 1;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-title-with-icon {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-icon {
+      font-size: 1.2rem;
     }
 
     .section-label {
       font-size: 0.75rem;
-      font-weight: 600;
-      color: rgba(0, 0, 0, 0.4);
+      font-weight: 700;
+      color: rgba(0, 0, 0, 0.7);
       text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-bottom: 15px;
+      letter-spacing: 0.8px;
+    }
+
+    .section-count {
+      background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.65rem;
+      font-weight: 700;
     }
 
     .section-description {
-      font-size: 0.85rem;
-      color: rgba(0, 0, 0, 0.5);
-      margin-bottom: 20px;
-      line-height: 1.6;
+      display: none;
     }
 
-    /* One-Liner Section */
+    /* One-Liner Section - Ultra Sleek */
+    .oneliner-display {
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.4;
+      color: #000000;
+      padding: 10px 12px;
+      background: rgba(0,0,0,0.01);
+      border-radius: 4px;
+      border: 1px solid rgba(0,0,0,0.04);
+      margin-bottom: 8px;
+      min-height: 42px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .oneliner-display:hover {
+      background: rgba(0,0,0,0.02);
+      border-color: rgba(0,0,0,0.08);
+    }
+
+    .oneliner-display.empty {
+      color: rgba(0,0,0,0.22);
+      font-style: italic;
+      font-size: 0.82rem;
+    }
+
     .oneliner-input {
       width: 100%;
       background: transparent;
       border: none;
-      border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-      padding: 20px 0;
-      font-size: 1.8rem;
-      font-weight: 300;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      padding: 10px 0;
+      font-size: 1rem;
+      font-weight: 400;
       color: #000000;
-      letter-spacing: -0.5px;
-      transition: all 0.3s;
+      letter-spacing: -0.2px;
+      transition: all 0.2s;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+      display: none;
+    }
+
+    .oneliner-input:focus {
+      outline: none;
+      border-bottom-color: rgba(0,0,0,0.15);
+    }
+
+    /* Compact List Items - More Minimal */
+    .compact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      max-height: 180px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .compact-list::-webkit-scrollbar {
+      width: 2px;
+    }
+
+    .compact-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .compact-list::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.1);
+      border-radius: 1px;
+    }
+
+    .compact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      padding: 5px 8px;
+      background: rgba(0,0,0,0.01);
+      border-radius: 4px;
+      transition: all 0.12s;
+      font-size: 0.78rem;
+      line-height: 1.35;
+      font-weight: 400;
+    }
+
+    .compact-item:hover {
+      background: rgba(0,0,0,0.03);
+    }
+
+    .compact-item-number {
+      min-width: 14px;
+      height: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: rgba(0,0,0,0.25);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .compact-item-text {
+      flex: 1;
+      color: rgba(0,0,0,0.75);
+      word-break: break-word;
+    }
+
+    /* Action Buttons - Ultra Sleek */
+    .action-row {
+      display: flex;
+      gap: 5px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      background: transparent;
+      border: 1px solid rgba(0,0,0,0.08);
+      color: rgba(0,0,0,0.5);
+      padding: 4px 8px;
+      font-size: 0.62rem;
+      cursor: pointer;
+      transition: all 0.12s;
+      border-radius: 3px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .action-btn:hover {
+      background: rgba(0,0,0,0.02);
+      border-color: rgba(0,0,0,0.15);
+      color: #000000;
+    }
+
+    .action-btn.primary {
+      background: #000000;
+      color: #ffffff;
+      border-color: #000000;
+    }
+
+    .action-btn.primary:hover {
+      background: #1a1a1a;
+    }
+
+    /* Top Bar - Compact */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .top-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    /* AI Actions - Compact Buttons */
+    .ai-actions-compact {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .ai-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 10px;
+      background: #000000;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .ai-btn:hover {
+      background: #1a1a1a;
+      transform: translateY(-1px);
+    }
+
+    .ai-btn-icon {
+      font-size: 0.9rem;
+    }
+
       font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
       text-align: center;
     }
@@ -334,6 +1390,28 @@
     .suggestions-box.visible {
       display: block;
       animation: fadeIn 0.5s ease;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 700px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      z-index: 1000;
+      background: #ffffff;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .suggestions-box.visible::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: -1;
     }
 
     .suggestions-header {
@@ -408,6 +1486,69 @@
       background: rgba(0, 0, 0, 0.05);
       border-color: rgba(0, 0, 0, 0.3);
       color: #000000;
+    }
+
+    /* Analysis Box */
+    .analysis-box {
+      margin-top: 20px;
+      padding: 30px;
+      background: #fafafa;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+      display: none;
+      position: relative;
+    }
+
+    .analysis-box.visible {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .analysis-section {
+      margin-bottom: 30px;
+    }
+
+    .analysis-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .analysis-heading {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #000000;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .analysis-content {
+      font-size: 0.9rem;
+      color: rgba(0, 0, 0, 0.7);
+      line-height: 1.7;
+      padding-left: 28px;
+    }
+
+    .analysis-highlight {
+      background: #ffffff;
+      border-left: 3px solid #000000;
+      padding: 15px 20px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .analysis-score {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #000000;
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-left: 10px;
     }
 
     /* Routines & Errands */
@@ -705,25 +1846,6 @@
       color: rgba(255, 0, 0, 0.8);
     }
 
-    /* Desire Section - Simple Menu */
-    .desire-grid {
-      display: grid;
-      gap: 15px;
-    }
-
-    .desire-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: #000000;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      flex-shrink: 0;
-    }
-
     /* Save Status */
     .save-status {
       position: fixed;
@@ -791,94 +1913,166 @@
 
   <!-- Main Content -->
   <div class="main-container">
-    <!-- Header -->
-    <div class="page-header">
-      <h1 class="page-title">Vision</h1>
-      <p class="page-subtitle">Your operating principles and guiding lights</p>
+    
+    <!-- Top Section -->
+    <div class="top-section">
+      <div class="top-content">
+        
+        <!-- One-Liner Card - Hero at Top -->
+        <div class="oneliner-card">
+          <div class="oneliner-label">Your One-Liner</div>
+          <div class="oneliner-display-main" id="onelinerDisplayMain" onclick="editOneliner()">
+            Click to set your one-liner...
+          </div>
+          <input 
+            type="text" 
+            class="oneliner-input-main" 
+            id="oneliner"
+            placeholder="I exist to..."
+            oninput="saveVision(); updateOnelinerDisplay()"
+            onblur="hideOnelinerInput()"
+          />
+          <button class="oneliner-exercise-btn-main" onclick="startOnelinerExercise()">
+            Start Discovery Exercise
+          </button>
+        </div>
+
+        <!-- Success Score & Top Insights Side by Side -->
+        <div class="metrics-row">
+          
+          <!-- Success Score - Compact -->
+          <div class="success-card">
+            <div class="success-score" id="successScore">—</div>
+            <div class="success-label">Success Likelihood</div>
+            <div class="success-meaning" id="successMeaning">Alignment Score</div>
+            <div class="success-status" id="successStatus">Calculate to analyze</div>
+            <button class="success-calculate" onclick="calculateSuccessLikelihood()">Calculate</button>
+          </div>
+
+          <!-- Top 3 Insights -->
+          <div class="top-suggestions">
+            <div class="top-suggestions-header">
+              <div class="top-suggestions-title">💡 Top 3 Insights</div>
+              <button class="top-suggestions-generate" onclick="generateTopInsights()">✨ Generate</button>
+            </div>
+            <div id="topSuggestionsContainer">
+              <div class="top-suggestions-placeholder">
+                Calculate Success Likelihood first, then generate insights
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
 
-    <!-- One-Liner -->
-    <div class="vision-section">
-      <div class="section-label">One-Liner</div>
-      <div class="section-description">Why you exist and what impact you want to have in one sentence.</div>
-      <input 
-        type="text" 
-        class="oneliner-input" 
-        id="oneliner"
-        placeholder="I am..."
-        oninput="saveVision()"
-      />
-    </div>
-
-    <!-- Values -->
-    <div class="vision-section">
-      <div class="section-label">Values</div>
-      <div class="section-description">How you set goals, think about your future, and make big decisions.</div>
-      <div class="principles-grid" id="valuesGrid"></div>
-      <button class="add-principle-btn" onclick="addValue()">+ Add Value</button>
-    </div>
-
-    <!-- Principles -->
-    <div class="vision-section">
-      <div class="section-label">Principles</div>
-      <div class="section-description">How you operate day to day to live in alignment and achieve your goals.</div>
-      <div class="principles-grid" id="principlesGrid"></div>
-      <button class="add-principle-btn" onclick="addPrinciple()">+ Add Principle</button>
-    </div>
-
-    <!-- Boundaries -->
-    <div class="vision-section">
-      <div class="section-label">Boundaries</div>
-      <div class="section-description">What you cannot or will not do because it brings you out of alignment.</div>
-      <div class="principles-grid" id="boundariesGrid"></div>
-      <button class="add-principle-btn" onclick="addBoundary()">+ Add Boundary</button>
-    </div>
-
-    <!-- Routines -->
-    <div class="vision-section">
-      <div class="section-label">Routines</div>
-      <div class="section-description">Habits that allow you to operate from your highest self regularly.</div>
+    <!-- Dashboard Grid -->
+    <div class="dashboard-grid">
       
-      <button class="ai-suggest-btn" onclick="suggestRoutines()" id="suggestRoutinesBtn">
-        ✨ Suggest Routines Based on My Vision
-      </button>
-      
-      <div class="suggestions-box" id="routineSuggestions"></div>
-      
-      <div class="items-list" id="routinesList"></div>
-      <button class="add-item-btn" onclick="addRoutine()">+ Add Routine</button>
+      <!-- Values -->
+      <div class="vision-section">
+        <div class="section-header">
+          <div class="section-title-with-icon">
+            <div class="section-icon">💎</div>
+            <div class="section-label">Values</div>
+          </div>
+          <div class="section-count" id="valuesCount">0</div>
+        </div>
+        <div class="compact-list" id="valuesCompactList"></div>
+        <button class="add-principle-btn" onclick="toggleValuesEdit()" style="margin-top: 10px;">+ Edit</button>
+        <div id="valuesEditSection" style="display: none; margin-top: 12px;">
+          <div class="principles-grid" id="valuesGrid"></div>
+          <button class="add-principle-btn" onclick="addValue()">+ Add Value</button>
+        </div>
+      </div>
+
+      <!-- Boundaries -->
+      <div class="vision-section">
+        <div class="section-header">
+          <div class="section-title-with-icon">
+            <div class="section-icon">🛡️</div>
+            <div class="section-label">Boundaries</div>
+          </div>
+          <div class="section-count" id="boundariesCount">0</div>
+        </div>
+        <div class="compact-list" id="boundariesCompactList"></div>
+        <button class="add-principle-btn" onclick="toggleBoundariesEdit()" style="margin-top: 10px;">+ Edit</button>
+        <div id="boundariesEditSection" style="display: none; margin-top: 12px;">
+          <div class="principles-grid" id="boundariesGrid"></div>
+          <button class="add-principle-btn" onclick="addBoundary()">+ Add Boundary</button>
+        </div>
+      </div>
+
+      <!-- Principles -->
+      <div class="vision-section">
+        <div class="section-header">
+          <div class="section-title-with-icon">
+            <div class="section-icon">⚡</div>
+            <div class="section-label">Principles</div>
+          </div>
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <button class="analysis-refresh-btn-top" onclick="showPrinciplesInspiration()" style="font-size: 0.62rem;">📝 Inspo</button>
+            <button class="analysis-refresh-btn-top" onclick="generatePrinciplesFlow()" style="font-size: 0.62rem;">✨ Gen</button>
+            <div class="section-count" id="principlesCount">0</div>
+          </div>
+        </div>
+        <div class="compact-list" id="principlesCompactList"></div>
+        <button class="add-principle-btn" onclick="togglePrinciplesEdit()" style="margin-top: 10px;">+ Edit</button>
+        <div id="principlesEditSection" style="display: none; margin-top: 12px;">
+          <div class="principles-grid" id="principlesGrid"></div>
+          <button class="add-principle-btn" onclick="addPrinciple()">+ Add Principle</button>
+        </div>
+      </div>
+
+      <!-- Routines -->
+      <div class="vision-section">
+        <div class="section-header">
+          <div class="section-title-with-icon">
+            <div class="section-icon">🔄</div>
+            <div class="section-label">Routines</div>
+          </div>
+          <div class="section-count" id="routinesCount">0</div>
+        </div>
+        <div class="compact-list" id="routinesCompactList"></div>
+        <button class="add-item-btn" onclick="toggleRoutinesEdit()" style="margin-top: 10px;">+ Edit</button>
+        <div id="routinesEditSection" style="display: none; margin-top: 12px;">
+          <div class="items-list" id="routinesList"></div>
+          <button class="add-item-btn" onclick="addRoutine()">+ Add Routine</button>
+        </div>
+      </div>
+
+      <!-- Growth Edges -->
+      <div class="vision-section">
+        <div class="section-header">
+          <div class="section-title-with-icon">
+            <div class="section-icon">🎯</div>
+            <div class="section-label">Growth Edges</div>
+          </div>
+          <div class="section-count" id="uplevelCount">0</div>
+        </div>
+        <div class="growth-edges-note" style="font-size: 0.68rem; margin-bottom: 8px; color: rgba(0,0,0,0.5);">Flow: Milestones → Yearly → Sprint → Weekly</div>
+        <div class="compact-list" id="uplevelCompactList"></div>
+        <button class="add-principle-btn" onclick="toggleUplevelEdit()" style="margin-top: 10px;">+ Edit</button>
+        <div id="uplevelEditSection" style="display: none; margin-top: 12px;">
+          <div class="principles-grid" id="uplevelGrid"></div>
+          <button class="add-principle-btn" onclick="addUplevel()">+ Add Growth Edge</button>
+        </div>
+      </div>
+
     </div>
 
-    <!-- Uplevel -->
-    <div class="vision-section">
-      <div class="section-label">Uplevel</div>
-      <div class="section-description">Areas outside your work and errands that help you unlock your highest self.</div>
-      
-      <button class="ai-suggest-btn" onclick="suggestUplevel()" id="suggestUplevelBtn">
-        ✨ Suggest Growth Areas Based on My Vision
-      </button>
-      
+    <!-- One-Liner Exercise Box (Modal) -->
+    <div class="suggestions-box" id="onelinerExerciseBox"></div>
+
+    <!-- Hidden sections for compatibility -->
+    <div style="display: none;">
+      <div class="suggestions-box" id="onelinerHistoryBox"></div>
+      <div class="suggestions-box" id="idealRoutinesBox"></div>
       <div class="suggestions-box" id="uplevelSuggestions"></div>
-      
-      <div class="uplevel-grid" id="uplevelGrid"></div>
-      <button class="add-item-btn" onclick="addUplevel()">+ Add Uplevel Item</button>
     </div>
 
-    <!-- Desire -->
-    <div class="vision-section">
-      <div class="section-label">Desire</div>
-      <div class="section-description">How you ensure your life is aligned to become what you truly want.</div>
-      
-      <button class="ai-suggest-btn" onclick="suggestDesires()" id="suggestDesiresBtn">
-        ✨ Discover New Desires
-      </button>
-      
-      <div class="suggestions-box" id="desireSuggestions"></div>
-      
-      <div class="desire-grid" id="desireGrid"></div>
-      <button class="add-item-btn" onclick="addDesire()">+ Add Desire</button>
-    </div>
   </div>
+
 
   <!-- Save Status -->
   <div class="save-status" id="saveStatus">✓ Saved</div>
@@ -928,12 +2122,13 @@
     // Vision data structure
     let visionData = {
       oneliner: '',
+      onelinerHistory: [],
       values: [],
-      principles: [],
       boundaries: [],
+      principlesInspiration: '',
+      principles: [],
       routines: [],
-      uplevel: [],
-      desire: []
+      uplevel: []
     };
 
     // Routine levels
@@ -960,6 +2155,8 @@
     // Save vision data
     function saveVision() {
       localStorage.setItem('visionData', JSON.stringify(visionData));
+      updateStats();
+      updateOnelinerDisplay();
       showSaveStatus();
     }
 
@@ -975,25 +2172,1308 @@
     // Render all vision content
     function renderVision() {
       // One-liner
-      document.getElementById('oneliner').value = visionData.oneliner;
+      updateOnelinerDisplay();
 
       // Values
       renderValues();
+      renderValuesCompact();
 
       // Principles
       renderPrinciples();
+      renderPrinciplesCompact();
 
       // Boundaries
       renderBoundaries();
+      renderBoundariesCompact();
 
       // Routines
       renderRoutines();
+      renderRoutinesCompact();
 
       // Uplevel
       renderUplevel();
+      renderUplevelCompact();
+      
+      // Update stats
+      updateStats();
+    }
+    
+    // Update stats counters
+    function updateStats() {
+      // Count components
+      const valuesCount = visionData.values.filter(v => v.trim()).length;
+      const principlesCount = visionData.principles.filter(p => p.trim()).length;
+      const boundariesCount = visionData.boundaries.filter(b => b.trim()).length;
+      const routinesCount = visionData.routines.filter(r => r.name && r.name.trim()).length;
+      const uplevelCount = visionData.uplevel.filter(u => {
+        if (typeof u === 'string') return u.trim();
+        return u.name && u.name.trim();
+      }).length;
+      
+      // Calculate system health (how many components are populated)
+      const totalComponents = 5;
+      let filledComponents = 0;
+      if (visionData.oneliner && visionData.oneliner.trim()) filledComponents++;
+      if (valuesCount > 0) filledComponents++;
+      if (principlesCount > 0) filledComponents++;
+      if (boundariesCount > 0) filledComponents++;
+      if (routinesCount > 0) filledComponents++;
+      
+      const systemHealthEl = document.getElementById('systemHealth');
+      if (systemHealthEl) {
+        systemHealthEl.textContent = `${filledComponents}/${totalComponents}`;
+      }
+      
+      // Calculate average routine level
+      const routineAvg = routinesCount > 0 
+        ? (visionData.routines.reduce((sum, r) => sum + (r.level || 0), 0) / routinesCount).toFixed(1)
+        : '—';
+      const routineStreakEl = document.getElementById('routineStreak');
+      if (routineStreakEl) routineStreakEl.textContent = routineAvg;
+      
+      // Try to load weekly planner data
+      loadWeeklyData();
+      
+      // Update section counts
+      const valuesCountEl = document.getElementById('valuesCount');
+      const principlesCountEl = document.getElementById('principlesCount');
+      const boundariesCountEl = document.getElementById('boundariesCount');
+      const routinesCountEl = document.getElementById('routinesCount');
+      const uplevelCountEl = document.getElementById('uplevelCount');
+      
+      if (valuesCountEl) valuesCountEl.textContent = valuesCount;
+      if (principlesCountEl) principlesCountEl.textContent = principlesCount;
+      if (boundariesCountEl) boundariesCountEl.textContent = boundariesCount;
+      if (routinesCountEl) routinesCountEl.textContent = routinesCount;
+      if (uplevelCountEl) uplevelCountEl.textContent = uplevelCount;
+    }
+    
+    // ===== TOP 3 INSIGHTS =====
+    async function generateTopInsights() {
+      const btn = event ? event.target : null;
+      const container = document.getElementById('topSuggestionsContainer');
+      
+      if (!visionData.oneliner) {
+        alert('Set your one-liner first!');
+        return;
+      }
+      
+      if (!window.__currentSuccessScore) {
+        alert('Calculate Success Likelihood first!');
+        return;
+      }
+      
+      const apiKey = getAPIKey();
+      if (!apiKey) {
+        const newKey = promptForAPIKey();
+        if (!newKey) return;
+      }
+      
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Generating...';
+      }
+      container.innerHTML = '<div class="top-suggestions-placeholder">Analyzing your complete vision system...</div>';
+      
+      try {
+        // Prepare all vision data
+        const filteredValues = visionData.values.filter(v => v.trim());
+        const filteredPrinciples = visionData.principles.filter(p => p.trim());
+        const filteredBoundaries = visionData.boundaries.filter(b => b.trim());
+        const filteredRoutines = visionData.routines.filter(r => r.name && r.name.trim());
+        const filteredUplevel = visionData.uplevel.filter(u => {
+          if (typeof u === 'string') return u.trim();
+          return u.name && u.name.trim();
+        });
+        
+        const prompt = `Analyze this person's complete vision system and give me the TOP 3 most critical insights.
 
-      // Desire
-      renderDesire();
+ONE-LINER: ${visionData.oneliner}
+
+VALUES: ${filteredValues.join(', ')}
+
+PRINCIPLES: ${filteredPrinciples.join(', ')}
+
+BOUNDARIES: ${filteredBoundaries.length > 0 ? filteredBoundaries.join(', ') : 'None set'}
+
+ROUTINES: ${filteredRoutines.length > 0 ? filteredRoutines.map(r => r.name).join(', ') : 'None set'}
+
+GROWTH EDGES: ${filteredUplevel.length > 0 ? filteredUplevel.map(u => typeof u === 'string' ? u : u.name).join(', ') : 'None set'}
+
+Return ONLY the top 3 most important insights as JSON:
+
+{
+  "insights": [
+    {
+      "title": "Short punchy title",
+      "insight": "2-3 sentence explanation of the key issue/opportunity. Be specific and reference their actual content.",
+      "action": "One concrete action they should take this week.",
+      "impact": "High/Medium - how critical this is"
+    },
+    {
+      "title": "Second insight title",
+      "insight": "Explanation...",
+      "action": "Action...",
+      "impact": "High/Medium"
+    },
+    {
+      "title": "Third insight title",
+      "insight": "Explanation...",
+      "action": "Action...",
+      "impact": "High/Medium"
+    }
+  ]
+}
+
+Focus on:
+1. Biggest misalignment or gap
+2. Strongest asset they're underutilizing
+3. Critical missing piece for their one-liner
+
+Be DIRECT and SPECIFIC. No fluff.`;
+
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              { 
+                role: 'system', 
+                content: 'You are a no-BS executive coach. Give only the top 3 most critical insights. Be direct and specific.'
+              },
+              { role: 'user', content: prompt }
+            ],
+            max_tokens: 800,
+            temperature: 0.7
+          })
+        });
+        
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        
+        const data = await response.json();
+        let analysisText = data.choices[0].message.content.trim();
+        analysisText = analysisText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        
+        const analysis = JSON.parse(analysisText);
+        const insights = analysis.insights || [];
+        
+        if (insights.length === 0) {
+          container.innerHTML = '<div class="top-suggestions-placeholder">No insights generated. Try again.</div>';
+          return;
+        }
+        
+        // Render top 3 insights
+        const impactColors = {
+          'High': 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+          'Medium': 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
+        };
+        
+        container.innerHTML = `
+          <div class="top-suggestions-grid">
+            ${insights.slice(0, 3).map((insight, i) => `
+              <div class="top-insight-card">
+                <div class="top-insight-header">
+                  <div class="top-insight-title">${i + 1}. ${insight.title}</div>
+                  <div class="top-insight-impact" style="background: ${impactColors[insight.impact] || impactColors['Medium']};">${insight.impact}</div>
+                </div>
+                <div class="top-insight-text">${insight.insight}</div>
+                <div class="top-insight-action-box">
+                  <div class="top-insight-action-label">Action This Week:</div>
+                  <div class="top-insight-action-text">${insight.action}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        
+      } catch (error) {
+        console.error('Error:', error);
+        container.innerHTML = '<div class="top-suggestions-placeholder">Error generating insights. Try again.</div>';
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = '✨ Generate';
+        }
+      }
+    }
+    
+    // ===== COMPREHENSIVE SUGGESTIONS =====
+    // Comprehensive suggestion generator - analyzes everything
+    async function generateComprehensiveSuggestions() {
+      const btn = event.target;
+      
+      if (!visionData.oneliner) {
+        alert('Set your one-liner first!');
+        return;
+      }
+      
+      if (!window.__currentSuccessScore) {
+        alert('Calculate Success Likelihood first!');
+        return;
+      }
+      
+      const apiKey = getAPIKey();
+      if (!apiKey) {
+        const newKey = promptForAPIKey();
+        if (!newKey) return;
+      }
+      
+      btn.disabled = true;
+      btn.textContent = 'Generating...';
+      
+      // Show loading in all sections
+      ['valuesSuggestionsList', 'boundariesSuggestionsList', 'principlesSuggestionsList', 'routinesSuggestionsList'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = '<div class="suggestion-placeholder">Analyzing...</div>';
+      });
+      
+      try {
+        const currentScore = window.__currentSuccessScore;
+        const visionAnalysisEl = document.getElementById('visionAnalysisTop');
+        const visionAnalysis = visionAnalysisEl ? visionAnalysisEl.innerText : 'Not available';
+        
+        const prompt = `Analyze this person's COMPLETE operating system and suggest improvements to increase their success likelihood from ${currentScore}/100.
+
+ONE-LINER: ${visionData.oneliner}
+
+CURRENT STATE:
+- Values: ${visionData.values.filter(v => v.trim()).join(', ') || 'None'}
+- Boundaries: ${visionData.boundaries.filter(b => b.trim()).join(', ') || 'None'}  
+- Principles: ${visionData.principles.filter(p => p.trim()).join(', ') || 'None'}
+- Routines: ${visionData.routines.map(r => `${r.name} (L${r.level})`).filter(n => n).join(', ') || 'None'}
+- Growth Edges: ${visionData.uplevel.filter(u => {
+  const name = typeof u === 'string' ? u : u.name;
+  return name && name.trim();
+}).map(u => typeof u === 'string' ? u : u.name).join(', ') || 'None'}
+
+CURRENT SUCCESS SCORE: ${currentScore}/100
+
+VISION ANALYSIS: ${visionAnalysis}
+
+Based on EVERYTHING above, suggest high-leverage improvements:
+
+Return ONLY valid JSON:
+{
+  "values": [
+    {"value": "<specific value>", "score_impact": <1-8>, "why": "<1 sentence>"}
+  ],
+  "boundaries": [
+    {"boundary": "<specific boundary>", "score_impact": <1-8>, "why": "<1 sentence>"}
+  ],
+  "principles": [
+    {"principle": "When [trigger], I [decision]", "score_impact": <1-10>, "why": "<1 sentence>"}
+  ],
+  "routines": [
+    {"routine": "<specific routine>", "score_impact": <1-10>, "why": "<1 sentence>"}
+  ]
+}
+
+2-3 items per category. SPECIFIC and ACTIONABLE.`;
+
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              { role: 'system', content: 'You analyze complete operating systems. Return only valid JSON.' },
+              { role: 'user', content: prompt }
+            ],
+            max_tokens: 800,
+            temperature: 0.7
+          })
+        });
+        
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        
+        const data = await response.json();
+        let resultText = data.choices[0].message.content.trim();
+        resultText = resultText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        
+        const suggestions = JSON.parse(resultText);
+        
+        // Render all suggestions
+        const typeMap = {
+          'value': 'Value',
+          'boundary': 'Boundary',
+          'principle': 'Principle',
+          'routine': 'Routine'
+        };
+        
+        const renderSuggestion = (s, type) => `
+          <div class="suggestion-item" id="sugg-${type}-${Math.random().toString(36).substr(2, 9)}">
+            <div class="suggestion-content">
+              <div class="suggestion-text">${s[type]}</div>
+              <div class="suggestion-score-impact">+${s.score_impact}</div>
+            </div>
+            <div class="suggestion-actions">
+              <button class="suggestion-btn-add" onclick="addSuggested${typeMap[type]}('${s[type].replace(/'/g, "\\'")}'); this.closest('.suggestion-item').remove();">Add</button>
+              <button class="suggestion-btn-edge" onclick="addToGrowthEdges('${typeMap[type]}: ${s[type].replace(/'/g, "\\'")}'); this.closest('.suggestion-item').remove();">→ Later</button>
+              <button class="suggestion-btn-reject" onclick="this.closest('.suggestion-item').remove();">×</button>
+            </div>
+          </div>
+        `;
+        
+        document.getElementById('valuesSuggestionsList').innerHTML = suggestions.values.map(s => renderSuggestion(s, 'value')).join('');
+        document.getElementById('boundariesSuggestionsList').innerHTML = suggestions.boundaries.map(s => renderSuggestion(s, 'boundary')).join('');
+        document.getElementById('principlesSuggestionsList').innerHTML = suggestions.principles.map(s => renderSuggestion(s, 'principle')).join('');
+        document.getElementById('routinesSuggestionsList').innerHTML = suggestions.routines.map(s => renderSuggestion(s, 'routine')).join('');
+        
+      } catch (error) {
+        console.error('Error:', error);
+        ['valuesSuggestionsList', 'boundariesSuggestionsList', 'principlesSuggestionsList', 'routinesSuggestionsList'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.innerHTML = '<div class="suggestion-placeholder">Error - try again</div>';
+        });
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Regenerate All';
+      }
+    }
+    
+// Generate value suggestions with score impact
+async function generateValueSuggestions() {
+  const btn = event.target;
+  const container = document.getElementById('valuesSuggestionsList');
+  
+  if (!visionData.oneliner) {
+    alert('Set your one-liner first!');
+    return;
+  }
+  
+  const apiKey = getAPIKey();
+  if (!apiKey) {
+    const newKey = promptForAPIKey();
+    if (!newKey) return;
+  }
+  
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  container.innerHTML = '<div class="suggestion-placeholder">Analyzing...</div>';
+  
+  try {
+    const currentScore = window.__currentSuccessScore || 50;
+    const prompt = `Based on this one-liner, suggest 3 values they should add.
+
+ONE-LINER: ${visionData.oneliner}
+CURRENT VALUES: ${visionData.values.filter(v => v.trim()).join(', ') || 'None'}
+CURRENT SUCCESS SCORE: ${currentScore}/100
+
+Return ONLY a JSON array:
+[
+  {"value": "<specific value>", "score_impact": <number 1-8>},
+  {"value": "<specific value>", "score_impact": <number 1-8>},
+  {"value": "<specific value>", "score_impact": <number 1-8>}
+]
+
+Make values SPECIFIC and directly supportive of their one-liner goal.`;
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: 'You suggest values. Return only valid JSON.' },
+          { role: 'user', content: prompt }
+        ],
+        max_tokens: 200,
+        temperature: 0.7
+      })
+    });
+    
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    
+    const data = await response.json();
+    let resultText = data.choices[0].message.content.trim();
+    resultText = resultText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    
+    const suggestions = JSON.parse(resultText);
+    
+    container.innerHTML = suggestions.map((s, i) => `
+      <div class="suggestion-item" id="value-sugg-${i}">
+        <div class="suggestion-content">
+          <div class="suggestion-text">${s.value}</div>
+          <div class="suggestion-score-impact">+${s.score_impact}</div>
+        </div>
+        <div class="suggestion-actions">
+          <button class="suggestion-btn-add" onclick="addSuggestedValue('${s.value.replace(/'/g, "\\'")}'); document.getElementById('value-sugg-${i}').remove();">Add</button>
+          <button class="suggestion-btn-edge" onclick="addToGrowthEdges('Value: ${s.value.replace(/'/g, "\\'")}'); document.getElementById('value-sugg-${i}').remove();">→ Later</button>
+          <button class="suggestion-btn-reject" onclick="document.getElementById('value-sugg-${i}').remove();">×</button>
+        </div>
+      </div>
+    `).join('');
+    
+  } catch (error) {
+    console.error('Error:', error);
+    container.innerHTML = '<div class="suggestion-placeholder">Error - try again</div>';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Regenerate';
+  }
+}
+
+// Similar functions for boundaries, principles, and routines
+async function generateBoundarySuggestions() {
+  const btn = event.target;
+  const container = document.getElementById('boundariesSuggestionsList');
+  
+  if (!visionData.oneliner) {
+    alert('Set your one-liner first!');
+    return;
+  }
+  
+  const apiKey = getAPIKey();
+  if (!apiKey) {
+    const newKey = promptForAPIKey();
+    if (!newKey) return;
+  }
+  
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  container.innerHTML = '<div class="suggestion-placeholder">Analyzing...</div>';
+  
+  try {
+    const currentScore = window.__currentSuccessScore || 50;
+    const prompt = `Based on this one-liner, suggest 3 boundaries to protect their energy and focus.
+
+ONE-LINER: ${visionData.oneliner}
+CURRENT BOUNDARIES: ${visionData.boundaries.filter(b => b.trim()).join(', ') || 'None'}
+CURRENT SUCCESS SCORE: ${currentScore}/100
+
+Return ONLY a JSON array:
+[
+  {"boundary": "<specific boundary>", "score_impact": <number 1-8>},
+  {"boundary": "<specific boundary>", "score_impact": <number 1-8>},
+  {"boundary": "<specific boundary>", "score_impact": <number 1-8>}
+]`;
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: 'You suggest boundaries. Return only valid JSON.' },
+          { role: 'user', content: prompt }
+        ],
+        max_tokens: 200,
+        temperature: 0.7
+      })
+    });
+    
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    
+    const data = await response.json();
+    let resultText = data.choices[0].message.content.trim();
+    resultText = resultText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    
+    const suggestions = JSON.parse(resultText);
+    
+    container.innerHTML = suggestions.map((s, i) => `
+      <div class="suggestion-item" id="boundary-sugg-${i}">
+        <div class="suggestion-content">
+          <div class="suggestion-text">${s.boundary}</div>
+          <div class="suggestion-score-impact">+${s.score_impact}</div>
+        </div>
+        <div class="suggestion-actions">
+          <button class="suggestion-btn-add" onclick="addSuggestedBoundary('${s.boundary.replace(/'/g, "\\'")}'); document.getElementById('boundary-sugg-${i}').remove();">Add</button>
+          <button class="suggestion-btn-edge" onclick="addToGrowthEdges('Boundary: ${s.boundary.replace(/'/g, "\\'")}'); document.getElementById('boundary-sugg-${i}').remove();">→ Later</button>
+          <button class="suggestion-btn-reject" onclick="document.getElementById('boundary-sugg-${i}').remove();">×</button>
+        </div>
+      </div>
+    `).join('');
+    
+  } catch (error) {
+    console.error('Error:', error);
+    container.innerHTML = '<div class="suggestion-placeholder">Error - try again</div>';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Regenerate';
+  }
+}
+
+async function generatePrinciplesSuggestions() {
+  const btn = event.target;
+  const container = document.getElementById('principlesSuggestionsList');
+  const inspoBox = document.getElementById('principlesInspirationBox');
+  
+  if (!visionData.oneliner) {
+    alert('Set your one-liner first!');
+    return;
+  }
+  
+  const apiKey = getAPIKey();
+  if (!apiKey) {
+    const newKey = promptForAPIKey();
+    if (!newKey) return;
+  }
+  
+  // Show inspiration box first
+  if (inspoBox && !inspoBox.classList.contains('visible')) {
+    inspoBox.innerHTML = `
+      <div class="suggestions-header">
+        <div class="suggestions-title">💡 What Makes a Real Principle?</div>
+        <button class="suggestions-close" onclick="document.getElementById('principlesInspirationBox').classList.remove('visible')">×</button>
+      </div>
+      <div style="padding: 12px; background: rgba(0,0,0,0.02); border-radius: 4px; margin-bottom: 12px;">
+        <div style="font-size: 0.8rem; font-weight: 600; margin-bottom: 8px;">Ray Dalio's Definition:</div>
+        <div style="font-size: 0.75rem; line-height: 1.5; color: rgba(0,0,0,0.7); margin-bottom: 10px;">
+          A principle is a fundamental truth that serves as a foundation for behavior and decision-making. 
+          It's an algorithm for dealing with reality well.
+        </div>
+        <div style="font-size: 0.75rem; font-weight: 600; margin-bottom: 6px;">A real principle has 3 parts:</div>
+        <div style="font-size: 0.73rem; line-height: 1.5; color: rgba(0,0,0,0.7);">
+          1. <strong>Trigger</strong>: When this happens...<br>
+          2. <strong>Tradeoff</strong>: Instead of that...<br>
+          3. <strong>Decision rule</strong>: I do this...
+        </div>
+      </div>
+      <div style="padding: 10px; background: rgba(0,0,0,0.015); border-radius: 4px; font-size: 0.72rem; line-height: 1.4; color: rgba(0,0,0,0.65);">
+        <strong>Example:</strong><br>
+        ❌ Not a principle: "Be authentic"<br>
+        ✓ Real principle: "When authenticity conflicts with approval, I choose authenticity"
+      </div>
+    `;
+    inspoBox.classList.add('visible');
+  }
+  
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  container.innerHTML = '<div class="suggestion-placeholder">Analyzing...</div>';
+  
+  try {
+    const currentScore = window.__currentSuccessScore || 50;
+    const prompt = `Based on this one-liner and current operating system, suggest 3 REAL PRINCIPLES (not values).
+
+ONE-LINER: ${visionData.oneliner}
+VALUES: ${visionData.values.filter(v => v.trim()).join(', ') || 'None'}
+CURRENT PRINCIPLES: ${visionData.principles.filter(p => p.trim()).join(', ') || 'None'}
+CURRENT SUCCESS SCORE: ${currentScore}/100
+
+A REAL PRINCIPLE (Ray Dalio style) has:
+1. Trigger: When this happens...
+2. Tradeoff: Instead of that...
+3. Decision rule: I do this...
+
+Examples:
+✓ "When authenticity conflicts with approval, I choose authenticity"
+✓ "When something goes wrong, I look first at what I could have done differently"
+✓ "I take risks when the downside is survivable and the upside is asymmetric"
+✓ "When faced with multiple options, I choose the simplest viable path"
+✓ "If a project consistently drains joy, I redesign or exit it"
+
+Return ONLY a JSON array:
+[
+  {"principle": "When [trigger], I [decision]", "score_impact": <number 1-10>, "why": "<1 sentence on why this helps their one-liner>"},
+  {"principle": "When [trigger], I [decision]", "score_impact": <number 1-10>, "why": "<1 sentence>"},
+  {"principle": "When [trigger], I [decision]", "score_impact": <number 1-10>, "why": "<1 sentence>"}
+]
+
+Make them OPERATIONAL - things they can actually use to make decisions.`;
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: 'You suggest operational decision principles in Ray Dalio style. Return only valid JSON.' },
+          { role: 'user', content: prompt }
+        ],
+        max_tokens: 300,
+        temperature: 0.7
+      })
+    });
+    
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    
+    const data = await response.json();
+    let resultText = data.choices[0].message.content.trim();
+    resultText = resultText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    
+    const suggestions = JSON.parse(resultText);
+    
+    container.innerHTML = suggestions.map((s, i) => `
+      <div class="suggestion-item" id="principle-sugg-${i}">
+        <div class="suggestion-content">
+          <div class="suggestion-text">${s.principle}</div>
+          <div class="suggestion-score-impact">+${s.score_impact}</div>
+        </div>
+        <div class="suggestion-actions">
+          <button class="suggestion-btn-add" onclick="addSuggestedPrinciple('${s.principle.replace(/'/g, "\\'")}'); document.getElementById('principle-sugg-${i}').remove();">Add</button>
+          <button class="suggestion-btn-edge" onclick="addToGrowthEdges('Principle: ${s.principle.replace(/'/g, "\\'")}'); document.getElementById('principle-sugg-${i}').remove();">→ Later</button>
+          <button class="suggestion-btn-reject" onclick="document.getElementById('principle-sugg-${i}').remove();">×</button>
+        </div>
+      </div>
+    `).join('');
+    
+  } catch (error) {
+    console.error('Error:', error);
+    container.innerHTML = '<div class="suggestion-placeholder">Error - try again</div>';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Regenerate';
+  }
+}
+
+async function generateRoutineSuggestions() {
+  const btn = event.target;
+  const container = document.getElementById('routinesSuggestionsList');
+  
+  if (!visionData.oneliner) {
+    alert('Set your one-liner first!');
+    return;
+  }
+  
+  const apiKey = getAPIKey();
+  if (!apiKey) {
+    const newKey = promptForAPIKey();
+    if (!newKey) return;
+  }
+  
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  container.innerHTML = '<div class="suggestion-placeholder">Analyzing...</div>';
+  
+  try {
+    const currentScore = window.__currentSuccessScore || 50;
+    const prompt = `Based on this one-liner, suggest 3 daily/weekly routines to build necessary capabilities.
+
+ONE-LINER: ${visionData.oneliner}
+CURRENT ROUTINES: ${visionData.routines.map(r => r.name).filter(n => n).join(', ') || 'None'}
+CURRENT SUCCESS SCORE: ${currentScore}/100
+
+Return ONLY a JSON array:
+[
+  {"routine": "<specific routine with frequency>", "score_impact": <number 1-10>},
+  {"routine": "<specific routine with frequency>", "score_impact": <number 1-10>},
+  {"routine": "<specific routine with frequency>", "score_impact": <number 1-10>}
+]`;
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: 'You suggest routines. Return only valid JSON.' },
+          { role: 'user', content: prompt }
+        ],
+        max_tokens: 250,
+        temperature: 0.7
+      })
+    });
+    
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    
+    const data = await response.json();
+    let resultText = data.choices[0].message.content.trim();
+    resultText = resultText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    
+    const suggestions = JSON.parse(resultText);
+    
+    container.innerHTML = suggestions.map((s, i) => `
+      <div class="suggestion-item" id="routine-sugg-${i}">
+        <div class="suggestion-content">
+          <div class="suggestion-text">${s.routine}</div>
+          <div class="suggestion-score-impact">+${s.score_impact}</div>
+        </div>
+        <div class="suggestion-actions">
+          <button class="suggestion-btn-add" onclick="addSuggestedRoutine('${s.routine.replace(/'/g, "\\'")}'); document.getElementById('routine-sugg-${i}').remove();">Add</button>
+          <button class="suggestion-btn-edge" onclick="addToGrowthEdges('Routine: ${s.routine.replace(/'/g, "\\'")}'); document.getElementById('routine-sugg-${i}').remove();">→ Later</button>
+          <button class="suggestion-btn-reject" onclick="document.getElementById('routine-sugg-${i}').remove();">×</button>
+        </div>
+      </div>
+    `).join('');
+    
+  } catch (error) {
+    console.error('Error:', error);
+    container.innerHTML = '<div class="suggestion-placeholder">Error - try again</div>';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Regenerate';
+  }
+}
+
+// Helper functions to add suggestions
+function addSuggestedValue(value) {
+  visionData.values.push(value);
+  saveVision();
+  renderValues();
+  showSaveStatus();
+}
+
+function addSuggestedBoundary(boundary) {
+  visionData.boundaries.push(boundary);
+  saveVision();
+  renderBoundaries();
+  showSaveStatus();
+}
+
+function addSuggestedPrinciple(principle) {
+  visionData.principles.push(principle);
+  saveVision();
+  renderPrinciples();
+  showSaveStatus();
+}
+
+function addSuggestedRoutine(routine) {
+  visionData.routines.push({ name: routine, level: 1 });
+  saveVision();
+  renderRoutines();
+  showSaveStatus();
+}
+
+function addToGrowthEdges(item) {
+  visionData.uplevel.push(item);
+  saveVision();
+  renderUplevel();
+  showSaveStatus();
+  alert('Added to Growth Edges!');
+}
+
+// Updated vision analysis that references success score and shows DEEP alignment
+async function analyzeVisionWithScore() {
+  const btn = event ? event.target : document.querySelector('.analysis-refresh-btn-top');
+  const container = document.getElementById('visionAnalysisTop');
+  
+  if (!visionData.oneliner) {
+    alert('Set your one-liner first!');
+    return;
+  }
+  
+  if (!window.__currentSuccessScore) {
+    alert('Calculate Success Likelihood first - the analysis is based on your score!');
+    return;
+  }
+  
+  const apiKey = getAPIKey();
+  if (!apiKey) {
+    const newKey = promptForAPIKey();
+    if (!newKey) return;
+  }
+  
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '↻ Analyzing...';
+  }
+  container.innerHTML = '<div class="analysis-placeholder">Deep analysis in progress...</div>';
+  
+  try {
+    const currentScore = window.__currentSuccessScore;
+    const prompt = `You are analyzing someone's complete operating system for DEEP ALIGNMENT with their one-liner. Your job is to show HOW everything connects (or doesn't).
+
+ONE-LINER: ${visionData.oneliner}
+
+VALUES: ${visionData.values.filter(v => v.trim()).join(', ') || 'None'}
+BOUNDARIES: ${visionData.boundaries.filter(b => b.trim()).join(', ') || 'None'}
+PRINCIPLES: ${visionData.principles.filter(p => p.trim()).join(', ') || 'None'}
+ROUTINES: ${visionData.routines.map(r => `${r.name} (Level ${r.level})`).join(', ') || 'None'}
+GROWTH EDGES: ${visionData.uplevel.filter(u => {
+  const name = typeof u === 'string' ? u : u.name;
+  return name && name.trim();
+}).map(u => typeof u === 'string' ? u : u.name).join(', ') || 'None'}
+
+CURRENT SUCCESS LIKELIHOOD: ${currentScore}/100
+
+Provide a DEEP ANALYSIS with EXACTLY 4 sections. Each section MUST be present:
+
+**1. Alignment Analysis**
+List which specific values/boundaries/principles/routines DIRECTLY support the one-liner. List which don't align. Be specific.
+
+**2. Major Discrepancies**  
+What's the biggest gap between what they say they want and what they're building? Where is misalignment?
+
+**3. Growth Edges Assessment**
+Are their growth edges addressing real gaps? Or focused on wrong things?
+
+**4. Actionable Path**
+Given ${currentScore}/100 score, what's the ONE most important thing to change/add/remove?
+
+Use markdown headers (## for sections). Be direct and specific - reference their actual content. No generic advice.`;
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: 'You provide deep alignment analysis in EXACTLY 4 sections with markdown headers. All 4 sections must be present. Be specific and direct.' },
+          { role: 'user', content: prompt }
+        ],
+        max_tokens: 700,
+        temperature: 0.6
+      })
+    });
+    
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    
+    const data = await response.json();
+    const analysis = data.choices[0].message.content.trim();
+    
+    // Parse sections - looking for markdown headers
+    const sections = [];
+    const lines = analysis.split('\n');
+    let currentSection = null;
+    
+    for (const line of lines) {
+      if (line.match(/^#{1,3}\s+(.+)/)) {
+        if (currentSection) sections.push(currentSection);
+        const title = line.replace(/^#{1,3}\s+/, '').replace(/\*\*/g, '');
+        currentSection = { title, content: [] };
+      } else if (currentSection && line.trim()) {
+        currentSection.content.push(line);
+      }
+    }
+    if (currentSection) sections.push(currentSection);
+    
+    // Icons for each section
+    const sectionIcons = {
+      'Alignment Analysis': '🎯',
+      'Major Discrepancies': '⚠️',
+      'Growth Edges Assessment': '📊',
+      'Actionable Path': '🚀'
+    };
+    
+    // Format as compact sections
+    const formattedSections = sections.map(section => {
+      const icon = sectionIcons[section.title] || '💡';
+      const content = section.content.join(' ').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      
+      return `
+        <div class="analysis-section-compact">
+          <div class="analysis-section-title">
+            <span class="analysis-section-icon">${icon}</span>
+            ${section.title}
+          </div>
+          <div class="analysis-section-text">${content}</div>
+        </div>
+      `;
+    }).join('');
+    
+    container.innerHTML = formattedSections || '<div class="analysis-placeholder">No analysis generated</div>';
+    
+    // Save to history
+    if (!visionData.analysisHistory) visionData.analysisHistory = [];
+    visionData.analysisHistory.unshift({
+      date: new Date().toISOString(),
+      score: currentScore,
+      analysis: analysis
+    });
+    // Keep last 10
+    if (visionData.analysisHistory.length > 10) {
+      visionData.analysisHistory = visionData.analysisHistory.slice(0, 10);
+    }
+    saveVision();
+    
+  } catch (error) {
+    console.error('Error:', error);
+    container.innerHTML = '<div class="analysis-placeholder">Error - try again</div>';
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = '↻ Refresh';
+    }
+  }
+}
+
+// Toggle analysis visibility
+function toggleAnalysis() {
+  const container = document.getElementById('visionAnalysisTop');
+  const btn = document.getElementById('toggleAnalysisBtn');
+  
+  if (container.style.display === 'none') {
+    container.style.display = 'block';
+    btn.textContent = '−';
+  } else {
+    container.style.display = 'none';
+    btn.textContent = '+';
+  }
+}
+
+// Show analysis history
+function showAnalysisHistory() {
+  if (!visionData.analysisHistory || visionData.analysisHistory.length === 0) {
+    alert('No analysis history yet. Run the analysis a few times to build history.');
+    return;
+  }
+  
+  const historyBox = document.getElementById('onelinerHistoryBox'); // Reuse existing modal
+  
+  const historyHTML = visionData.analysisHistory.map((item, i) => {
+    const date = new Date(item.date);
+    const dateStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    
+    const formattedAnalysis = item.analysis
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/^## (.*?)$/gm, '<div style="font-weight: 700; margin-top: 12px;">$1</div>')
+      .replace(/\n\n/g, '<br><br>')
+      .replace(/\n/g, '<br>');
+    
+    return `<div style="margin-bottom: 16px; padding: 16px; background: white; border-radius: 6px; border: 1px solid rgba(0,0,0,0.1);">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+        <div style="font-size: 0.75rem; color: rgba(0,0,0,0.5);">${dateStr}</div>
+        <div style="font-size: 0.75rem; font-weight: 600;">Score: ${item.score}/100</div>
+      </div>
+      <div style="font-size: 0.85rem; line-height: 1.6;">${formattedAnalysis}</div>
+    </div>`;
+  }).join('');
+  
+  historyBox.innerHTML = `
+    <div class="suggestions-header">
+      <div class="suggestions-title">📜 Analysis History</div>
+      <button class="suggestions-close" onclick="document.getElementById('onelinerHistoryBox').classList.remove('visible')">×</button>
+    </div>
+    <div style="max-height: 70vh; overflow-y: auto;">
+      ${historyHTML}
+    </div>
+  `;
+  historyBox.classList.add('visible');
+}
+    
+    // Load weekly planner data
+    function loadWeeklyData() {
+      try {
+        const weekKey = getWeekKey(new Date());
+        const weekData = localStorage.getItem(`weeklyPlan_${weekKey}`);
+        
+        if (weekData) {
+          const week = JSON.parse(weekData);
+          const completedTasks = week.days?.reduce((total, day) => {
+            return total + (day.tasks?.filter(t => t.completed).length || 0);
+          }, 0) || 0;
+          
+          const totalTasks = week.days?.reduce((total, day) => {
+            return total + (day.tasks?.length || 0);
+          }, 0) || 0;
+          
+          const weekCompleteEl = document.getElementById('weekComplete');
+          if (weekCompleteEl && totalTasks > 0) {
+            const percentage = Math.round((completedTasks / totalTasks) * 100);
+            weekCompleteEl.textContent = `${percentage}%`;
+          } else if (weekCompleteEl) {
+            weekCompleteEl.textContent = '—';
+          }
+        } else {
+          const weekCompleteEl = document.getElementById('weekComplete');
+          if (weekCompleteEl) weekCompleteEl.textContent = '—';
+        }
+      } catch (e) {
+        console.error('Error loading weekly data:', e);
+      }
+    }
+    
+    // Helper to get week key
+    function getWeekKey(date) {
+      const d = new Date(date);
+      d.setHours(0, 0, 0, 0);
+      d.setDate(d.getDate() - d.getDay());
+      return d.toISOString().split('T')[0];
+    }
+    
+    // Calculate success likelihood
+    async function calculateSuccessLikelihood() {
+      const btn = document.querySelector('.success-calculate');
+      const scoreEl = document.getElementById('successScore');
+      const statusEl = document.getElementById('successStatus');
+      
+      if (!visionData.oneliner || visionData.oneliner.trim() === '') {
+        alert('Please set your one-liner first!');
+        return;
+      }
+      
+      const apiKey = getAPIKey();
+      if (!apiKey) {
+        const newKey = promptForAPIKey();
+        if (!newKey) {
+          alert('API key required');
+          return;
+        }
+      }
+      
+      btn.disabled = true;
+      btn.textContent = 'Analyzing...';
+      scoreEl.textContent = '...';
+      statusEl.textContent = 'Evaluating your system...';
+      
+      try {
+        const prompt = `Analyze this person's operating system and rate their LIKELIHOOD OF SUCCESS (0-100) in achieving their one-liner.
+
+ONE-LINER: ${visionData.oneliner}
+
+VALUES: ${visionData.values.filter(v => v.trim()).join(', ') || 'None defined'}
+PRINCIPLES: ${visionData.principles.filter(p => p.trim()).join(', ') || 'None defined'}
+BOUNDARIES: ${visionData.boundaries.filter(b => b.trim()).join(', ') || 'None defined'}
+ROUTINES: ${visionData.routines.map(r => `${r.name} (Level ${r.level})`).filter(n => n).join(', ') || 'None defined'}
+
+SCORING FRAMEWORK (be realistic and strict):
+- 90-100: Exceptional alignment. Values directly support goal. Clear principles guide decisions. Strong boundaries protect energy. Daily routines build necessary capabilities. Everything interconnected.
+- 75-89: Strong foundation. Most components support goal. Some principles operational. Routines emerging. Minor gaps.
+- 60-74: Good start. Values align but principles vague. Boundaries unclear. Routines inconsistent. Needs more operational specificity.
+- 40-59: Moderate foundation. Some alignment but major gaps. Principles too generic. Missing key routines. Needs significant work.
+- 20-39: Early stages. Limited alignment. Values present but not operationalized. Missing critical components.
+- 0-19: Minimal foundation. Misalignment or very incomplete system.
+
+Return ONLY a JSON object:
+{
+  "score": <0-100 number>,
+  "status": "<one concise line on their current state and what they need most>"
+}
+
+Be STRICT. Don't inflate scores. 85+ should be rare and exceptional.`;
+
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              { role: 'system', content: 'You analyze personal operating systems and rate likelihood of goal achievement and fulfillment. Return only valid JSON.' },
+              { role: 'user', content: prompt }
+            ],
+            max_tokens: 150,
+            temperature: 0.5
+          })
+        });
+        
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        
+        const data = await response.json();
+        let resultText = data.choices[0].message.content.trim();
+        resultText = resultText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        
+        const result = JSON.parse(resultText);
+        
+        scoreEl.textContent = result.score;
+        statusEl.textContent = result.status;
+        
+        // Add score interpretation
+        let interpretation = '';
+        if (result.score >= 90) interpretation = 'Exceptional alignment';
+        else if (result.score >= 75) interpretation = 'Strong foundation';
+        else if (result.score >= 60) interpretation = 'Good start, needs refinement';
+        else if (result.score >= 40) interpretation = 'Moderate foundation';
+        else if (result.score >= 20) interpretation = 'Early stages';
+        else interpretation = 'Building from scratch';
+        
+        const meaningEl = document.getElementById('successMeaning');
+        if (meaningEl) {
+          meaningEl.textContent = interpretation;
+          meaningEl.style.fontStyle = 'normal';
+          meaningEl.style.fontWeight = '600';
+        }
+        
+        // Store for suggestions to reference
+        window.__currentSuccessScore = result.score;
+        
+      } catch (error) {
+        console.error('Error calculating success likelihood:', error);
+        scoreEl.textContent = '—';
+        statusEl.textContent = 'Error - check console';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Recalculate';
+      }
+    }
+    
+    // Alias for compatibility
+    function calculateAlignment() {
+      return calculateSuccessLikelihood();
+    }
+    
+    // One-liner display functions
+    function updateOnelinerDisplay() {
+      const display = document.getElementById('onelinerDisplayMain');
+      const input = document.getElementById('oneliner');
+      
+      if (input) input.value = visionData.oneliner || '';
+      
+      if (display) {
+        if (visionData.oneliner && visionData.oneliner.trim()) {
+          display.textContent = visionData.oneliner;
+          display.classList.remove('empty');
+        } else {
+          display.textContent = 'Click to set your one-liner...';
+          display.classList.add('empty');
+        }
+      }
+    }
+    
+    function editOneliner() {
+      const display = document.getElementById('onelinerDisplayMain');
+      const input = document.getElementById('oneliner');
+      if (display && input) {
+        display.style.display = 'none';
+        input.style.display = 'flex';
+        input.focus();
+      }
+    }
+    
+    function hideOnelinerInput() {
+      const display = document.getElementById('onelinerDisplayMain');
+      const input = document.getElementById('oneliner');
+      setTimeout(() => {
+        if (display && input) {
+          display.style.display = 'flex';
+          input.style.display = 'none';
+          updateOnelinerDisplay();
+        }
+      }, 100);
+    }
+    
+    // Compact list renderers
+    function renderValuesCompact() {
+      const list = document.getElementById('valuesCompactList');
+      if (!list) return;
+      
+      const filtered = visionData.values.filter(v => v.trim());
+      if (filtered.length === 0) {
+        list.innerHTML = '<div style="padding: 20px; text-align: center; color: rgba(0,0,0,0.3); font-size: 0.8rem;">No values yet</div>';
+        return;
+      }
+      
+      list.innerHTML = filtered.map((v, i) => `
+        <div class="compact-item">
+          <div class="compact-item-number">${i + 1}</div>
+          <div class="compact-item-text">${v}</div>
+        </div>
+      `).join('');
+    }
+    
+    function renderPrinciplesCompact() {
+      const list = document.getElementById('principlesCompactList');
+      if (!list) return;
+      
+      const filtered = visionData.principles.filter(p => p.trim());
+      if (filtered.length === 0) {
+        list.innerHTML = '<div style="padding: 20px; text-align: center; color: rgba(0,0,0,0.3); font-size: 0.8rem;">No principles yet</div>';
+        return;
+      }
+      
+      list.innerHTML = filtered.map((p, i) => `
+        <div class="compact-item">
+          <div class="compact-item-number">${i + 1}</div>
+          <div class="compact-item-text">${p}</div>
+        </div>
+      `).join('');
+    }
+    
+    function renderBoundariesCompact() {
+      const list = document.getElementById('boundariesCompactList');
+      if (!list) return;
+      
+      const filtered = visionData.boundaries.filter(b => b.trim());
+      if (filtered.length === 0) {
+        list.innerHTML = '<div style="padding: 20px; text-align: center; color: rgba(0,0,0,0.3); font-size: 0.8rem;">No boundaries yet</div>';
+        return;
+      }
+      
+      list.innerHTML = filtered.map((b, i) => `
+        <div class="compact-item">
+          <div class="compact-item-number">${i + 1}</div>
+          <div class="compact-item-text">${b}</div>
+        </div>
+      `).join('');
+    }
+    
+    function renderRoutinesCompact() {
+      const list = document.getElementById('routinesCompactList');
+      if (!list) return;
+      
+      const filtered = visionData.routines.filter(r => r.name && r.name.trim());
+      if (filtered.length === 0) {
+        list.innerHTML = '<div style="padding: 20px; text-align: center; color: rgba(0,0,0,0.3); font-size: 0.8rem;">No routines yet</div>';
+        return;
+      }
+      
+      const levelNames = ['L0', 'L1', 'L2', 'L3', 'L4'];
+      
+      list.innerHTML = filtered.map((r, i) => `
+        <div class="compact-item">
+          <div class="compact-item-number">${i + 1}</div>
+          <div class="compact-item-text">
+            ${r.name}
+            <span class="level-badge level-${r.level || 0}">${levelNames[r.level || 0]}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function renderUplevelCompact() {
+      const list = document.getElementById('uplevelCompactList');
+      if (!list) return;
+      
+      const filtered = visionData.uplevel.filter(u => {
+        if (typeof u === 'string') return u.trim();
+        return u.name && u.name.trim();
+      });
+      
+      if (filtered.length === 0) {
+        list.innerHTML = '<div style="padding: 20px; text-align: center; color: rgba(0,0,0,0.3); font-size: 0.8rem;">No uplevel areas yet</div>';
+        return;
+      }
+      
+      list.innerHTML = filtered.map((u, i) => {
+        const name = typeof u === 'string' ? u : u.name;
+        return `
+          <div class="compact-item">
+            <div class="compact-item-number">${i + 1}</div>
+            <div class="compact-item-text">${name}</div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    // Toggle functions for edit sections
+    function toggleValuesEdit() {
+      const section = document.getElementById('valuesEditSection');
+      if (section) section.style.display = section.style.display === 'none' ? 'block' : 'none';
+    }
+    
+    function togglePrinciplesEdit() {
+      const section = document.getElementById('principlesEditSection');
+      if (section) section.style.display = section.style.display === 'none' ? 'block' : 'none';
+    }
+    
+    function toggleBoundariesEdit() {
+      const section = document.getElementById('boundariesEditSection');
+      if (section) section.style.display = section.style.display === 'none' ? 'block' : 'none';
+    }
+    
+    function toggleRoutinesEdit() {
+      const section = document.getElementById('routinesEditSection');
+      if (section) section.style.display = section.style.display === 'none' ? 'block' : 'none';
+    }
+    
+    function toggleUplevelEdit() {
+      const section = document.getElementById('uplevelEditSection');
+      if (section) section.style.display = section.style.display === 'none' ? 'block' : 'none';
     }
 
     // === PRINCIPLES ===
@@ -1017,6 +3497,8 @@
         `;
         grid.appendChild(item);
       });
+      
+      renderPrinciplesCompact();
     }
 
     function addPrinciple() {
@@ -1035,6 +3517,252 @@
         visionData.principles.splice(index, 1);
         saveVision();
         renderPrinciples();
+      }
+    }
+
+    function savePrinciplesInspiration() {
+      visionData.principlesInspiration = document.getElementById('principlesInspiration').value;
+      saveVision();
+    }
+
+    // === GENERATE PRINCIPLES - NEW FLOW ===
+    
+    // Show principles inspiration modal
+    function showPrinciplesInspiration() {
+      const modal = document.getElementById('onelinerHistoryBox'); // Reuse modal
+      const currentInspo = visionData.principlesInspiration || '';
+      
+      modal.innerHTML = `
+        <div class="suggestions-header">
+          <div class="suggestions-title">💡 Principles Inspiration</div>
+          <button class="suggestions-close" onclick="document.getElementById('onelinerHistoryBox').classList.remove('visible')">×</button>
+        </div>
+        <div style="padding: 16px; background: rgba(0,0,0,0.02); border-radius: 6px; margin-bottom: 16px; font-size: 0.8rem; line-height: 1.5;">
+          <strong>Ray Dalio's Definition:</strong><br>
+          A principle is a fundamental truth that serves as the foundation for behavior. It's an algorithm for reality.
+          <br><br>
+          <strong>Structure:</strong> When [trigger], I [decision]
+          <br><br>
+          <strong>Example:</strong><br>
+          ✓ "When authenticity conflicts with approval, I choose authenticity"<br>
+          ❌ "Be authentic"
+        </div>
+        <textarea
+          id="principlesInspirationText"
+          placeholder="Paste quotes, ideas, or principles that inspire you..."
+          style="width: 100%; min-height: 200px; padding: 12px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; font-size: 0.85rem; font-family: inherit; resize: vertical;"
+        >${currentInspo}</textarea>
+        <div style="display: flex; gap: 10px; margin-top: 16px;">
+          <button class="ai-suggest-btn" onclick="savePrinciplesInspiration()" style="flex: 1;">Save Inspiration</button>
+          <button class="ai-suggest-btn" onclick="document.getElementById('onelinerHistoryBox').classList.remove('visible')" style="flex: 1; background: transparent; color: #000; border: 1px solid rgba(0,0,0,0.2);">Cancel</button>
+        </div>
+      `;
+      modal.classList.add('visible');
+    }
+    
+    // Save principles inspiration
+    function savePrinciplesInspiration() {
+      const text = document.getElementById('principlesInspirationText').value;
+      visionData.principlesInspiration = text;
+      saveVision();
+      document.getElementById('onelinerHistoryBox').classList.remove('visible');
+      alert('Inspiration saved!');
+    }
+    
+    // Generate principles flow - shows inspiration first, then generates
+    async function generatePrinciplesFlow() {
+      console.log('generatePrinciplesFlow called');
+      
+      const modal = document.getElementById('onelinerHistoryBox');
+      console.log('Modal element:', modal);
+      
+      if (!modal) {
+        alert('Modal element not found!');
+        return;
+      }
+      
+      if (!visionData.oneliner) {
+        alert('Set your one-liner first!');
+        return;
+      }
+      
+      if (!visionData.values || visionData.values.filter(v => v.trim()).length === 0) {
+        alert('Add at least one value first!');
+        return;
+      }
+      
+      // Show inspiration box first
+      const currentInspo = visionData.principlesInspiration || '';
+      
+      modal.innerHTML = `
+        <div class="suggestions-header">
+          <div class="suggestions-title">⚡ Generate Principles</div>
+          <button class="suggestions-close" onclick="document.getElementById('onelinerHistoryBox').classList.remove('visible')">×</button>
+        </div>
+        <div style="padding: 16px; background: rgba(0,0,0,0.02); border-radius: 6px; margin-bottom: 16px; font-size: 0.8rem; line-height: 1.5;">
+          <strong>Ray Dalio's Definition:</strong><br>
+          A principle is a fundamental truth - an algorithm for reality. It has:<br>
+          1. <strong>Trigger</strong>: When this happens...<br>
+          2. <strong>Tradeoff</strong>: Instead of that...<br>
+          3. <strong>Decision</strong>: I do this...<br><br>
+          <strong>Example:</strong> "When authenticity conflicts with approval, I choose authenticity"
+        </div>
+        <div style="margin-bottom: 12px;">
+          <div style="font-size: 0.75rem; font-weight: 600; margin-bottom: 6px; color: rgba(0,0,0,0.6);">OPTIONAL: Add inspiration (quotes, ideas, etc)</div>
+          <textarea
+            id="principlesInspirationText"
+            placeholder="Paste quotes or principles that inspire you..."
+            style="width: 100%; min-height: 120px; padding: 12px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; font-size: 0.85rem; font-family: inherit; resize: vertical;"
+          >${currentInspo}</textarea>
+        </div>
+        <button class="ai-suggest-btn" onclick="executeGeneratePrinciples()" style="width: 100%;">✨ Generate 5-8 Principles</button>
+      `;
+      
+      modal.classList.add('visible');
+      modal.style.display = 'block';
+      console.log('Modal should be visible now');
+    }
+    
+    // Execute the actual generation
+    async function executeGeneratePrinciples() {
+      const modal = document.getElementById('onelinerHistoryBox');
+      const inspo = document.getElementById('principlesInspirationText').value;
+      
+      // Save inspiration
+      visionData.principlesInspiration = inspo;
+      saveVision();
+      
+      modal.innerHTML = '<div style="padding: 40px; text-align: center;">Generating principles...</div>';
+      
+      const apiKey = getAPIKey();
+      if (!apiKey) {
+        const newKey = promptForAPIKey();
+        if (!newKey) {
+          modal.classList.remove('visible');
+          return;
+        }
+      }
+      
+      try {
+        const filteredValues = visionData.values.filter(v => v.trim());
+        
+        const prompt = `Generate TRUE PRINCIPLES (not values) in Ray Dalio's sense.
+
+ONE-LINER: ${visionData.oneliner}
+
+VALUES: ${filteredValues.join(', ')}
+
+${inspo ? `INSPIRATION (use as reference):\n${inspo}\n\n` : ''}CRITICAL: A principle is a DECISION RULE with:
+1. TRIGGER: When [situation]
+2. TRADEOFF: Instead of [alternative]
+3. DECISION: I [action]
+
+EXAMPLES:
+✓ "When authenticity conflicts with approval, I choose authenticity"
+✓ "If a project consistently drains joy, I redesign or exit it"
+✓ "When something goes wrong, I look first at what I could have done differently"
+
+Generate 5-8 operational principles that:
+- Start with "When..." or "If..."
+- Make tradeoffs explicit
+- Are grounded in their one-liner and values
+- Can be followed like code
+
+Return ONLY a JSON array:
+["When [trigger], I [decision]", ...]
+
+Make them SHARP and USABLE.`;
+
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01'
+          },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 1000,
+            messages: [
+              { role: 'user', content: prompt }
+            ]
+          })
+        });
+        
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        
+        const data = await response.json();
+        let principlesText = data.content[0].text.trim();
+        principlesText = principlesText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        
+        const newPrinciples = JSON.parse(principlesText);
+        
+        // REPLACE existing principles with new ones
+        visionData.principles = newPrinciples;
+        
+        saveVision();
+        renderPrinciples();
+        
+        modal.innerHTML = `
+          <div class="suggestions-header">
+            <div class="suggestions-title">✨ Generated ${newPrinciples.length} Principles</div>
+            <button class="suggestions-close" onclick="document.getElementById('onelinerHistoryBox').classList.remove('visible')">×</button>
+          </div>
+          <div style="padding: 20px; text-align: center;">
+            <div style="font-size: 1.2rem; margin-bottom: 16px;">✅ Success!</div>
+            <div style="font-size: 0.9rem; color: rgba(0,0,0,0.7);">
+              Generated ${newPrinciples.length} operational principles.<br>
+              They're now in your Principles section.
+            </div>
+            <button class="ai-suggest-btn" onclick="document.getElementById('onelinerHistoryBox').classList.remove('visible')" style="margin-top: 20px;">Close</button>
+          </div>
+        `;
+        
+      } catch (error) {
+        console.error('Error:', error);
+        modal.innerHTML = `
+          <div style="padding: 40px; text-align: center;">
+            <div style="color: red;">Error generating principles</div>
+            <button class="ai-suggest-btn" onclick="document.getElementById('onelinerHistoryBox').classList.remove('visible')" style="margin-top: 20px;">Close</button>
+          </div>
+        `;
+      }
+    }
+    
+    // Simple prompt-based add functions
+    function addValuePrompt() {
+      const value = prompt('Enter a value:');
+      if (value && value.trim()) {
+        visionData.values.push(value.trim());
+        saveVision();
+        renderValues();
+      }
+    }
+    
+    function addBoundaryPrompt() {
+      const boundary = prompt('Enter a boundary:');
+      if (boundary && boundary.trim()) {
+        visionData.boundaries.push(boundary.trim());
+        saveVision();
+        renderBoundaries();
+      }
+    }
+    
+    function addRoutinePrompt() {
+      const routine = prompt('Enter a routine:');
+      if (routine && routine.trim()) {
+        visionData.routines.push({ name: routine.trim(), level: 1 });
+        saveVision();
+        renderRoutines();
+      }
+    }
+    
+    function addUplevelPrompt() {
+      const item = prompt('Enter a growth edge:');
+      if (item && item.trim()) {
+        visionData.uplevel.push(item.trim());
+        saveVision();
+        renderUplevel();
       }
     }
 
@@ -1059,6 +3787,8 @@
         `;
         grid.appendChild(item);
       });
+      
+      renderValuesCompact();
     }
 
     function addValue() {
@@ -1101,6 +3831,8 @@
         `;
         grid.appendChild(item);
       });
+      
+      renderBoundariesCompact();
     }
 
     function addBoundary() {
@@ -1119,6 +3851,849 @@
         visionData.boundaries.splice(index, 1);
         saveVision();
         renderBoundaries();
+      }
+    }
+
+    // === PRINCIPLES INSPIRATION ===
+    // === ONE-LINER EXERCISE ===
+    async function startOnelinerExercise() {
+      const btn = event ? event.target : null;
+      const exerciseBox = document.getElementById('onelinerExerciseBox');
+      
+      if (!exerciseBox) {
+        console.error('Exercise box not found');
+        return;
+      }
+      
+      const apiKey = getAPIKey();
+      if (!apiKey) {
+        const newKey = promptForAPIKey();
+        if (!newKey) {
+          alert('API key required for exercise');
+          return;
+        }
+      }
+      
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Starting exercise...';
+      }
+      
+      try {
+        // Get current context
+        const hasValues = visionData.values && visionData.values.filter(v => v.trim()).length > 0;
+        const hasPrinciples = visionData.principles && visionData.principles.filter(p => p.trim()).length > 0;
+        
+        const contextPrompt = hasValues || hasPrinciples ? `
+CURRENT CONTEXT:
+${hasValues ? `Values: ${visionData.values.filter(v => v.trim()).join(', ')}` : ''}
+${hasPrinciples ? `Principles: ${visionData.principles.filter(p => p.trim()).join(', ')}` : ''}
+${visionData.oneliner ? `Current one-liner: ${visionData.oneliner}` : ''}
+` : '';
+
+        const prompt = `You are helping someone craft their one-liner - a self-alignment checksum they can use to know if a choice is "on-path" or "off-path."
+
+${contextPrompt}
+
+THE RIGHT MENTAL MODEL:
+A one-liner answers THREE questions at once:
+1. Who am I serving?
+2. How do I do it?
+3. How do I want to live while doing it?
+
+THE TEMPLATE:
+"I exist to [contribution] while [way of living]."
+
+CRITICAL RULES:
+- If it creates PRESSURE when you read it → it's goal-contaminated
+- If it creates RELIEF when you read it → it's value-aligned
+- It should guide decisions quietly, not create urgency
+- It should work even if no one sees it
+- It should still fit in 10 years
+
+Create 3-4 simple, direct questions that will help them discover:
+1. Their mode of contribution (not job title - their function in the world)
+2. Who they serve (be specific)
+3. How they want to operate while doing it (with ease? with autonomy? without self-betrayal?)
+
+Questions should be:
+- Simple and direct
+- Easy to answer in 1-2 sentences
+- Designed to extract VALUES, not goals
+- Help them name what they already do naturally
+
+Return ONLY a JSON array of 3-4 questions:
+
+[
+  "What do you naturally do that brings clarity or value to others? (Not your job - your function)",
+  "Who specifically benefits when you do this well?",
+  "How do you want to FEEL while doing this work? (with ease, with freedom, with joy?)",
+  "What way of living would you never compromise, even for success?"
+]
+
+Keep it SIMPLE. Make it easy to answer.`;
+
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              { role: 'system', content: 'You help people craft self-alignment checksums - one-liners that create orientation (not urgency) and guide decisions quietly. Focus on contribution + way of living. Simple questions only.' },
+              { role: 'user', content: prompt }
+            ],
+            max_tokens: 400,
+            temperature: 0.8
+          })
+        });
+        
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        
+        const data = await response.json();
+        let questionsText = data.choices[0].message.content.trim();
+        questionsText = questionsText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        
+        const questions = JSON.parse(questionsText);
+        
+        // Display interactive exercise
+        const questionsHTML = questions.map((q, i) => 
+          `<div style="margin-bottom: 20px;">
+            <div style="font-weight: 600; margin-bottom: 10px; color: #000;">${i + 1}. ${q}</div>
+            <textarea 
+              id="exercise-answer-${i}"
+              style="width: 100%; min-height: 80px; padding: 12px; border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; font-size: 0.9rem; font-family: inherit; resize: vertical;"
+              placeholder="Your answer..."
+            ></textarea>
+          </div>`
+        ).join('');
+        
+        exerciseBox.innerHTML = `
+          <div class="suggestions-header">
+            <div class="suggestions-title">✨ One-Liner Discovery Exercise</div>
+            <button class="suggestions-close" onclick="document.getElementById('onelinerExerciseBox').classList.remove('visible')">×</button>
+          </div>
+          <div style="margin-bottom: 20px; padding: 12px; background: rgba(0,0,0,0.03); border-radius: 6px; font-size: 0.85rem; color: rgba(0,0,0,0.7);">
+            Answer these questions honestly. Take your time. Your answers will help generate potential one-liners.
+          </div>
+          ${questionsHTML}
+          <button class="ai-suggest-btn" onclick="generateOnelinerFromAnswers()" style="width: 100%; margin-top: 10px;">
+            Generate One-Liners from My Answers
+          </button>
+        `;
+        exerciseBox.classList.add('visible');
+        
+      } catch (error) {
+        console.error('Error starting exercise:', error);
+        alert('Failed to start exercise. Check console for details.');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Start Exercise →';
+        }
+      }
+    }
+
+    async function generateOnelinerFromAnswers() {
+      const exerciseBox = document.getElementById('onelinerExerciseBox');
+      
+      // Collect answers
+      const answers = [];
+      let i = 0;
+      while (document.getElementById(`exercise-answer-${i}`)) {
+        const answer = document.getElementById(`exercise-answer-${i}`).value.trim();
+        if (answer) answers.push(answer);
+        i++;
+      }
+      
+      if (answers.length === 0) {
+        alert('Please answer at least one question first!');
+        return;
+      }
+      
+      const apiKey = getAPIKey();
+      if (!apiKey) return;
+      
+      try {
+        exerciseBox.innerHTML = `
+          <div class="suggestions-header">
+            <div class="suggestions-title">✨ Generating One-Liners...</div>
+          </div>
+          <div style="padding: 20px; text-align: center;">Analyzing your answers...</div>
+        `;
+        
+        const prompt = `Based on these answers, generate 3-4 one-liners using this EXACT structure:
+
+"I exist to [contribution] while [way of living]."
+
+ANSWERS:
+${answers.map((a, i) => `${i + 1}. ${a}`).join('\n')}
+
+CRITICAL FRAMEWORK:
+A one-liner is a SELF-ALIGNMENT CHECKSUM - something they can read and immediately know if a choice is "on-path" or "off-path."
+
+It must answer THREE questions:
+1. Who am I serving?
+2. How do I do it? (their mode of contribution)
+3. How do I want to live while doing it?
+
+Return JSON with this structure:
+{
+  "candidates": [
+    {
+      "text": "I exist to [contribution] while [way of living]",
+      "scores": {
+        "orientation_not_urgency": 8,
+        "true_if_no_one_sees_it": 9,
+        "ten_year_fit": 8,
+        "decision_usefulness": 9,
+        "voice_match": 7
+      },
+      "notes": "Brief note about this candidate"
+    }
+  ],
+  "best": "The best candidate text",
+  "voice_phrases": ["phrase from their answers", "another phrase"]
+}
+
+VALIDATION (score 1-10 for each candidate):
+- orientation_not_urgency: Creates calm direction, not pressure
+- true_if_no_one_sees_it: Still feels true privately
+- ten_year_fit: Will age well
+- decision_usefulness: Helps choose between options
+- voice_match: Sounds like them
+
+Generate 3-4 candidates with increasing boldness.`;
+
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              { role: 'system', content: 'You create self-alignment checksums using: "I exist to [contribution] while [way of living]". Must create RELIEF not pressure. Identity-first, values-encoded, outcome-agnostic.' },
+              { role: 'user', content: prompt }
+            ],
+            max_tokens: 800,
+            temperature: 0.8
+          })
+        });
+        
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        
+        const data = await response.json();
+        let resultText = data.choices[0].message.content.trim();
+        resultText = resultText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        
+        const result = JSON.parse(resultText);
+        
+        // Store for refine functions
+        window.__lastOnelinerExercise = result;
+        
+        const candidates = result.candidates || [];
+        const best = result.best || (candidates[0]?.text || '');
+        
+        // Helper function to escape HTML
+        function escapeHTML(str) {
+          const div = document.createElement('div');
+          div.textContent = str;
+          return div.innerHTML;
+        }
+        
+        // Helper to format numbers
+        function num(val) {
+          return Number.isFinite(val) ? val : 0;
+        }
+        
+        // Generate candidate cards with sliders
+        const candHTML = candidates.map((c, idx) => {
+          const s = c.scores || {};
+          const scoreLine = `Orientation ${num(s.orientation_not_urgency)}/10 • True ${num(s.true_if_no_one_sees_it)}/10 • 10yr ${num(s.ten_year_fit)}/10 • Decision ${num(s.decision_usefulness)}/10 • Voice ${num(s.voice_match)}/10`;
+          
+          const isBest = (c.text || '').trim() === best.trim();
+          const candId = `cand-${idx}`;
+          
+          return `
+            <div style="padding:12px; border:1px solid rgba(0,0,0,${isBest ? '0.18' : '0.08'}); border-radius:10px; margin-bottom:10px; background:${isBest ? 'rgba(0,0,0,0.03)' : 'transparent'};">
+              <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start;">
+                <div style="font-weight:650;">${isBest ? '✅ Best (model-picked)' : `Option ${idx + 1}`}</div>
+                <button
+                  class="suggestion-add-btn"
+                  onclick="setOnelinerFromExercise('${c.text.replace(/'/g, "\\'")}')"
+                >
+                  Use this
+                </button>
+              </div>
+
+              <div style="margin-top:8px; font-size:1.02rem; line-height:1.35; color:#000;">
+                ${escapeHTML(c.text)}
+              </div>
+
+              <div style="margin-top:8px; font-size:0.82rem; color:rgba(0,0,0,0.65);">
+                ${escapeHTML(scoreLine)}
+              </div>
+
+              ${c.notes ? `<div style="margin-top:6px; font-size:0.82rem; color:rgba(0,0,0,0.6);">${escapeHTML(c.notes)}</div>` : ''}
+
+              <!-- USER RATING -->
+              <div style="margin-top:12px; padding-top:10px; border-top:1px solid rgba(0,0,0,0.06);">
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+                  <div style="font-size:0.86rem; font-weight:650; color:rgba(0,0,0,0.75);">
+                    Feels like me
+                  </div>
+                  <div style="font-size:0.86rem; color:rgba(0,0,0,0.75);">
+                    <span id="${candId}-val">7</span>/10
+                  </div>
+                </div>
+
+                <input
+                  type="range"
+                  min="1"
+                  max="10"
+                  value="7"
+                  data-cand-index="${idx}"
+                  id="${candId}-slider"
+                  oninput="document.getElementById('${candId}-val').textContent = this.value"
+                  style="width:100%; margin-top:8px;"
+                />
+
+                <textarea
+                  id="${candId}-note"
+                  placeholder="Optional: what feels off / what you'd change (tone, words, vibe)…"
+                  style="width:100%; margin-top:10px; min-height:60px; padding:10px; border:1px solid rgba(0,0,0,0.1); border-radius:8px; font-size:0.88rem; font-family:inherit; resize:vertical;"
+                ></textarea>
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+        // Display results with refine buttons
+        exerciseBox.innerHTML = `
+          <div class="suggestions-header">
+            <div class="suggestions-title">Generated One-Liners</div>
+            <button class="suggestions-close" onclick="document.getElementById('onelinerExerciseBox').classList.remove('visible')">×</button>
+          </div>
+          
+          <div id="onelinerResults">
+            <div style="margin-bottom:10px; padding:12px; border:1px solid rgba(0,0,0,0.08); border-radius:10px;">
+              <div style="font-weight:700; margin-bottom:6px;">Your best-fit one-liner</div>
+              <div style="font-size:1.05rem; line-height:1.35;">${escapeHTML(best)}</div>
+
+              <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="ai-suggest-btn" onclick="setOnelinerFromExercise('${best.replace(/'/g, "\\'")}')">✅ Save as my one-liner</button>
+                <button class="ai-suggest-btn" style="opacity:0.9;" onclick="refineBestOneliner()">🔁 Refine (model)</button>
+                <button class="ai-suggest-btn" style="opacity:1;" onclick="refineUsingUserRatings()">🎯 Refine using my ratings</button>
+              </div>
+
+              <div id="ratingRefineStatus" style="margin-top:10px; font-size:0.82rem; color:rgba(0,0,0,0.6);"></div>
+            </div>
+
+            ${candHTML}
+          </div>
+          
+          <button class="ai-suggest-btn" onclick="startOnelinerExercise()" style="width: 100%; margin-top: 10px; background: transparent; color: #000; border: 1px solid rgba(0,0,0,0.2);">
+            ← Start Over
+          </button>
+        `;
+        
+      } catch (error) {
+        console.error('Error generating one-liners:', error);
+        alert('Failed to generate one-liners. Check console for details.');
+      }
+    }
+
+    function setOnelinerFromExercise(oneliner) {
+      selectOneliner(oneliner);
+    }
+
+    async function refineBestOneliner() {
+      const apiKey = getAPIKey();
+      const out = window.__lastOnelinerExercise;
+      const statusEl = document.getElementById('ratingRefineStatus');
+      
+      if (!apiKey || !out?.best) {
+        alert('Cannot refine - missing data');
+        return;
+      }
+      
+      if (statusEl) statusEl.textContent = 'Refining...';
+      
+      try {
+        const prompt = `Refine this one-liner to be even more authentic and aligned:
+
+CURRENT BEST: ${out.best}
+
+CONTEXT:
+${JSON.stringify(out, null, 2)}
+
+Make it tighter, more personal, more true. Keep the template: "I exist to [contribution] while [way of living]."
+
+Return ONE refined version that feels most authentic.`;
+
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              { role: 'system', content: 'You refine one-liners to maximum authenticity while keeping the template.' },
+              { role: 'user', content: prompt }
+            ],
+            max_tokens: 200,
+            temperature: 0.6
+          })
+        });
+        
+        const data = await response.json();
+        const refined = data.choices[0].message.content.trim().replace(/["""]/g, '');
+        
+        // Add refined version to top
+        const resultsEl = document.getElementById('onelinerResults');
+        const refinedHTML = `
+          <div style="margin-bottom:12px; padding:12px; border:1px solid rgba(0,0,0,0.10); border-radius:10px; background:rgba(0,0,0,0.02);">
+            <div style="font-weight:750; margin-bottom:6px;">🔁 Model-refined version</div>
+            <div style="font-size:1.08rem; line-height:1.35; color:#000;">${refined}</div>
+            <div style="margin-top:10px;">
+              <button class="ai-suggest-btn" onclick="setOnelinerFromExercise('${refined.replace(/'/g, "\\'")}')">✅ Save this</button>
+            </div>
+          </div>
+        `;
+        
+        resultsEl.innerHTML = refinedHTML + resultsEl.innerHTML;
+        if (statusEl) statusEl.textContent = 'Done ✅';
+        
+      } catch (error) {
+        console.error('Refine error:', error);
+        if (statusEl) statusEl.textContent = '';
+        alert('Failed to refine. Check console.');
+      }
+    }
+
+    async function refineUsingUserRatings() {
+      const apiKey = getAPIKey();
+      const out = window.__lastOnelinerExercise;
+      const statusEl = document.getElementById('ratingRefineStatus');
+      const resultsEl = document.getElementById('onelinerResults');
+
+      if (!apiKey) {
+        alert('API key required');
+        return;
+      }
+      if (!out?.candidates?.length) {
+        alert('No candidates found to refine.');
+        return;
+      }
+
+      // Collect ratings + notes
+      const ratings = out.candidates.map((c, idx) => {
+        const slider = document.getElementById(`cand-${idx}-slider`);
+        const noteEl = document.getElementById(`cand-${idx}-note`);
+        const rating = slider ? Number(slider.value) : 7;
+        const note = noteEl ? (noteEl.value || '').trim() : '';
+
+        return {
+          index: idx,
+          text: c.text,
+          model_scores: c.scores || {},
+          user_rating_1to10: Number.isFinite(rating) ? rating : 7,
+          user_note: note
+        };
+      });
+
+      // Find top-rated candidate (tie-break: higher model voice_match)
+      const sorted = [...ratings].sort((a, b) => {
+        if (b.user_rating_1to10 !== a.user_rating_1to10) return b.user_rating_1to10 - a.user_rating_1to10;
+        const av = Number(a.model_scores?.voice_match || 0);
+        const bv = Number(b.model_scores?.voice_match || 0);
+        return bv - av;
+      });
+      const top = sorted[0];
+
+      if (statusEl) statusEl.textContent = 'Refining based on your ratings…';
+
+      try {
+        const prompt = `You are refining a user's one-liner so it feels maximally authentic to THEM.
+
+CONTEXT:
+A one-liner is a SELF-ALIGNMENT CHECKSUM. It must create ORIENTATION (not urgency).
+It must be outcome-agnostic. No "top 1%", "millions", "world-class", "legacy".
+
+TEMPLATE (must match EXACTLY):
+"I exist to [contribution] while [way of living]."
+
+INPUTS:
+1) Prior model output (truth_profile + candidates):
+${JSON.stringify(out, null, 2)}
+
+2) User ratings (ground truth) for each candidate:
+${JSON.stringify(ratings, null, 2)}
+
+TASK:
+- Treat user_rating_1to10 as the most important signal.
+- Identify what the user likes/dislikes (from notes + rating patterns).
+- Extract 6-10 "voice anchor phrases" from their original answers inside voice_phrases (reuse them).
+- Produce:
+  A) "best" = 1 improved final one-liner (highest authenticity)
+  B) 3 variants: (tighter), (warmer), (more ruthless)
+  C) a short "why" that cites specific phrases used (no more than 1 sentence)
+
+HARD RULES:
+- Must use template exactly.
+- Must include at least 2 voice_phrases verbatim if available.
+- Must remove any goal-contaminated language.
+- Must feel true even if no one sees it.
+- Must still fit in 10 years.
+
+Return ONLY JSON:
+{
+  "best": "string",
+  "variants": ["string", "string", "string"],
+  "why": "string"
+}`;
+
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              { 
+                role: 'system', 
+                content: 'You refine identity statements using user ratings as ground truth. You must preserve the template and reuse user voice phrases. No goals. No fluff.' 
+              },
+              { role: 'user', content: prompt }
+            ],
+            max_tokens: 600,
+            temperature: 0.35
+          })
+        });
+
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+
+        const data = await response.json();
+        let refinedText = data.choices[0].message.content.trim();
+        refinedText = refinedText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        
+        const refined = JSON.parse(refinedText);
+
+        const best = (refined?.best || '').trim();
+        const variants = Array.isArray(refined?.variants) ? refined.variants.map(v => String(v).trim()).filter(Boolean) : [];
+        const why = (refined?.why || '').trim();
+
+        if (!best || variants.length < 2) throw new Error('Refinement output invalid');
+
+        // Helper function
+        function escapeHTML(str) {
+          const div = document.createElement('div');
+          div.textContent = str;
+          return div.innerHTML;
+        }
+
+        // Render refinement panel at top
+        const panelHTML = `
+          <div style="margin-bottom:12px; padding:12px; border:1px solid rgba(0,0,0,0.10); border-radius:10px; background:rgba(0,0,0,0.02);">
+            <div style="font-weight:750; margin-bottom:6px;">🎯 Refined using your ratings</div>
+            <div style="font-size:1.08rem; line-height:1.35; color:#000;">${escapeHTML(best)}</div>
+            ${why ? `<div style="margin-top:8px; font-size:0.82rem; color:rgba(0,0,0,0.65);">${escapeHTML(why)}</div>` : ''}
+
+            <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="ai-suggest-btn" onclick="setOnelinerFromExercise('${best.replace(/'/g, "\\'")}')">✅ Save this</button>
+              <button class="ai-suggest-btn" style="opacity:0.9;" onclick="seedRatingsFromTopCandidate(${top.index})">↩︎ Copy ratings from top pick</button>
+            </div>
+          </div>
+
+          <div style="margin-bottom:12px;">
+            ${variants.map((v, i) => `
+              <div style="padding:12px; border:1px solid rgba(0,0,0,0.08); border-radius:10px; margin-bottom:10px;">
+                <div style="font-weight:650; margin-bottom:6px;">Variant ${i + 1}</div>
+                <div style="font-size:1.02rem; line-height:1.35;">${escapeHTML(v)}</div>
+                <div style="margin-top:10px;">
+                  <button class="ai-suggest-btn" onclick="setOnelinerFromExercise('${v.replace(/'/g, "\\'")}')">Use this</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+
+        // Prepend panel without destroying existing candidates UI
+        resultsEl.innerHTML = panelHTML + resultsEl.innerHTML;
+
+        if (statusEl) statusEl.textContent = 'Done ✅';
+
+      } catch (error) {
+        console.error('Rating-based refine error:', error);
+        if (statusEl) statusEl.textContent = '';
+        alert('Failed to refine using ratings. Check console for details.');
+      }
+    }
+
+    function selectOneliner(oneliner) {
+      // Save current one-liner to history if it exists
+      if (visionData.oneliner && visionData.oneliner.trim()) {
+        if (!visionData.onelinerHistory) visionData.onelinerHistory = [];
+        visionData.onelinerHistory.unshift({
+          text: visionData.oneliner,
+          date: new Date().toISOString()
+        });
+        // Keep only last 10 versions
+        if (visionData.onelinerHistory.length > 10) {
+          visionData.onelinerHistory = visionData.onelinerHistory.slice(0, 10);
+        }
+      }
+      
+      // Set new one-liner
+      visionData.oneliner = oneliner;
+      document.getElementById('oneliner').value = oneliner;
+      saveVision();
+      
+      // Close exercise box
+      document.getElementById('onelinerExerciseBox').classList.remove('visible');
+      
+      showSaveStatus();
+    }
+
+    function seedRatingsFromTopCandidate(topIndex) {
+      // Set top candidate to 10, others to 7 (or 6) as a quick baseline
+      const sliders = Array.from(document.querySelectorAll('#onelinerResults input[type="range"][data-cand-index]'));
+      sliders.forEach(sl => {
+        const idx = Number(sl.dataset.candIndex);
+        sl.value = (idx === Number(topIndex)) ? 10 : 7;
+        const valEl = document.getElementById(`cand-${idx}-val`);
+        if (valEl) valEl.textContent = sl.value;
+      });
+    }
+
+    function showOnelinerHistory() {
+      const historyBox = document.getElementById('onelinerHistoryBox');
+      
+      if (!visionData.onelinerHistory || visionData.onelinerHistory.length === 0) {
+        alert('No version history yet. Update your one-liner a few times to build history.');
+        return;
+      }
+      
+      const historyHTML = visionData.onelinerHistory.map((version, i) => {
+        const date = new Date(version.date);
+        const dateStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        
+        return `<div style="margin-bottom: 12px; padding: 16px; background: white; border-radius: 6px; border: 1px solid rgba(0,0,0,0.1);">
+          <div style="font-size: 0.75rem; color: rgba(0,0,0,0.5); margin-bottom: 8px;">${dateStr}</div>
+          <div style="font-size: 0.95rem; margin-bottom: 10px; line-height: 1.5;">${version.text}</div>
+          <button class="suggestion-add-btn" onclick="restoreOneliner(${i})">Restore</button>
+        </div>`;
+      }).join('');
+      
+      historyBox.innerHTML = `
+        <div class="suggestions-header">
+          <div class="suggestions-title">📜 Version History</div>
+          <button class="suggestions-close" onclick="document.getElementById('onelinerHistoryBox').classList.remove('visible')">×</button>
+        </div>
+        ${historyHTML}
+      `;
+      historyBox.classList.add('visible');
+    }
+
+    function restoreOneliner(index) {
+      const version = visionData.onelinerHistory[index];
+      visionData.oneliner = version.text;
+      document.getElementById('oneliner').value = version.text;
+      saveVision();
+      document.getElementById('onelinerHistoryBox').classList.remove('visible');
+      showSaveStatus();
+    }
+
+    // === EXPORT DATA ===
+    function exportVisionData() {
+      // Create export object
+      const exportData = {
+        exportDate: new Date().toISOString(),
+        vision: visionData
+      };
+      
+      // Convert to JSON
+      const dataStr = JSON.stringify(exportData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      
+      // Create download link
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `vision-data-${new Date().toISOString().split('T')[0]}.json`;
+      
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      showSaveStatus();
+    }
+
+    // === VISION ANALYSIS ===
+    async function analyzeVision() {
+      const btn = document.getElementById('analyzeVisionBtn');
+      const analysisBox = document.getElementById('visionAnalysis');
+      
+      // Validation
+      if (!visionData.oneliner || visionData.oneliner.trim() === '') {
+        alert('Please fill in your one-liner first!');
+        return;
+      }
+      
+      if (!visionData.values || visionData.values.length === 0) {
+        alert('Please add at least one value!');
+        return;
+      }
+      
+      if (!visionData.principles || visionData.principles.length === 0) {
+        alert('Please add at least one principle!');
+        return;
+      }
+      
+      // Get API key
+      const apiKey = getAPIKey();
+      if (!apiKey) {
+        const newKey = promptForAPIKey();
+        if (!newKey) {
+          alert('API key required for vision analysis');
+          return;
+        }
+      }
+      
+      btn.disabled = true;
+      btn.textContent = '✨ Analyzing...';
+      
+      try {
+        // Prepare all vision data
+        const filteredValues = visionData.values.filter(v => v.trim());
+        const filteredPrinciples = visionData.principles.filter(p => p.trim());
+        const filteredBoundaries = visionData.boundaries.filter(b => b.trim());
+        const filteredRoutines = visionData.routines.filter(r => r.name && r.name.trim());
+        const filteredUplevel = visionData.uplevel.filter(u => {
+          if (typeof u === 'string') return u.trim();
+          return u.name && u.name.trim();
+        });
+        
+        const prompt = `Analyze this person's complete vision system and give me the TOP 3 most critical insights.
+
+ONE-LINER: ${visionData.oneliner}
+
+VALUES: ${filteredValues.join(', ')}
+
+PRINCIPLES: ${filteredPrinciples.join(', ')}
+
+BOUNDARIES: ${filteredBoundaries.length > 0 ? filteredBoundaries.join(', ') : 'None set'}
+
+ROUTINES: ${filteredRoutines.length > 0 ? filteredRoutines.map(r => r.name).join(', ') : 'None set'}
+
+UPLEVEL AREAS: ${filteredUplevel.length > 0 ? filteredUplevel.map(u => typeof u === 'string' ? u : u.name).join(', ') : 'None set'}
+
+Return ONLY the top 3 most important insights as JSON:
+
+{
+  "insights": [
+    {
+      "title": "Short punchy title",
+      "insight": "2-3 sentence explanation of the key issue/opportunity. Be specific and reference their actual content.",
+      "action": "One concrete action they should take this week.",
+      "impact": "High/Medium - how critical this is"
+    },
+    {
+      "title": "Second insight title",
+      "insight": "Explanation...",
+      "action": "Action...",
+      "impact": "High/Medium"
+    },
+    {
+      "title": "Third insight title",
+      "insight": "Explanation...",
+      "action": "Action...",
+      "impact": "High/Medium"
+    }
+  ]
+}
+
+Focus on:
+1. Biggest misalignment or gap
+2. Strongest asset they're underutilizing
+3. Critical missing piece for their one-liner
+
+Be DIRECT and SPECIFIC. No fluff.`;
+
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              { 
+                role: 'system', 
+                content: 'You are a no-BS executive coach. Give only the top 3 most critical insights. Be direct and specific.'
+              },
+              { role: 'user', content: prompt }
+            ],
+            max_tokens: 800,
+            temperature: 0.7
+          })
+        });
+        
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        
+        const data = await response.json();
+        let analysisText = data.choices[0].message.content.trim();
+        analysisText = analysisText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        
+        const analysis = JSON.parse(analysisText);
+        
+        // Display top 3 insights
+        const insightsHTML = analysis.insights.map((insight, i) => {
+          const impactColor = insight.impact === 'High' ? '#ef4444' : '#f59e0b';
+          return `
+          <div style="margin-bottom: 24px; padding: 20px; background: #fafafa; border-radius: 8px; border-left: 4px solid ${impactColor};">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+              <div style="font-size: 1.1rem; font-weight: 600; color: #000;">${i + 1}. ${insight.title}</div>
+              <span style="background: ${impactColor}; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">${insight.impact}</span>
+            </div>
+            <div style="font-size: 0.9rem; color: rgba(0,0,0,0.8); line-height: 1.6; margin-bottom: 12px;">
+              ${insight.insight}
+            </div>
+            <div style="padding: 12px; background: white; border-radius: 6px; margin-top: 12px;">
+              <div style="font-size: 0.75rem; font-weight: 600; color: rgba(0,0,0,0.5); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Action This Week:</div>
+              <div style="font-size: 0.9rem; color: #000; font-weight: 500;">
+                ${insight.action}
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+        
+        analysisBox.innerHTML = `
+          <div class="suggestions-header">
+            <div class="suggestions-title">✨ Top 3 Insights</div>
+            <button class="suggestions-close" onclick="document.getElementById('visionAnalysis').classList.remove('visible')">×</button>
+          </div>
+          ${insightsHTML}
+        `;
+        analysisBox.classList.add('visible');
+        
+      } catch (error) {
+        console.error('Error analyzing vision:', error);
+        alert('Failed to analyze vision. Check console for details.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Get Top 3 Insights';
       }
     }
 
@@ -1158,6 +4733,8 @@
         `;
         list.appendChild(item);
       });
+      
+      renderRoutinesCompact();
     }
 
     function addRoutine() {
@@ -1179,120 +4756,72 @@
       }
     }
 
-    // === UPLEVEL ===
-    function renderUplevel() {
-      const grid = document.getElementById('uplevelGrid');
-      grid.innerHTML = '';
-
-      visionData.uplevel.forEach((item, index) => {
-        // Handle legacy string format
-        if (typeof item === 'string') {
-          item = { name: item, description: '', success: '', milestones: [] };
-          visionData.uplevel[index] = item;
-        }
-        
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'uplevel-item';
-        itemDiv.innerHTML = `
-          <div class="uplevel-header">
-            <div class="uplevel-icon">⚡</div>
-            <input 
-              type="text" 
-              class="uplevel-name-input" 
-              value="${item.name || ''}"
-              placeholder="What do you want to level up in?"
-              oninput="updateUplevel(${index}, 'name', this.value)"
-            />
-          </div>
-          
-          <div class="uplevel-details">
-            <div class="uplevel-detail-label">What is this?</div>
-            <textarea 
-              class="uplevel-detail-input"
-              placeholder="Describe what this uplevel area is about..."
-              oninput="updateUplevel(${index}, 'description', this.value)"
-            >${item.description || ''}</textarea>
-            
-            <div class="uplevel-detail-label">What does success look like?</div>
-            <textarea 
-              class="uplevel-detail-input"
-              placeholder="How will you know you've leveled up? What's the goal?"
-              oninput="updateUplevel(${index}, 'success', this.value)"
-            >${item.success || ''}</textarea>
-            
-            <div class="uplevel-detail-label">Milestones to Track</div>
-            <div class="uplevel-milestones" id="uplevel-milestones-${index}">
-              ${(item.milestones || []).map((m, mIdx) => `
-                <div class="uplevel-milestone-item">
-                  <input type="checkbox" class="milestone-checkbox" disabled />
-                  <span class="milestone-text">${m}</span>
-                </div>
-              `).join('')}
-            </div>
-            <button class="generate-milestones-btn" onclick="generateMilestones(${index})">
-              ✨ Generate Milestones
-            </button>
-          </div>
-          
-          <button class="uplevel-delete-btn" onclick="deleteUplevel(${index})">Delete</button>
-        `;
-        grid.appendChild(itemDiv);
-      });
-    }
-
-    function addUplevel() {
-      visionData.uplevel.push({ name: '', description: '', success: '', milestones: [] });
-      saveVision();
-      renderUplevel();
-    }
-
-    function updateUplevel(index, field, value) {
-      if (typeof visionData.uplevel[index] === 'string') {
-        visionData.uplevel[index] = { name: visionData.uplevel[index], description: '', success: '', milestones: [] };
-      }
-      visionData.uplevel[index][field] = value;
-      saveVision();
-    }
-
-    function deleteUplevel(index) {
-      if (confirm('Delete this uplevel item?')) {
-        visionData.uplevel.splice(index, 1);
-        saveVision();
-        renderUplevel();
-      }
-    }
-
-    async function generateMilestones(index) {
-      const item = visionData.uplevel[index];
+    // === IDEAL ROUTINES ===
+    async function generateIdealRoutines() {
+      const btn = document.getElementById('generateIdealRoutinesBtn');
+      const idealRoutinesBox = document.getElementById('idealRoutinesBox');
       
-      if (!item.name || !item.description) {
-        alert('Please fill in the name and description first!');
+      if (!visionData.oneliner || !visionData.principles || visionData.principles.length === 0) {
+        alert('Please fill in your one-liner and at least one principle first!');
         return;
       }
+      
+      if (!visionData.uplevel || visionData.uplevel.length === 0) {
+        alert('Please add at least one uplevel area first! Ideal routines are generated from your uplevel goals.');
+        return;
+      }
+      
+      btn.disabled = true;
+      btn.textContent = '✨ Generating ideal routines...';
       
       const apiKey = getAPIKey();
       if (!apiKey) {
         const newKey = promptForAPIKey();
         if (!newKey) {
-          alert('API key required for generating milestones');
+          alert('API key required for generating routines');
+          btn.disabled = false;
+          btn.textContent = 'Generate Ideal Routines from Uplevel Areas';
           return;
         }
       }
       
-      const btn = event.target;
-      btn.disabled = true;
-      btn.textContent = '✨ Generating...';
-      
       try {
-        const prompt = `Based on this uplevel goal, suggest 3-5 trackable milestones:
+        const filteredPrinciples = visionData.principles.filter(p => p.trim());
+        const filteredUplevel = visionData.uplevel.filter(u => {
+          if (typeof u === 'string') return u.trim();
+          return u.name && u.name.trim();
+        });
+        
+        const prompt = `Based on this person's vision and uplevel areas, generate ideal routines that will help them achieve mastery.
 
-Name: ${item.name}
-Description: ${item.description}
-Success looks like: ${item.success || 'Not specified'}
+ONE-LINER: ${visionData.oneliner}
 
-Return ONLY a JSON array of 3-5 milestone strings. Each should be specific and measurable.
+PRINCIPLES:
+${filteredPrinciples.map((p, i) => `${i + 1}. ${p}`).join('\n')}
 
-Format: ["milestone 1", "milestone 2", "milestone 3"]`;
+UPLEVEL AREAS:
+${filteredUplevel.map((u, i) => {
+  const name = typeof u === 'string' ? u : u.name;
+  const description = typeof u === 'string' ? '' : (u.description || '');
+  return `${i + 1}. ${name}${description ? ' - ' + description : ''}`;
+}).join('\n')}
+
+For EACH uplevel area, suggest 1-2 ideal routines that represent the INTEGRATED/EMBODIED state of that skill.
+
+Return ONLY a JSON array of routine objects:
+
+[
+  {
+    "routine": "Specific routine name with time (e.g., 'Morning design practice (30 min)')",
+    "principle": "Which principle from their list this embodies",
+    "uplevel": "Which uplevel area this advances",
+    "frequency": "Daily/3x week/Weekly",
+    "why": "One sentence on why this routine is critical for their one-liner",
+    "level": "What routine level this represents when mastered (3 or 4)"
+  }
+]
+
+Make routines SPECIFIC with exact times. These are IDEAL routines - what they should be doing when they've mastered each uplevel area.`;
 
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
@@ -1303,10 +4832,10 @@ Format: ["milestone 1", "milestone 2", "milestone 3"]`;
           body: JSON.stringify({
             model: 'gpt-4o-mini',
             messages: [
-              { role: 'system', content: 'You are a goal-setting coach helping someone define trackable milestones.' },
+              { role: 'system', content: 'You are a performance coach helping someone design ideal routines that represent mastery of their growth areas.' },
               { role: 'user', content: prompt }
             ],
-            max_tokens: 200,
+            max_tokens: 800,
             temperature: 0.7
           })
         });
@@ -1314,295 +4843,154 @@ Format: ["milestone 1", "milestone 2", "milestone 3"]`;
         if (!response.ok) throw new Error(`API error: ${response.status}`);
         
         const data = await response.json();
-        let milestonesText = data.choices[0].message.content.trim();
-        milestonesText = milestonesText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        let routinesText = data.choices[0].message.content.trim();
+        routinesText = routinesText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
         
-        const milestones = JSON.parse(milestonesText);
-        visionData.uplevel[index].milestones = milestones;
+        const idealRoutines = JSON.parse(routinesText);
         
-        saveVision();
-        renderUplevel();
-        showSaveStatus();
-        
-      } catch (error) {
-        console.error('Error generating milestones:', error);
-        alert('Failed to generate milestones. Check console for details.');
-      } finally {
-        btn.disabled = false;
-        btn.textContent = '✨ Generate Milestones';
-      }
-    }
-
-    // === DESIRE ===
-    function renderDesire() {
-      const grid = document.getElementById('desireGrid');
-      grid.innerHTML = '';
-
-      visionData.desire.forEach((item, index) => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'principle-item';
-        itemDiv.innerHTML = `
-          <div class="desire-icon">✨</div>
-          <input 
-            type="text" 
-            class="principle-input" 
-            value="${item}"
-            placeholder="Add something that makes you feel alive..."
-            oninput="updateDesire(${index}, this.value)"
-          />
-          <button class="item-delete" onclick="deleteDesire(${index})">×</button>
-        `;
-        grid.appendChild(itemDiv);
-      });
-    }
-
-    function addDesire() {
-      visionData.desire.push('');
-      saveVision();
-      renderDesire();
-    }
-
-    function updateDesire(index, value) {
-      visionData.desire[index] = value;
-      saveVision();
-    }
-
-    function deleteDesire(index) {
-      if (confirm('Delete this desire?')) {
-        visionData.desire.splice(index, 1);
-        saveVision();
-        renderDesire();
-      }
-    }
-
-    // AI Suggestion for Desires
-    async function suggestDesires() {
-      const btn = document.getElementById('suggestDesiresBtn');
-      const suggestionsBox = document.getElementById('desireSuggestions');
-      
-      if (!visionData.oneliner || !visionData.principles || visionData.principles.length === 0) {
-        alert('Please fill in your one-liner and at least one principle first!');
-        return;
-      }
-      
-      btn.disabled = true;
-      btn.textContent = '✨ Generating suggestions...';
-      
-      const apiKey = getAPIKey();
-      if (!apiKey) {
-        const newKey = promptForAPIKey();
-        if (!newKey) {
-          alert('API key required for suggestions');
-          btn.disabled = false;
-          btn.textContent = '✨ Discover New Desires';
-          return;
-        }
-      }
-      
-      try {
-        const prompt = `Based on this person's vision, principles, and existing desires, suggest 5 new activities they might enjoy:
-
-One-liner: ${visionData.oneliner}
-
-Principles:
-${visionData.principles.map((p, i) => `${i + 1}. ${p}`).join('\n')}
-
-Existing desires:
-${visionData.desire.length > 0 ? visionData.desire.map((d, i) => `- ${d}`).join('\n') : 'None yet'}
-
-Suggest concrete activities (not abstract concepts). Examples: "Morning coffee at a new cafe", "Sunset motorcycle ride", "Golf with family on weekends"
-
-Return ONLY a JSON array of 5 activity suggestions.
-
-Format: ["activity 1", "activity 2", "activity 3", "activity 4", "activity 5"]`;
-
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-          },
-          body: JSON.stringify({
-            model: 'gpt-4o-mini',
-            messages: [
-              { role: 'system', content: 'You are helping someone discover activities that align with their authentic desires and values.' },
-              { role: 'user', content: prompt }
-            ],
-            max_tokens: 300,
-            temperature: 0.8
-          })
-        });
-        
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
-        
-        const data = await response.json();
-        let suggestionsText = data.choices[0].message.content.trim();
-        suggestionsText = suggestionsText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-        
-        const suggestions = JSON.parse(suggestionsText);
-        
-        // Display suggestions
-        suggestionsBox.innerHTML = `
-          <div class="suggestions-header">
-            <div class="suggestions-title">✨ Suggested Activities</div>
-            <button class="suggestions-close" onclick="document.getElementById('desireSuggestions').classList.remove('visible')">×</button>
-          </div>
-          ${suggestions.map(s => `
-            <div class="suggestion-item">
-              <span>${s}</span>
-              <button class="suggestion-add-btn" onclick="addSuggestedDesire('${s.replace(/'/g, "\\'")}')">+ Add</button>
+        // Display ideal routines with add buttons
+        const routinesHTML = idealRoutines.map((r, i) => 
+          `<div style="margin-bottom: 16px; padding: 20px; background: white; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+              <strong style="font-size: 1rem; flex: 1;">${r.routine}</strong>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="background: #000; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">${r.frequency}</span>
+                <button class="suggestion-add-btn" onclick="addIdealRoutine('${r.routine.replace(/'/g, "\\'")}', ${r.level || 3})" style="white-space: nowrap;">+ Add</button>
+              </div>
             </div>
-          `).join('')}
-        `;
-        suggestionsBox.classList.add('visible');
-        
-      } catch (error) {
-        console.error('Error generating suggestions:', error);
-        alert('Failed to generate suggestions. Check console for details.');
-      } finally {
-        btn.disabled = false;
-        btn.textContent = '✨ Discover New Desires';
-      }
-    }
-
-    function addSuggestedDesire(desireName) {
-      visionData.desire.push(desireName);
-      saveVision();
-      renderDesire();
-      showSaveStatus();
-    }
-
-    // === ONE-LINER ===
-    document.getElementById('oneliner').addEventListener('input', (e) => {
-      visionData.oneliner = e.target.value;
-      saveVision();
-    });
-
-    // === AI SUGGESTIONS ===
-    async function suggestRoutines() {
-      const btn = document.getElementById('suggestRoutinesBtn');
-      const suggestionsBox = document.getElementById('routineSuggestions');
-      
-      if (!visionData.oneliner || !visionData.principles || visionData.principles.length === 0) {
-        alert('Please fill in your one-liner and at least one principle first!');
-        return;
-      }
-      
-      btn.disabled = true;
-      btn.textContent = '✨ Generating suggestions...';
-      
-      const apiKey = getAPIKey();
-      if (!apiKey) {
-        const newKey = promptForAPIKey();
-        if (!newKey) {
-          alert('API key required for suggestions');
-          btn.disabled = false;
-          btn.textContent = '✨ Suggest Routines Based on My Vision';
-          return;
-        }
-      }
-      
-      try {
-        const prompt = `Based on this person's vision and principles, suggest 5 daily routines that would support their growth:
-
-One-liner: ${visionData.oneliner}
-
-Principles:
-${visionData.principles.map((p, i) => `${i + 1}. ${p}`).join('\n')}
-
-Return ONLY a JSON array of 5 routine suggestions. Each should be a concise string (e.g., "Morning meditation (10 min)", "Evening reflection journaling").
-
-Format: ["routine 1", "routine 2", "routine 3", "routine 4", "routine 5"]`;
-
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-          },
-          body: JSON.stringify({
-            model: 'gpt-4o-mini',
-            messages: [
-              { role: 'system', content: 'You are a life coach helping someone design their ideal daily routines based on their values and vision.' },
-              { role: 'user', content: prompt }
-            ],
-            max_tokens: 300,
-            temperature: 0.8
-          })
-        });
-        
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
-        
-        const data = await response.json();
-        let suggestionsText = data.choices[0].message.content.trim();
-        suggestionsText = suggestionsText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-        
-        const suggestions = JSON.parse(suggestionsText);
-        
-        // Display suggestions
-        suggestionsBox.innerHTML = `
-          <div class="suggestions-header">
-            <div class="suggestions-title">✨ Suggested Routines</div>
-            <button class="suggestions-close" onclick="document.getElementById('routineSuggestions').classList.remove('visible')">×</button>
-          </div>
-          ${suggestions.map(s => `
-            <div class="suggestion-item">
-              <span>${s}</span>
-              <button class="suggestion-add-btn" onclick="addSuggestedRoutine('${s.replace(/'/g, "\\'")}')">+ Add</button>
+            <div style="font-size: 0.85rem; color: rgba(0,0,0,0.7); margin-bottom: 6px;">
+              <strong>Embodies:</strong> ${r.principle}
             </div>
-          `).join('')}
+            <div style="font-size: 0.85rem; color: rgba(0,0,0,0.7); margin-bottom: 6px;">
+              <strong>Advances:</strong> ${r.uplevel}
+            </div>
+            <div style="font-size: 0.85rem; color: rgba(0,0,0,0.7); margin-bottom: 8px;">
+              <strong>Target Level:</strong> Level ${r.level || 3} (${r.level === 4 ? 'Embodied' : 'Integrated'})
+            </div>
+            <div style="font-size: 0.85rem; color: rgba(0,0,0,0.6); padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.06);">
+              ${r.why}
+            </div>
+          </div>`
+        ).join('');
+        
+        idealRoutinesBox.innerHTML = `
+          <div class="suggestions-header">
+            <div class="suggestions-title">✨ Ideal Routines (Integrated State)</div>
+            <button class="suggestions-close" onclick="document.getElementById('idealRoutinesBox').classList.remove('visible')">×</button>
+          </div>
+          <div style="margin-bottom: 12px; padding: 12px; background: rgba(0,0,0,0.03); border-radius: 6px; font-size: 0.85rem; color: rgba(0,0,0,0.7);">
+            These routines represent what you'll be doing when you've mastered each uplevel area. Add them to start building toward that integrated state.
+          </div>
+          ${routinesHTML}
         `;
-        suggestionsBox.classList.add('visible');
+        idealRoutinesBox.classList.add('visible');
         
       } catch (error) {
-        console.error('Error generating suggestions:', error);
-        alert('Failed to generate suggestions. Check console for details.');
+        console.error('Error generating ideal routines:', error);
+        alert('Failed to generate ideal routines. Check console for details.');
       } finally {
         btn.disabled = false;
-        btn.textContent = '✨ Suggest Routines Based on My Vision';
+        btn.textContent = 'Generate Ideal Routines from Uplevel Areas';
       }
     }
 
-    function addSuggestedRoutine(routineName) {
-      visionData.routines.push({ name: routineName, level: 1 });
+    function addIdealRoutine(routineName, level) {
+      visionData.routines.push({ name: routineName, level: level || 3 });
       saveVision();
       renderRoutines();
       showSaveStatus();
     }
 
+    // === UPLEVEL ===
+
+    function renderUplevel() {
+      const grid = document.getElementById('uplevelGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      visionData.uplevel.forEach((item, index) => {
+        // Handle legacy format - convert to simple string
+        const name = typeof item === 'string' ? item : (item.name || '');
+        
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'principle-item';
+        itemDiv.innerHTML = `
+          <div class="principle-number">${index + 1}</div>
+          <input 
+            type="text" 
+            class="principle-input" 
+            value="${name}"
+            placeholder="Add a growth area..."
+            oninput="updateUplevel(${index}, this.value)"
+          />
+          <button class="item-delete" onclick="deleteUplevel(${index})">×</button>
+        `;
+        grid.appendChild(itemDiv);
+      });
+      
+      renderUplevelCompact();
+    }
+
+    function addUplevel() {
+      visionData.uplevel.push('');
+      saveVision();
+      renderUplevel();
+    }
+
+    function updateUplevel(index, value) {
+      visionData.uplevel[index] = value;
+      saveVision();
+      renderUplevelCompact();
+    }
+
+    function deleteUplevel(index) {
+      if (confirm('Delete this growth area?')) {
+        visionData.uplevel.splice(index, 1);
+        saveVision();
+        renderUplevel();
+      }
+    }
+
     async function suggestUplevel() {
-      const btn = document.getElementById('suggestUplevelBtn');
+      const btn = event ? event.target : null;
       const suggestionsBox = document.getElementById('uplevelSuggestions');
       
-      if (!visionData.oneliner || !visionData.principles || visionData.principles.length === 0) {
-        alert('Please fill in your one-liner and at least one principle first!');
+      if (!visionData.oneliner || visionData.oneliner.trim() === '') {
+        alert('Please fill in your one-liner first!');
         return;
       }
-      
-      btn.disabled = true;
-      btn.textContent = '✨ Generating suggestions...';
       
       const apiKey = getAPIKey();
       if (!apiKey) {
         const newKey = promptForAPIKey();
         if (!newKey) {
-          alert('API key required for suggestions');
-          btn.disabled = false;
-          btn.textContent = '✨ Suggest Growth Areas Based on My Vision';
+          alert('API key required');
           return;
         }
       }
       
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = '✨ Generating suggestions...';
+      }
+      
       try {
-        const prompt = `Based on this person's vision and principles, suggest 5 specific ways they could level up and grow:
+        const filteredValues = visionData.values.filter(v => v.trim());
+        const filteredPrinciples = visionData.principles.filter(p => p.trim());
+        
+        const prompt = `Based on this person's vision, suggest 5 growth areas they should focus on:
 
-One-liner: ${visionData.oneliner}
+ONE-LINER: ${visionData.oneliner}
+VALUES: ${filteredValues.join(', ')}
+PRINCIPLES: ${filteredPrinciples.slice(0, 5).join(', ')}
 
-Principles:
-${visionData.principles.map((p, i) => `${i + 1}. ${p}`).join('\n')}
+Suggest growth areas that:
+- Align with their one-liner and values
+- Are specific and actionable
+- Cover different life domains (health, relationships, skills, mindset, etc.)
+- Will have high leverage impact
 
-Return ONLY a JSON array of 5 uplevel suggestions. Each should be specific and actionable (e.g., "Learn Python for automation", "Build public speaking confidence", "Master financial modeling").
-
+Return ONLY a JSON array of 5 short growth area names (2-4 words each):
 Format: ["uplevel 1", "uplevel 2", "uplevel 3", "uplevel 4", "uplevel 5"]`;
 
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -1633,7 +5021,7 @@ Format: ["uplevel 1", "uplevel 2", "uplevel 3", "uplevel 4", "uplevel 5"]`;
         // Display suggestions
         suggestionsBox.innerHTML = `
           <div class="suggestions-header">
-            <div class="suggestions-title">✨ Suggested Growth Areas</div>
+            <div class="suggestions-title">Suggested Growth Areas</div>
             <button class="suggestions-close" onclick="document.getElementById('uplevelSuggestions').classList.remove('visible')">×</button>
           </div>
           ${suggestions.map(s => `
@@ -1649,8 +5037,10 @@ Format: ["uplevel 1", "uplevel 2", "uplevel 3", "uplevel 4", "uplevel 5"]`;
         console.error('Error generating suggestions:', error);
         alert('Failed to generate suggestions. Check console for details.');
       } finally {
-        btn.disabled = false;
-        btn.textContent = '✨ Suggest Growth Areas Based on My Vision';
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Suggest Growth Areas Based on My Vision';
+        }
       }
     }
 
