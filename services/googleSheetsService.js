@@ -91,7 +91,7 @@ class GoogleSheetsService {
       const response = await this.sheets.spreadsheets.values.append({
         spreadsheetId: this.spreadsheetId,
         range,
-        valueInputOption: 'RAW',  // Use RAW to prevent date interpretation
+        valueInputOption: 'USER_ENTERED',  // Use USER_ENTERED for proper number formatting
         requestBody: {
           values: transactionsWithBlanks,
         },

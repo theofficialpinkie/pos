@@ -33,6 +33,7 @@ class TransactionParser {
 
   parseSingleLineFormat(lines) {
     const transactions = [];
+    const seenTransactions = new Set(); // Track duplicates
     let skipNext = false;
 
     for (let i = 0; i < lines.length; i++) {
@@ -52,6 +53,8 @@ class TransactionParser {
           line.toLowerCase().includes('show details') ||
           line.toLowerCase().includes('not sorted') ||
           line.toLowerCase().includes('action') ||
+          line.toLowerCase().includes('payment') ||
+          line.toLowerCase().includes('balance') ||
           line.match(/^\d+\s+X\s+0\.\d+/) ||
           skipNext) {
         skipNext = false;
@@ -61,7 +64,20 @@ class TransactionParser {
       // Parse transaction line
       const transaction = this.parseTransactionLine(line);
       if (transaction) {
-        transactions.push(transaction);
+        // Skip if amount looks like a CC balance (over $1000)
+        if (transaction.amount > 1000) {
+          continue;
+        }
+
+        // Create unique key to detect duplicates
+        const transactionKey = `${transaction.date}|${transaction.expenseName}|${transaction.amount}`;
+
+        // Only add if not a duplicate
+        if (!seenTransactions.has(transactionKey)) {
+          seenTransactions.add(transactionKey);
+          transactions.push(transaction);
+        }
+
         // Skip the next line if it's likely an exchange rate
         if (i + 1 < lines.length && lines[i + 1].toLowerCase().includes('rupiah')) {
           skipNext = true;
@@ -388,7 +404,7 @@ class TransactionParser {
       t.date,
       t.expenseName,
       t.category,
-      String(parseFloat(t.amount) || 0), // Convert to string to prevent date interpretation
+      parseFloat(t.amount) || 0, // Keep as number for proper formatting
       t.notes || ''
     ]);
   }
