@@ -3764,6 +3764,308 @@ function updateRoutineDisplay() {
       window.open('https://docs.google.com/spreadsheets/d/1fhXnyTk09IbDDvzs1cAceZUtBkYW5g90y_eICCVD9q0/edit?usp=sharing', '_blank');
     }
 
+    async function processFinances(taskId) {
+      const task = dashboardState.weeklyTasks[currentDay]?.find(t => t.id === taskId);
+      if (!task) return;
+
+      // Get the raw transaction data from the task description
+      const rawTransactions = task.description || '';
+
+      if (!rawTransactions.trim()) {
+        alert('Please paste your Chase transaction data in the task description first');
+        return;
+      }
+
+      // Helper function to parse currency input (handles $, commas, etc.)
+      const parseCurrency = (input) => {
+        if (!input || input.trim() === '') return 0;
+        // Remove dollar signs, commas, and whitespace
+        const cleaned = input.replace(/[$,\s]/g, '');
+        const value = parseFloat(cleaned);
+        return isNaN(value) ? 0 : value;
+      };
+
+      // Get financial data (you can prompt user or pull from localStorage)
+      const checkingInput = prompt('Enter your current checking balance:');
+      if (checkingInput === null) {
+        alert('Operation cancelled');
+        return; // User cancelled
+      }
+      const checkingBalance = parseCurrency(checkingInput);
+
+      const savingsInput = prompt('Enter your current savings balance:');
+      if (savingsInput === null) {
+        alert('Operation cancelled');
+        return; // User cancelled
+      }
+      const savingsBalance = parseCurrency(savingsInput);
+
+      const freedomInput = prompt('Enter your Freedom CC balance:');
+      if (freedomInput === null) {
+        alert('Operation cancelled');
+        return; // User cancelled
+      }
+      const freedomCC = parseCurrency(freedomInput);
+
+      const primeVisaInput = prompt('Enter your Prime Visa CC balance:');
+      if (primeVisaInput === null) {
+        alert('Operation cancelled');
+        return; // User cancelled
+      }
+      const primeVisaCC = parseCurrency(primeVisaInput);
+
+      console.log('Financial values collected:', { checkingBalance, savingsBalance, freedomCC, primeVisaCC });
+
+      try {
+        // Show processing indicator
+        const processingMsg = document.createElement('div');
+        processingMsg.id = 'processing-finances';
+        processingMsg.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.9); color: white; padding: 30px 50px; border-radius: 12px; z-index: 9999; font-size: 1.2rem;';
+        processingMsg.textContent = '⚡ Processing transactions...';
+        document.body.appendChild(processingMsg);
+
+        // Get current week dates
+        const weekDates = getWeekDateRange();
+
+        // Call API to process transactions
+        const response = await fetch('/api/finance/process-transactions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            rawTransactions,
+            weekDates,
+            checkingBalance,
+            savingsBalance,
+            freedomCC,
+            primeVisaCC
+          })
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to process transactions');
+        }
+
+        // Store the results in the task
+        task.financeData = {
+          transactions: result.transactions,
+          insights: result.insights,
+          checkingBalance,
+          savingsBalance,
+          freedomCC,
+          primeVisaCC,
+          weekDates,
+          processedAt: new Date().toISOString()
+        };
+
+        saveDashboard();
+
+        // Remove processing message
+        document.body.removeChild(processingMsg);
+
+        // Show success and insights
+        showFinanceInsights(task.financeData.insights);
+
+        // Ask if user wants to update Google Sheets
+        if (confirm('Transactions processed! Would you like to update your Google Sheets now?')) {
+          await updateGoogleSheets(task);
+        }
+
+        // Refresh the task view
+        openTaskSidebar(taskId);
+
+      } catch (error) {
+        const msg = document.getElementById('processing-finances');
+        if (msg) document.body.removeChild(msg);
+        alert('Error processing finances: ' + error.message);
+      }
+    }
+
+    async function updateGoogleSheets(task) {
+      const financeData = task.financeData;
+      if (!financeData) {
+        alert('No finance data to update. Process transactions first.');
+        return;
+      }
+
+      try {
+        const processingMsg = document.createElement('div');
+        processingMsg.id = 'updating-sheets';
+        processingMsg.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.9); color: white; padding: 30px 50px; border-radius: 12px; z-index: 9999; font-size: 1.2rem;';
+        processingMsg.textContent = '📊 Updating Google Sheets...';
+        document.body.appendChild(processingMsg);
+
+        // Get Google Sheets credentials from localStorage or environment
+        const credentials = getGoogleCredentials();
+
+        if (!credentials) {
+          document.body.removeChild(processingMsg);
+          alert('Google Sheets credentials not configured. Please set up Google API credentials first.');
+          showCredentialsSetupInstructions();
+          return;
+        }
+
+        // Prepare week data
+        const weekData = {
+          week: `Week ${getWeekNumber()}`,
+          dates: financeData.weekDates,
+          expenses: financeData.insights.totalExpenses,
+          checkingBalance: financeData.checkingBalance,
+          savingsBalance: financeData.savingsBalance,
+          freedomCC: financeData.freedomCC,
+          primeVisaCC: financeData.primeVisaCC,
+          notes: ''
+        };
+
+        const response = await fetch('/api/finance/update-sheets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            transactions: financeData.transactions,
+            weekData,
+            credentials
+          })
+        });
+
+        const result = await response.json();
+
+        document.body.removeChild(processingMsg);
+
+        if (result.success) {
+          alert('✅ Google Sheets updated successfully!');
+        } else {
+          throw new Error(result.error || 'Failed to update sheets');
+        }
+
+      } catch (error) {
+        const msg = document.getElementById('updating-sheets');
+        if (msg) document.body.removeChild(msg);
+        alert('Error updating Google Sheets: ' + error.message);
+      }
+    }
+
+    function showFinanceInsights(insights) {
+      const modal = document.createElement('div');
+      modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 40px;';
+
+      const content = document.createElement('div');
+      content.style.cssText = 'background: white; border-radius: 20px; padding: 40px; max-width: 600px; max-height: 80vh; overflow-y: auto;';
+
+      let categoryHTML = '';
+      insights.topCategories.forEach((cat, idx) => {
+        categoryHTML += `
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: ${idx === 0 ? '#fef3c7' : '#f3f4f6'}; border-radius: 8px; margin-bottom: 8px;">
+            <span style="font-weight: 500;">${cat.category}</span>
+            <div>
+              <span style="font-size: 1.1rem; font-weight: 600;">$${cat.amount}</span>
+              <span style="color: #6b7280; margin-left: 8px;">${cat.percentage}%</span>
+            </div>
+          </div>
+        `;
+      });
+
+      let tipsHTML = '';
+      insights.tips.forEach(tip => {
+        tipsHTML += `<li style="margin-bottom: 8px; color: #4b5563;">${tip}</li>`;
+      });
+
+      content.innerHTML = `
+        <div style="text-align: center; margin-bottom: 30px;">
+          <h2 style="font-size: 2rem; font-weight: 300; margin-bottom: 10px;">Weekly Finance Insights</h2>
+          <div style="font-size: 0.9rem; color: #6b7280;">Automated Analysis</div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 24px; color: white; margin-bottom: 24px; text-align: center;">
+          <div style="font-size: 0.9rem; margin-bottom: 8px; opacity: 0.9;">Total Expenses</div>
+          <div style="font-size: 3rem; font-weight: 600;">$${insights.totalExpenses}</div>
+          <div style="font-size: 0.9rem; margin-top: 8px; opacity: 0.9;">Spending Level: ${insights.spendingLevel}</div>
+        </div>
+
+        <div style="background: ${insights.runway.weeksUntilRed < 2 ? '#fee2e2' : insights.runway.weeksUntilRed < 4 ? '#fef3c7' : '#d1fae5'}; border-radius: 12px; padding: 20px; margin-bottom: 24px; text-align: center;">
+          <div style="font-size: 1.2rem; font-weight: 500; color: #1f2937;">${insights.runway.message}</div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <h3 style="font-size: 1.2rem; font-weight: 500; margin-bottom: 16px;">Top Spending Categories</h3>
+          ${categoryHTML}
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <h3 style="font-size: 1.2rem; font-weight: 500; margin-bottom: 16px;">💡 Money-Saving Tips</h3>
+          <ul style="list-style-position: inside;">
+            ${tipsHTML}
+          </ul>
+        </div>
+
+        <button onclick="this.closest('[style*=fixed]').remove()" style="width: 100%; background: #000; color: white; border: none; padding: 16px; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: 500;">
+          Close
+        </button>
+      `;
+
+      modal.appendChild(content);
+      document.body.appendChild(modal);
+
+      modal.onclick = (e) => {
+        if (e.target === modal) modal.remove();
+      };
+    }
+
+    function getWeekDateRange() {
+      const currentWeek = localStorage.getItem('currentWeek');
+      if (!currentWeek) return '';
+
+      const startDate = new Date(currentWeek + 'T00:00:00');
+      const endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 6);
+
+      const formatDate = (date) => {
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${month}/${day}`;
+      };
+
+      return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+    }
+
+    function getWeekNumber() {
+      const currentWeek = localStorage.getItem('currentWeek');
+      if (!currentWeek) return 1;
+
+      const startDate = new Date(currentWeek);
+      const yearStart = new Date(startDate.getFullYear(), 0, 1);
+      const diff = startDate - yearStart;
+      const oneWeek = 1000 * 60 * 60 * 24 * 7;
+      return Math.ceil(diff / oneWeek);
+    }
+
+    function getGoogleCredentials() {
+      // Try to get from localStorage
+      const stored = localStorage.getItem('googleSheetsCredentials');
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch (e) {
+          console.error('Invalid credentials format');
+        }
+      }
+      return null;
+    }
+
+    function showCredentialsSetupInstructions() {
+      alert(`To enable automatic Google Sheets updates, you need to set up Google API credentials.
+
+Steps:
+1. Go to Google Cloud Console (console.cloud.google.com)
+2. Create a new project or select existing
+3. Enable Google Sheets API
+4. Create a Service Account
+5. Download the JSON credentials file
+6. Store the credentials in localStorage with key 'googleSheetsCredentials'
+
+For now, you can manually copy the formatted data to your spreadsheet.`);
+    }
+
     function scheduleHairAppointment() {
       window.open('https://www.fresha.com/a/lush-bali-beauty-salon-umalas-bali-jl-tengah-no-8-kerobokan-badung-regency-jalan-tengah-no-8-jag4ep7n/booking?bookingId=1473368882&offerItems=sv%3A16699163&rebook=true&appointmentId=1092704254%3A1473368882&cartId=ea8710fa-fd62-4a34-a4a5-f986ed6c0620', '_blank');
     }
@@ -5532,10 +5834,45 @@ function getNextWeekDates() {
       
       if (task.hasFinanceButton) {
         html += `
+          <button class="action-btn" onclick="processFinances('${taskId}')" style="background: #10b981; color: white; margin: 10px 0;">
+            ⚡ Process Finances
+          </button>
           <button class="action-btn" onclick="openFinanceSheet()" style="background: #3b82f6; color: white; margin: 10px 0;">
             📊 View Spreadsheet
           </button>
         `;
+
+        // Show insights if already processed
+        if (task.financeData && task.financeData.insights) {
+          const insights = task.financeData.insights;
+          html += `
+            <div style="background: #f9fafb; border-radius: 12px; padding: 20px; margin: 15px 0; border: 1px solid #e5e7eb;">
+              <div style="font-weight: 600; margin-bottom: 15px; font-size: 1.1rem;">📊 This Week's Insights</div>
+
+              <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; padding: 16px; color: white; margin-bottom: 12px; text-align: center;">
+                <div style="font-size: 0.8rem; opacity: 0.9;">Total Expenses</div>
+                <div style="font-size: 2rem; font-weight: 600; margin: 4px 0;">$${insights.totalExpenses}</div>
+                <div style="font-size: 0.8rem; opacity: 0.9;">${insights.spendingLevel} Spending</div>
+              </div>
+
+              <div style="background: ${insights.runway.weeksUntilRed < 2 ? '#fee2e2' : insights.runway.weeksUntilRed < 4 ? '#fef3c7' : '#d1fae5'}; border-radius: 8px; padding: 12px; margin-bottom: 12px; text-align: center; font-weight: 500; font-size: 0.9rem;">
+                ${insights.runway.message}
+              </div>
+
+              <div style="font-size: 0.9rem; font-weight: 500; margin-bottom: 8px;">Top Categories:</div>
+              ${insights.topCategories.map((cat, idx) => `
+                <div style="display: flex; justify-content: space-between; padding: 8px; background: ${idx === 0 ? '#fef3c7' : 'white'}; border-radius: 6px; margin-bottom: 4px; font-size: 0.85rem;">
+                  <span>${cat.category}</span>
+                  <span style="font-weight: 600;">$${cat.amount}</span>
+                </div>
+              `).join('')}
+
+              <button class="action-btn" onclick="showFinanceInsights(${JSON.stringify(insights).replace(/"/g, '&quot;')})" style="background: rgba(0,0,0,0.05); margin-top: 12px;">
+                View Full Analysis
+              </button>
+            </div>
+          `;
+        }
       }
       
       if (task.hasHairButton) {
