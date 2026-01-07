@@ -106,6 +106,18 @@
             font-weight: 400;
         }
 
+        .data-management {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .data-management .btn-secondary {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+        }
+
         .progress-indicator {
             display: flex;
             justify-content: center;
@@ -596,6 +608,320 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
+        /* Vision Section - True Full Screen */
+        .vision-section {
+            padding: 0 !important;
+            max-width: none !important;
+            margin: 0 !important;
+        }
+
+        .vision-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 40px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-back, .btn-save {
+            background: transparent;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+            color: rgba(0, 0, 0, 0.7);
+            font-weight: 500;
+        }
+
+        .btn-back:hover, .btn-save:hover {
+            background: rgba(0, 0, 0, 0.03);
+            border-color: rgba(0, 0, 0, 0.3);
+            color: #000000;
+        }
+
+        .year-toggle-nav {
+            display: flex;
+            gap: 0;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .year-tab {
+            padding: 8px 32px;
+            border: none;
+            background: transparent;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: rgba(0, 0, 0, 0.5);
+            border-right: 1px solid rgba(0, 0, 0, 0.12);
+        }
+
+        .year-tab:last-child {
+            border-right: none;
+        }
+
+        .year-tab.active {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .vision-fullscreen {
+            position: relative;
+            width: 100vw;
+            min-height: calc(100vh - 60px);
+            background: #fafafa;
+            padding: 80px 120px;
+        }
+
+        .vision-human {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+
+        .vision-human img {
+            width: 320px;
+            height: auto;
+            filter: grayscale(100%) contrast(1.15);
+            opacity: 0.15;
+        }
+
+        .goal-section {
+            position: absolute;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .goal-line {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.1);
+            transform-origin: 0 0;
+        }
+
+        .goal-content {
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+
+        .goal-category-title {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #000000;
+            letter-spacing: -0.3px;
+        }
+
+        .goal-summary {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: rgba(0, 0, 0, 0.6);
+            margin: 0;
+            font-weight: 400;
+        }
+
+        /* Position each section - wider spacing */
+        .goal-top-left {
+            top: 60px;
+            left: 80px;
+        }
+
+        .goal-top-left .goal-line {
+            width: 1px;
+            height: 240px;
+            left: 100px;
+            top: 60px;
+            transform: rotate(42deg);
+        }
+
+        .goal-top-right {
+            top: 60px;
+            right: 80px;
+        }
+
+        .goal-top-right .goal-line {
+            width: 1px;
+            height: 240px;
+            right: 100px;
+            top: 60px;
+            transform: rotate(-42deg);
+        }
+
+        .goal-left {
+            left: 80px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .goal-left .goal-line {
+            width: 220px;
+            height: 1px;
+            left: 160px;
+            top: 30px;
+        }
+
+        .goal-right {
+            right: 80px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .goal-right .goal-line {
+            width: 220px;
+            height: 1px;
+            right: 160px;
+            top: 30px;
+        }
+
+        .goal-bottom-left {
+            bottom: 80px;
+            left: 80px;
+        }
+
+        .goal-bottom-left .goal-line {
+            width: 1px;
+            height: 240px;
+            left: 100px;
+            bottom: 60px;
+            transform: rotate(-42deg);
+        }
+
+        .goal-bottom-right {
+            bottom: 80px;
+            right: 80px;
+        }
+
+        .goal-bottom-right .goal-line {
+            width: 1px;
+            height: 240px;
+            right: 100px;
+            bottom: 60px;
+            transform: rotate(42deg);
+        }
+
+        .goal-top {
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .goal-top .goal-line {
+            width: 1px;
+            height: 180px;
+            left: 50%;
+            top: 60px;
+            transform: translateX(-50%);
+        }
+
+        .goal-bottom {
+            bottom: 160px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .goal-bottom .goal-line {
+            width: 1px;
+            height: 180px;
+            left: 50%;
+            bottom: 60px;
+            transform: translateX(-50%);
+        }
+
+        .goal-status {
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .goal-status .goal-line {
+            width: 1px;
+            height: 100px;
+            left: 50%;
+            bottom: 60px;
+            transform: translateX(-50%);
+        }
+
+        /* Modal for full descriptions */
+        .vision-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .vision-modal.visible {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border: none;
+            padding: 48px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: rgba(0, 0, 0, 0.4);
+            transition: color 0.2s;
+            width: 36px;
+            height: 36px;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #000000;
+        }
+
+        .modal-title {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #000000;
+            letter-spacing: -0.5px;
+        }
+
+        .modal-description {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Arial', sans-serif;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: rgba(0, 0, 0, 0.75);
+            white-space: pre-wrap;
+        }
+
         @media (max-width: 768px) {
             .main-container {
                 padding: 60px 30px 40px;
@@ -629,6 +955,41 @@
             .transformation-breakdown {
                 grid-template-columns: 1fr;
             }
+
+            .vision-nav {
+                padding: 12px 20px;
+            }
+
+            .vision-fullscreen {
+                min-height: calc(100vh - 56px);
+                padding: 40px 20px;
+            }
+
+            .vision-human img {
+                width: 200px;
+            }
+
+            .year-tab {
+                padding: 6px 20px;
+                font-size: 0.85rem;
+            }
+
+            .goal-category-title {
+                font-size: 1rem;
+            }
+
+            .goal-summary {
+                font-size: 0.8rem;
+            }
+
+            .goal-section .goal-line {
+                display: none;
+            }
+
+            .btn-back, .btn-save {
+                padding: 6px 16px;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
@@ -637,6 +998,11 @@
         <div class="page-header">
             <h1 class="page-title">Year Reset</h1>
             <p class="page-subtitle">2025 → 2026</p>
+            <div class="data-management">
+                <button id="export-data" class="btn-secondary">⬇ Export Data</button>
+                <input type="file" id="import-file" accept=".json" style="display: none;">
+                <button id="import-data" class="btn-secondary">⬆ Import Data</button>
+            </div>
         </div>
 
         <div class="progress-indicator">
@@ -1286,65 +1652,105 @@
         </div>
 
         <!-- DASHBOARD SECTION -->
-        <div class="section" id="dashboard-section">
-            <div class="section-label">Part 3 of 3: Your 2026 Vision</div>
-            <p class="section-description">Everything in one place</p>
-
-            <div class="dashboard-grid">
-                <div class="dashboard-card hero-card">
-                    <h3>One Big Move</h3>
-                    <div class="dashboard-value" id="dash-bigmove">—</div>
-                    <div class="dashboard-description">This is your North Star for 2026</div>
+        <div class="section vision-section" id="dashboard-section">
+            <!-- Top Navigation Bar -->
+            <div class="vision-nav">
+                <button class="btn-back" id="back-to-planning">← Back to Planning</button>
+                <div class="year-toggle-nav">
+                    <button class="year-tab active" data-year="2025">2025</button>
+                    <button class="year-tab" data-year="2026">2026</button>
                 </div>
-
-                <div class="dashboard-card">
-                    <h3>Goals</h3>
-                    <div class="dashboard-value" id="dash-goals-count">0</div>
-                    <div class="dashboard-description" id="dash-goals-list"></div>
-                </div>
-
-                <div class="dashboard-card">
-                    <h3>Identity (Goal-Related)</h3>
-                    <div class="dashboard-value">Builder</div>
-                    <div class="dashboard-description" id="dash-identity-goal">—</div>
-                </div>
-
-                <div class="dashboard-card">
-                    <h3>Fear → Power</h3>
-                    <div class="dashboard-value">Transform</div>
-                    <div class="dashboard-description" id="dash-fear-power">—</div>
-                </div>
-
-                <div class="dashboard-card">
-                    <h3>Identity Upgrades</h3>
-                    <div class="dashboard-value" id="dash-identity-count">0</div>
-                    <div class="dashboard-description" id="dash-identity-list"></div>
-                </div>
-
-                <div class="dashboard-card">
-                    <h3>Metrics Tracking</h3>
-                    <div class="dashboard-value" id="dash-metrics-count">0</div>
-                    <div class="dashboard-description" id="dash-metrics-list"></div>
-                </div>
+                <button class="btn-save" id="save-to-pos">Save →</button>
             </div>
 
-            <div class="ai-insights" style="margin-top: 30px;">
-                <div class="ai-insights-header">
-                    <div class="ai-icon">✨</div>
-                    <h3>Your Year at a Glance</h3>
+            <!-- Full-Screen Human-Centered Vision -->
+            <div class="vision-fullscreen">
+                <!-- Central Human -->
+                <div class="vision-human">
+                    <img src="sketch-human-outline.jpg" alt="Human Outline">
                 </div>
-                <div class="insight-item">
-                    <p><strong>2025 was:</strong> <span id="dash-2025-sentence">—</span></p>
-                    <p><strong>2026 is:</strong> Building something real</p>
-                </div>
-                <div class="insight-item">
-                    <p><strong>Transformation score:</strong> <span id="dash-rating">—</span>/10 last year.</p>
-                </div>
-            </div>
 
-            <div class="button-group">
-                <button class="btn-secondary" id="back-to-planning">← Back to Planning</button>
-                <button id="save-to-pos">Save to POS →</button>
+                <!-- Radiating Goal Sections -->
+                <div class="goal-section goal-top-left" data-category="skills">
+                    <div class="goal-line"></div>
+                    <div class="goal-content">
+                        <h3 class="goal-category-title" id="skills-title">Skills</h3>
+                        <p class="goal-summary" id="skills-summary">—</p>
+                    </div>
+                </div>
+
+                <div class="goal-section goal-top-right" data-category="health">
+                    <div class="goal-line"></div>
+                    <div class="goal-content">
+                        <h3 class="goal-category-title" id="health-title">Health</h3>
+                        <p class="goal-summary" id="health-summary">—</p>
+                    </div>
+                </div>
+
+                <div class="goal-section goal-left" data-category="social">
+                    <div class="goal-line"></div>
+                    <div class="goal-content">
+                        <h3 class="goal-category-title" id="social-title">Social</h3>
+                        <p class="goal-summary" id="social-summary">—</p>
+                    </div>
+                </div>
+
+                <div class="goal-section goal-right" data-category="family">
+                    <div class="goal-line"></div>
+                    <div class="goal-content">
+                        <h3 class="goal-category-title" id="family-title">Family</h3>
+                        <p class="goal-summary" id="family-summary">—</p>
+                    </div>
+                </div>
+
+                <div class="goal-section goal-bottom-left" data-category="relationships">
+                    <div class="goal-line"></div>
+                    <div class="goal-content">
+                        <h3 class="goal-category-title" id="relationships-title">Relationships</h3>
+                        <p class="goal-summary" id="relationships-summary">—</p>
+                    </div>
+                </div>
+
+                <div class="goal-section goal-bottom-right" data-category="spiritual">
+                    <div class="goal-line"></div>
+                    <div class="goal-content">
+                        <h3 class="goal-category-title" id="spiritual-title">Spiritual</h3>
+                        <p class="goal-summary" id="spiritual-summary">—</p>
+                    </div>
+                </div>
+
+                <div class="goal-section goal-top" data-category="environment">
+                    <div class="goal-line"></div>
+                    <div class="goal-content">
+                        <h3 class="goal-category-title" id="environment-title">Environment</h3>
+                        <p class="goal-summary" id="environment-summary">—</p>
+                    </div>
+                </div>
+
+                <div class="goal-section goal-bottom" data-category="travel">
+                    <div class="goal-line"></div>
+                    <div class="goal-content">
+                        <h3 class="goal-category-title" id="travel-title">Travel</h3>
+                        <p class="goal-summary" id="travel-summary">—</p>
+                    </div>
+                </div>
+
+                <div class="goal-section goal-status" data-category="status">
+                    <div class="goal-line"></div>
+                    <div class="goal-content">
+                        <h3 class="goal-category-title" id="status-title">Status/Success</h3>
+                        <p class="goal-summary" id="status-summary">—</p>
+                    </div>
+                </div>
+
+                <!-- Hover Modal -->
+                <div class="vision-modal" id="vision-modal">
+                    <div class="modal-content">
+                        <button class="modal-close" id="modal-close">×</button>
+                        <h2 class="modal-title"></h2>
+                        <div class="modal-description"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1531,27 +1937,237 @@
             saveState();
         }
 
-        function populateDashboard() {
-            document.getElementById('dash-bigmove').textContent = state.planning.bigmove || '—';
-            
-            const goals = [state.planning['goal-1'], state.planning['goal-2'], state.planning['goal-3'], state.planning['goal-4'], state.planning['goal-5']].filter(Boolean);
-            document.getElementById('dash-goals-count').textContent = goals.length;
-            document.getElementById('dash-goals-list').innerHTML = goals.map(g => `• ${g}`).join('<br>');
-            
-            document.getElementById('dash-identity-goal').textContent = state.planning['identity-goal'] || '—';
+        // Vision Canvas Data and Functionality
+        let currentVisionYear = '2025';
 
-            const identities = [state.planning['identity-1'], state.planning['identity-2'], state.planning['identity-3'], state.planning['identity-4'], state.planning['identity-5'], state.planning['identity-6'], state.planning['identity-7'], state.planning['identity-8'], state.planning['identity-9'], state.planning['identity-10']].filter(Boolean);
-            document.getElementById('dash-identity-count').textContent = identities.length;
-            document.getElementById('dash-identity-list').innerHTML = identities.map(i => `• ${i}`).join('<br>');
-            
-            const metrics = [state.planning['metric-1'], state.planning['metric-2'], state.planning['metric-3'], state.planning['metric-4'], state.planning['metric-5']].filter(Boolean);
-            document.getElementById('dash-metrics-count').textContent = metrics.length;
-            document.getElementById('dash-metrics-list').innerHTML = metrics.map(m => `• ${m}`).join('<br>');
-            
-            document.getElementById('dash-fear-power').textContent = `${state.planning['fear-map'] || 'Fear'} → ${state.planning['power-map'] || 'Power'}`;
-            document.getElementById('dash-2025-sentence').textContent = state.retro.sentence || '—';
-            document.getElementById('dash-rating').textContent = state.retro.rating || '—';
+        const visionData = {
+            '2025': {
+                skills: { title: 'Skills', summary: '', description: '' },
+                health: { title: 'Health', summary: '', description: '' },
+                social: { title: 'Social', summary: '', description: '' },
+                family: { title: 'Family', summary: '', description: '' },
+                relationships: { title: 'Relationships', summary: '', description: '' },
+                spiritual: { title: 'Spiritual', summary: '', description: '' },
+                environment: { title: 'Environment', summary: '', description: '' },
+                travel: { title: 'Travel', summary: '', description: '' },
+                status: { title: 'Status/Success', summary: '', description: '' }
+            },
+            '2026': {
+                skills: { title: 'Skills', summary: '', description: '' },
+                health: { title: 'Health', summary: '', description: '' },
+                social: { title: 'Social', summary: '', description: '' },
+                family: { title: 'Family', summary: '', description: '' },
+                relationships: { title: 'Relationships', summary: '', description: '' },
+                spiritual: { title: 'Spiritual', summary: '', description: '' },
+                environment: { title: 'Environment', summary: '', description: '' },
+                travel: { title: 'Travel', summary: '', description: '' },
+                status: { title: 'Status/Success', summary: '', description: '' }
+            }
+        };
+
+        function populateDashboard() {
+            populateVisionData();
+            updateVisionCanvas();
         }
+
+        function populateVisionData() {
+            // 2025 (RETRO) - What actually happened
+
+            // Skills - from uplevel/learnings
+            const skills2025 = state.retro.uplevel || '';
+            const learnings = [state.retro['learning-1'], state.retro['learning-2'], state.retro['learning-3']].filter(Boolean);
+            visionData['2025'].skills.description = skills2025 || learnings.join('\n') || 'No skills development recorded';
+            visionData['2025'].skills.title = skills2025 ? extractSmartTitle(skills2025) : 'Skills';
+            visionData['2025'].skills.summary = skills2025 ? extractFirstWords(skills2025, 4) : (learnings.length ? `${learnings.length} learnings` : '—');
+
+            // Health - from achievements/challenges mentioning health
+            const healthRelated = [
+                state.retro['achievement-1'], state.retro['achievement-2'],
+                state.retro['achievement-3'], state.retro['challenge-1']
+            ].filter(item => item && (item.toLowerCase().includes('health') || item.toLowerCase().includes('body') || item.toLowerCase().includes('workout') || item.toLowerCase().includes('weight'))).join('\n');
+            visionData['2025'].health.description = healthRelated || state.retro.dowant || 'No health changes recorded';
+            visionData['2025'].health.title = healthRelated ? 'Health Changes' : 'Health';
+            visionData['2025'].health.summary = healthRelated ? extractFirstWords(healthRelated, 3) : '—';
+
+            // Social - from relationships built/lost and transform-people
+            const socialLife = state.retro['relationships-built'] || '';
+            const socialScore = state.retro['transform-people'] || '0';
+            visionData['2025'].social.description = `New connections:\n${socialLife}\n\nSocial transformation: ${socialScore}/2`;
+            visionData['2025'].social.title = socialLife ? 'Connections' : 'Social';
+            visionData['2025'].social.summary = socialLife ? 'New people' : `${socialScore}/2`;
+
+            // Family - look for family mentions in story/firstthings
+            const storyText = (state.retro.story || '') + ' ' + (state.retro.firstthings || '');
+            const familyMentions = storyText.match(/family|mom|dad|parent|sibling|brother|sister/gi);
+            visionData['2025'].family.description = storyText || 'No family updates recorded';
+            visionData['2025'].family.title = familyMentions ? 'Family Growth' : 'Family';
+            visionData['2025'].family.summary = familyMentions ? `${familyMentions.length} mentions` : '—';
+
+            // Relationships - key relationships from built/lost
+            const relationshipsLost = state.retro['relationships-lost'] || '';
+            const relationshipScore = state.retro['transform-relationship'] || '0';
+            visionData['2025'].relationships.description = `Built:\n${state.retro['relationships-built'] || 'None'}\n\nLost:\n${relationshipsLost || 'None'}\n\nTransformation: ${relationshipScore}/2`;
+            visionData['2025'].relationships.title = relationshipScore >= 1 ? 'Love Evolved' : 'Relationships';
+            visionData['2025'].relationships.summary = relationshipScore >= 1 ? `${relationshipScore}/2 growth` : '—';
+
+            // Spiritual - from before/after transformation
+            const before = state.retro.before || '';
+            const after = state.retro.after || '';
+            const lifefeel = state.retro.lifefeel || '';
+            visionData['2025'].spiritual.description = `Before: ${before}\n\nAfter: ${after}\n\nCurrent state: ${lifefeel}`;
+            visionData['2025'].spiritual.title = after ? 'Inner Growth' : 'Spiritual';
+            visionData['2025'].spiritual.summary = after ? 'Transformed' : '—';
+
+            // Environment - big move + transform-place
+            const bigmove2025 = state.retro.bigmove || '';
+            const placeScore = state.retro['transform-place'] || '0';
+            visionData['2025'].environment.description = `Big move: ${bigmove2025 || 'None'}\n\nPlace transformation: ${placeScore}/2`;
+            visionData['2025'].environment.title = bigmove2025 ? extractSmartTitle(bigmove2025) : 'Environment';
+            visionData['2025'].environment.summary = bigmove2025 ? extractFirstWords(bigmove2025, 3) : `${placeScore}/2`;
+
+            // Travel - from pivot moments and story
+            const pivotMoments = Array.from({length: 15}, (_, i) => state.retro[`pivotmoment-${i+1}`]).filter(Boolean);
+            const travelMoments = pivotMoments.filter(m => m.toLowerCase().match(/travel|trip|visit|bali|nyc|city|country/));
+            visionData['2025'].travel.description = travelMoments.join('\n') || pivotMoments.slice(0, 3).join('\n') || 'No significant travel recorded';
+            visionData['2025'].travel.title = travelMoments.length ? 'Adventures' : 'Travel';
+            visionData['2025'].travel.summary = travelMoments.length ? `${travelMoments.length} trips` : '—';
+
+            // Status/Success - achievements
+            const achievements = [
+                state.retro['achievement-1'], state.retro['achievement-2'],
+                state.retro['achievement-3'], state.retro['achievement-4'], state.retro['achievement-5']
+            ].filter(Boolean);
+            visionData['2025'].status.description = achievements.join('\n') || 'No achievements recorded';
+            visionData['2025'].status.title = achievements.length ? 'Victories' : 'Status/Success';
+            visionData['2025'].status.summary = achievements.length ? `${achievements.length} wins` : '—';
+
+            // 2026 (PLANNING) - What's planned
+
+            // Skills - from identity upgrades
+            const identityUpgrades = [
+                state.planning['identity-1'], state.planning['identity-2'], state.planning['identity-3'],
+                state.planning['identity-4'], state.planning['identity-5']
+            ].filter(Boolean);
+            visionData['2026'].skills.description = identityUpgrades.join('\n') || 'No identity upgrades planned';
+            visionData['2026'].skills.title = identityUpgrades.length ? 'Becoming' : 'Skills';
+            visionData['2026'].skills.summary = identityUpgrades.length ? `${identityUpgrades.length} upgrades` : '—';
+
+            // Health - from desires and intentions
+            const desires2026 = state.planning.desires || '';
+            const healthDesires = desires2026.match(/(health|body|workout|fitness|weight|yoga|exercise)/gi);
+            visionData['2026'].health.description = desires2026 || 'No health goals set';
+            visionData['2026'].health.title = healthDesires ? 'Body Goals' : 'Health';
+            visionData['2026'].health.summary = healthDesires ? `${healthDesires.length} goals` : '—';
+
+            // Social - from desires about connection
+            const socialDesires = desires2026.match(/(friend|social|people|community|connection)/gi);
+            visionData['2026'].social.description = desires2026 || 'No social goals set';
+            visionData['2026'].social.title = socialDesires ? 'Connection' : 'Social';
+            visionData['2026'].social.summary = socialDesires ? 'Expanding' : '—';
+
+            // Family - from freewrite
+            const freewrite = state.planning.freewrite || '';
+            const familyPlans = freewrite.match(/family|mom|dad|parent/gi);
+            visionData['2026'].family.description = freewrite || 'No family plans recorded';
+            visionData['2026'].family.title = familyPlans ? 'Family Focus' : 'Family';
+            visionData['2026'].family.summary = familyPlans ? `${familyPlans.length} mentions` : '—';
+
+            // Relationships - fear → power
+            const fear = state.planning['fear-map'] || '';
+            const power = state.planning['power-map'] || '';
+            visionData['2026'].relationships.description = `Fear: ${fear}\n\n→\n\nPower: ${power}`;
+            visionData['2026'].relationships.title = power ? extractSmartTitle(power) : 'Relationships';
+            visionData['2026'].relationships.summary = power ? extractFirstWords(power, 3) : '—';
+
+            // Spiritual - from identity-goal
+            const identityGoal = state.planning['identity-goal'] || '';
+            visionData['2026'].spiritual.description = identityGoal || 'No spiritual identity set';
+            visionData['2026'].spiritual.title = identityGoal ? 'Becoming' : 'Spiritual';
+            visionData['2026'].spiritual.summary = identityGoal ? extractFirstWords(identityGoal, 3) : '—';
+
+            // Environment - big move
+            const bigmove2026 = state.planning.bigmove || '';
+            visionData['2026'].environment.description = bigmove2026 || 'No big move planned';
+            visionData['2026'].environment.title = bigmove2026 ? extractSmartTitle(bigmove2026) : 'Environment';
+            visionData['2026'].environment.summary = bigmove2026 ? extractFirstWords(bigmove2026, 3) : '—';
+
+            // Travel - from desires
+            const travelDesires = desires2026.match(/(travel|trip|visit|explore|journey)/gi);
+            visionData['2026'].travel.description = desires2026 || 'No travel plans set';
+            visionData['2026'].travel.title = travelDesires ? 'Wanderlust' : 'Travel';
+            visionData['2026'].travel.summary = travelDesires ? `${travelDesires.length} dreams` : '—';
+
+            // Status/Success - goals
+            const goals2026 = [
+                state.planning['goal-1'], state.planning['goal-2'],
+                state.planning['goal-3'], state.planning['goal-4'], state.planning['goal-5']
+            ].filter(Boolean);
+            visionData['2026'].status.description = goals2026.join('\n') || 'No goals set';
+            visionData['2026'].status.title = goals2026.length ? 'Targets' : 'Status/Success';
+            visionData['2026'].status.summary = goals2026.length ? `${goals2026.length} goals` : '—';
+        }
+
+        function extractSmartTitle(text) {
+            if (!text) return '';
+            const words = text.trim().split(/\s+/).slice(0, 2);
+            return words.join(' ').replace(/[.,!?]$/, '');
+        }
+
+        function extractFirstWords(text, count = 3) {
+            if (!text) return '—';
+            const words = text.trim().split(/\s+/).slice(0, count);
+            return words.length > 0 ? words.join(' ') : '—';
+        }
+
+        function updateVisionCanvas() {
+            const categories = ['skills', 'health', 'social', 'family', 'relationships', 'spiritual', 'environment', 'travel', 'status'];
+
+            categories.forEach(category => {
+                const titleEl = document.getElementById(`${category}-title`);
+                const summaryEl = document.getElementById(`${category}-summary`);
+                if (titleEl) {
+                    titleEl.textContent = visionData[currentVisionYear][category].title;
+                }
+                if (summaryEl) {
+                    summaryEl.textContent = visionData[currentVisionYear][category].summary || '—';
+                }
+            });
+        }
+
+        // Year toggle functionality
+        document.querySelectorAll('.year-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.year-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                currentVisionYear = this.dataset.year;
+                updateVisionCanvas();
+            });
+        });
+
+        // Modal functionality
+        const modal = document.getElementById('vision-modal');
+        const modalClose = document.getElementById('modal-close');
+
+        document.querySelectorAll('.goal-section').forEach(section => {
+            section.addEventListener('click', function() {
+                const categoryName = this.dataset.category;
+                const data = visionData[currentVisionYear][categoryName];
+
+                modal.querySelector('.modal-title').textContent = data.title;
+                modal.querySelector('.modal-description').textContent = data.description;
+                modal.classList.add('visible');
+            });
+        });
+
+        modalClose.addEventListener('click', () => {
+            modal.classList.remove('visible');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('visible');
+            }
+        });
 
         document.getElementById('generate-retro-insights').addEventListener('click', async function() {
             await generateRetroInsights(this);
@@ -2069,6 +2685,53 @@ Guidelines:
         document.getElementById('save-to-pos').addEventListener('click', () => {
             saveState();
             alert('Year Reset saved! This data is now stored in your browser and ready to integrate with your POS.');
+        });
+
+        // Export functionality
+        document.getElementById('export-data').addEventListener('click', () => {
+            const data = localStorage.getItem('yearReset2026');
+            if (!data) {
+                alert('No data to export. Please fill out your reflection first.');
+                return;
+            }
+
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `year-reset-backup-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert('Data exported successfully! Keep this file safe.');
+        });
+
+        // Import functionality
+        document.getElementById('import-data').addEventListener('click', () => {
+            document.getElementById('import-file').click();
+        });
+
+        document.getElementById('import-file').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const data = event.target.result;
+                    JSON.parse(data); // Validate it's valid JSON
+
+                    if (confirm('This will replace your current data. Are you sure?')) {
+                        localStorage.setItem('yearReset2026', data);
+                        location.reload(); // Reload to show imported data
+                    }
+                } catch (error) {
+                    alert('Invalid file format. Please select a valid JSON export file.');
+                }
+            };
+            reader.readAsText(file);
         });
 
         loadState();
