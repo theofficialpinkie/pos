@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Year Dashboard 2026</title>
+    <link rel="stylesheet" href="styles/pos-unified.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            padding: 2px;
+        }
+
+        .dashboard-container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .dashboard-header h1 {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 8px;
+            margin-bottom: 0;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .dashboard-nav {
+            position: fixed;
+            top: 6px;
+            left: 6px;
+            z-index: 200;
+        }
+
+        .dashboard-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 10px;
+            opacity: 0.2;
+            transition: opacity 0.2s ease;
+        }
+
+        .dashboard-nav a:hover {
+            opacity: 0.6;
+        }
+
+        /* Big Decision Button */
+        .big-decision-btn {
+            width: 100%;
+            background: var(--poppy-primary);
+            color: white;
+            border: none;
+            padding: 24px;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .big-decision-btn:hover {
+            background: var(--poppy-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Section content styles */
+        .section-content {
+            margin-bottom: 40px;
+        }
+
+        .section-content h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-content h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 24px 0 12px;
+        }
+
+        .reflection-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .reflection-item:last-child {
+            border-bottom: none;
+        }
+
+        .reflection-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .reflection-value {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Fear to Power - Inline on Main Page - Compact */
+        .fear-power-inline {
+            margin: 0 0 4px 0;
+            padding: 8px 12px;
+            background: transparent;
+            border-radius: 0;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .fear-power-inline:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .fear-power-collapsed {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .fear-power-expanded {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 12px;
+        }
+
+        .fear-text, .power-text {
+            font-weight: 300;
+            color: #ffffff;
+            opacity: 0.7;
+        }
+
+        .fear-section, .power-section {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .fear-section-title, .power-section-title {
+            font-size: 0.65rem;
+            font-weight: 300;
+            text-transform: uppercase;
+            opacity: 0.4;
+            margin-bottom: 4px;
+            letter-spacing: 2px;
+        }
+
+        .fear-item, .power-item {
+            font-size: 0.75rem;
+            padding-left: 12px;
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 300;
+        }
+
+        .power-item {
+            border-left-color: #ffffff;
+            color: #ffffff;
+            font-weight: 300;
+        }
+
+        .fear-arrow {
+            font-size: 0.8rem;
+            color: #ffffff;
+            opacity: 0.3;
+        }
+
+        .power-text {
+            color: #ffffff;
+            font-weight: 300;
+            opacity: 1;
+        }
+
+        /* Goals Preview - Centered Large */
+        .goals-preview-compact {
+            margin: 0 0 4px 0;
+            padding: 12px 16px;
+            background: transparent;
+            border-radius: 0;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .goals-preview-compact:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .goals-preview-compact.collapsed .big-goal-compact {
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: #ffffff;
+            margin-bottom: 0;
+            letter-spacing: 1px;
+        }
+
+        .goals-preview-compact.expanded .big-goal-compact {
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: #ffffff;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .goals-preview-compact .other-goals-compact {
+            font-size: 0.85rem;
+            color: #ffffff;
+            opacity: 0.7;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .goals-preview-compact .other-goals-compact span {
+            background: transparent;
+            padding: 4px 0;
+            border-radius: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Fear to Power - Modal Version */
+        .fear-power-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 24px;
+            align-items: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #FFE0E0 0%, #FFF 50%, #E0FFE0 100%);
+            border-radius: 16px;
+            margin: 40px 0;
+        }
+
+        .fear-side, .power-side {
+            padding: 24px;
+            background: white;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .fear-side h3, .power-side h3 {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+        }
+
+        .fear-side p, .power-side p {
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .power-side p {
+            color: var(--poppy-primary);
+        }
+
+        .arrow {
+            font-size: 48px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Vision Board */
+        .big-goal {
+            background: var(--poppy-light);
+            border-left: 4px solid var(--poppy-primary);
+            padding: 24px;
+            margin-bottom: 32px;
+            border-radius: 8px;
+        }
+
+        .big-goal h3 {
+            color: var(--poppy-primary);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .big-goal p {
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .goals-list {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+
+        .goals-list li {
+            padding: 12px 0 12px 24px;
+            border-left: 2px solid var(--border);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .vision-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .vision-grid img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .vision-grid img:hover {
+            transform: translateY(-4px);
+        }
+
+        .vision-grid img:first-child {
+            grid-column: span 2;
+            grid-row: span 2;
+            height: 416px;
+        }
+
+        /* Vision Board Grid with background images */
+        .vision-board-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .vision-img {
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            aspect-ratio: 1;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-height: 200px;
+        }
+
+        .vision-img:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        /* Uplevels Collage - Takes 85% of Page */
+        .uplevels-collage-container {
+            position: relative;
+            width: 100%;
+            height: 88vh;
+            overflow: hidden;
+            background: #000000;
+            border-radius: 8px;
+            margin-top: 0;
+        }
+
+        .uplevels-collage {
+            display: grid;
+            height: 100%;
+            width: 100%;
+            padding: 20px;
+            gap: 15px;
+            grid-template-columns: repeat(5, 1fr);
+            grid-auto-rows: minmax(150px, 1fr);
+            overflow-y: auto;
+        }
+
+        .uplevels-collage::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .uplevels-collage::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .uplevels-collage::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .uplevels-collage::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Floating animation */
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .uplevel-img {
+            width: 100%;
+            height: 100%;
+            min-height: 200px;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            transform: scale(0.85) translateY(30px);
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .uplevel-img.loaded {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            animation: gentleFloat 6s ease-in-out infinite;
+        }
+
+        /* Stagger animations */
+        .uplevel-img:nth-child(1).loaded { animation-delay: 0s; }
+        .uplevel-img:nth-child(2).loaded { animation-delay: 0.5s; }
+        .uplevel-img:nth-child(3).loaded { animation-delay: 1s; }
+        .uplevel-img:nth-child(4).loaded { animation-delay: 1.5s; }
+        .uplevel-img:nth-child(5).loaded { animation-delay: 2s; }
+        .uplevel-img:nth-child(6).loaded { animation-delay: 2.5s; }
+        .uplevel-img:nth-child(7).loaded { animation-delay: 3s; }
+        .uplevel-img:nth-child(8).loaded { animation-delay: 3.5s; }
+        .uplevel-img:nth-child(9).loaded { animation-delay: 4s; }
+        .uplevel-img:nth-child(10).loaded { animation-delay: 4.5s; }
+        .uplevel-img:nth-child(11).loaded { animation-delay: 5s; }
+        .uplevel-img:nth-child(12).loaded { animation-delay: 5.5s; }
+        .uplevel-img:nth-child(13).loaded { animation-delay: 6s; }
+        .uplevel-img:nth-child(14).loaded { animation-delay: 6.5s; }
+        .uplevel-img:nth-child(15).loaded { animation-delay: 7s; }
+
+        /* Grid layout - optimized for 8 items */
+        .uplevel-img:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+        .uplevel-img:nth-child(2) { grid-column: span 1; grid-row: span 1; }
+        .uplevel-img:nth-child(3) { grid-column: span 1; grid-row: span 1; }
+        .uplevel-img:nth-child(4) { grid-column: span 1; grid-row: span 2; }
+        .uplevel-img:nth-child(5) { grid-column: span 2; grid-row: span 1; }
+        .uplevel-img:nth-child(6) { grid-column: span 1; grid-row: span 1; }
+        .uplevel-img:nth-child(7) { grid-column: span 2; grid-row: span 1; }
+        .uplevel-img:nth-child(8) { grid-column: span 2; grid-row: span 1; }
+
+        /* Text overlay on each image */
+        .uplevel-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 60%, transparent 100%);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            min-height: 60px;
+        }
+
+        .uplevel-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #ffffff;
+            flex-shrink: 0;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+        }
+
+        .uplevel-label {
+            flex: 1;
+            font-size: 0.85rem;
+            color: #ffffff;
+            font-weight: 500;
+            line-height: 1.3;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+        }
+
+        /* Upload button on image */
+        .uplevel-upload-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            z-index: 5;
+        }
+
+        .uplevel-upload-btn:hover {
+            background: white;
+            transform: scale(1.05);
+        }
+
+        /* Completed state */
+        .uplevel-img.completed {
+            filter: saturate(0.2) brightness(0.6);
+        }
+
+        .uplevel-img.completed::before {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6rem;
+            font-weight: 200;
+            color: rgba(255, 255, 255, 0.95);
+            z-index: 2;
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.5),
+                         0 0 80px rgba(255, 255, 255, 0.3);
+            pointer-events: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Arial', sans-serif;
+            letter-spacing: -5px;
+            animation: checkGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes checkGlow {
+            0%, 100% {
+                text-shadow: 0 0 40px rgba(255, 255, 255, 0.5),
+                             0 0 80px rgba(255, 255, 255, 0.3);
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                text-shadow: 0 0 50px rgba(255, 255, 255, 0.7),
+                             0 0 100px rgba(255, 255, 255, 0.5);
+                transform: translate(-50%, -50%) scale(1.02);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1px;
+            }
+
+            .dashboard-header h1 {
+                font-size: 0.65rem;
+            }
+
+            .goals-preview-compact {
+                padding: 6px 8px;
+            }
+
+            .goals-preview-compact .big-goal-compact {
+                font-size: 0.75rem;
+            }
+
+            .goals-preview-compact .other-goals-compact {
+                font-size: 0.6rem;
+            }
+
+            .fear-power-inline {
+                flex-direction: row;
+                gap: 6px;
+                padding: 4px 8px;
+                font-size: 0.65rem;
+            }
+
+            .fear-arrow {
+                font-size: 0.7rem;
+            }
+
+            .uplevels-collage {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 15px;
+                gap: 15px;
+            }
+
+            .uplevel-img:nth-child(1),
+            .uplevel-img:nth-child(2),
+            .uplevel-img:nth-child(3),
+            .uplevel-img:nth-child(4),
+            .uplevel-img:nth-child(5),
+            .uplevel-img:nth-child(6),
+            .uplevel-img:nth-child(7),
+            .uplevel-img:nth-child(8),
+            .uplevel-img:nth-child(n+9) {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+
+            .uplevel-img.completed::before {
+                font-size: 4rem;
+            }
+
+            .pos-icon-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .fear-power-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .vision-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .vision-grid img:first-child {
+                grid-column: span 2;
+                height: 300px;
+            }
+        }
+
+        /* Loading */
+        .loading-container {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state h2 {
+            margin-bottom: 16px;
+        }
+
+        .empty-state a {
+            color: var(--poppy-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .empty-state a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <div class="dashboard-nav">
+        <a href="index.html">← POS</a>
+    </div>
+
+    <div class="dashboard-header">
+        <h1>2026</h1>
+    </div>
+
+    <div id="main-view">
+        <!-- Goals Preview - Compact -->
+        <div id="goals-preview-compact" class="goals-preview-compact">
+            <!-- Will be populated by JavaScript -->
+        </div>
+
+        <!-- Fear → Power - Inline Display - Compact -->
+        <div id="fear-power-preview" class="fear-power-inline">
+            <!-- Will be populated by JavaScript -->
+        </div>
+
+        <!-- Uplevels Collage - 85% of page -->
+        <div class="uplevels-collage-container">
+            <div class="uplevels-collage" id="uplevelsCollage">
+                <!-- Will be populated by JavaScript with floating cards -->
+            </div>
+        </div>
+
+        <!-- Navigation to other sections - Top Right -->
+        <div style="position: fixed; top: 6px; right: 6px; display: flex; gap: 4px; z-index: 100;">
+            <button onclick="openSection('written')" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ffffff; padding: 5px 9px; border-radius: 2px; cursor: pointer; font-size: 0.65rem; font-weight: 300; letter-spacing: 1px;">WRITTEN</button>
+            <button onclick="openSection('summary')" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ffffff; padding: 5px 9px; border-radius: 2px; cursor: pointer; font-size: 0.65rem; font-weight: 300; letter-spacing: 1px;">SUMMARY</button>
+            <button onclick="openSection('principles')" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ffffff; padding: 5px 9px; border-radius: 2px; cursor: pointer; font-size: 0.65rem; font-weight: 300; letter-spacing: 1px;">PRINCIPLES</button>
+            <button onclick="openSection('vision')" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ffffff; padding: 5px 9px; border-radius: 2px; cursor: pointer; font-size: 0.65rem; font-weight: 300; letter-spacing: 1px;">VISION</button>
+            <button onclick="openDecisionEngine()" style="background: #ffffff; color: #000000; border: none; padding: 5px 12px; border-radius: 2px; cursor: pointer; font-size: 0.65rem; font-weight: 500; letter-spacing: 1px;">DECIDE</button>
+        </div>
+    </div>
+
+    <!-- Fullscreen modals for each section -->
+    <div class="pos-fullscreen-modal" id="modal-written">
+        <div class="pos-fullscreen-header">
+            <a href="#" class="pos-fullscreen-back" onclick="closeSection(); return false;">
+                ← Back to Dashboard
+            </a>
+            <a href="#" class="pos-fullscreen-next" onclick="nextSection('written'); return false;">
+                Next →
+            </a>
+        </div>
+        <div class="pos-fullscreen-content" id="content-written">
+            <!-- Dynamic content -->
+        </div>
+    </div>
+
+    <div class="pos-fullscreen-modal" id="modal-summary">
+        <div class="pos-fullscreen-header">
+            <a href="#" class="pos-fullscreen-back" onclick="closeSection(); return false;">
+                ← Back to Dashboard
+            </a>
+            <a href="#" class="pos-fullscreen-next" onclick="nextSection('summary'); return false;">
+                Next →
+            </a>
+        </div>
+        <div class="pos-fullscreen-content" id="content-summary">
+            <!-- Dynamic content -->
+        </div>
+    </div>
+
+    <div class="pos-fullscreen-modal" id="modal-principles">
+        <div class="pos-fullscreen-header">
+            <a href="#" class="pos-fullscreen-back" onclick="closeSection(); return false;">
+                ← Back to Dashboard
+            </a>
+            <a href="#" class="pos-fullscreen-next" onclick="nextSection('principles'); return false;">
+                Next →
+            </a>
+        </div>
+        <div class="pos-fullscreen-content" id="content-principles">
+            <!-- Dynamic content -->
+        </div>
+        </div>
+
+    <div class="pos-fullscreen-modal" id="modal-fear-power">
+        <div class="pos-fullscreen-header">
+            <a href="#" class="pos-fullscreen-back" onclick="closeSection(); return false;">
+                ← Back to Dashboard
+            </a>
+            <a href="#" class="pos-fullscreen-next" onclick="nextSection('fear-power'); return false;">
+                Next →
+            </a>
+        </div>
+        <div class="pos-fullscreen-content" id="content-fear-power">
+            <!-- Dynamic content -->
+        </div>
+    </div>
+
+    <div class="pos-fullscreen-modal" id="modal-vision">
+        <div class="pos-fullscreen-header">
+            <a href="#" class="pos-fullscreen-back" onclick="closeSection(); return false;">
+                ← Back to Dashboard
+            </a>
+            <a href="#" class="pos-fullscreen-next" onclick="nextSection('vision'); return false;">
+                Next →
+            </a>
+        </div>
+        <div class="pos-fullscreen-content" id="content-vision">
+            <!-- Dynamic content -->
+        </div>
+    </div>
+
+    <div class="pos-fullscreen-modal" id="modal-uplevels">
+        <div class="pos-fullscreen-header">
+            <a href="#" class="pos-fullscreen-back" onclick="closeSection(); return false;">
+                ← Back to Dashboard
+            </a>
+            <a href="#" class="pos-fullscreen-next" onclick="nextSection('uplevels'); return false;">
+                Next →
+            </a>
+        </div>
+        <div class="pos-fullscreen-content" id="content-uplevels">
+            <!-- Dynamic content -->
+        </div>
+    </div>
+</div>
+
+<!-- Load dependencies -->
+<script src="shared/pos-api.js"></script>
+<script src="shared/pos-storage.js"></script>
+<script src="shared/pos-principles.js"></script>
+<script src="shared/pos-decision-engine.js"></script>
+<script src="shared/pos-floating-button.js"></script>
+
+<script>
+// Dashboard logic
+const sections = ['written', 'summary', 'principles', 'fear-power', 'vision', 'uplevels'];
+let yearData = {};
+let yearReviewData = {};
+
+// Initialize dashboard
+document.addEventListener('DOMContentLoaded', async () => {
+    loadData();
+    await checkAndGeneratePrinciples();
+    renderAllSections();
+});
+
+function loadData() {
+    yearData = getYearData();
+    yearReviewData = getYearReviewData();
+}
+
+async function checkAndGeneratePrinciples() {
+    if (!principlesExist() && hasYearData()) {
+        const generate = confirm('Welcome to your Year Dashboard!\n\nWould you like to generate principles from your year data?');
+        if (generate) {
+            await generatePrinciplesFlow();
+        }
+    }
+}
+
+async function generatePrinciplesFlow() {
+    const apiKey = getAPIKey() || promptForAPIKey();
+    if (!apiKey) return;
+
+    // Show loading
+    document.getElementById('content-principles').innerHTML = `
+        <div class="loading-container">
+            <div class="pos-loading" style="width: 40px; height: 40px;"></div>
+            <p style="margin-top: 16px;">Generating your principles...</p>
+        </div>
+    `;
+
+    try {
+        await POS.Principles.generatePrinciples(yearData, yearReviewData, apiKey, (message) => {
+            document.getElementById('content-principles').innerHTML = `
+                <div class="loading-container">
+                    <div class="pos-loading" style="width: 40px; height: 40px;"></div>
+                    <p style="margin-top: 16px;">${message}</p>
+                </div>
+            `;
+        });
+
+        renderPrinciplesSection();
+        alert('Principles generated successfully!');
+    } catch (error) {
+        alert('Error generating principles: ' + error.message);
+    }
+}
+
+function renderAllSections() {
+    renderGoalsPreviewCompact();
+    renderFearPowerPreview();
+    renderUplevelsCollage();
+    renderWrittenSection();
+    renderSummarySection();
+    renderPrinciplesSection();
+    renderFearPowerSection();
+    renderVisionSection();
+}
+
+function renderGoalsPreview() {
+    const container = document.getElementById('goals-preview');
+    const planning = yearData.planning || {};
+
+    // Get ONE BIG GOAL
+    const bigGoal = planning.bigmove || planning['goal-1'] || '';
+
+    // Get other goals
+    const goals = [];
+    for (let i = 1; i <= 5; i++) {
+        const goal = planning[`goal-${i}`];
+        if (goal && goal !== bigGoal) {
+            goals.push(goal);
+        }
+    }
+
+    if (!bigGoal && goals.length === 0) {
+        container.innerHTML = '';
+        return;
+    }
+
+    let html = '';
+
+    // ONE BIG GOAL - Hero element
+    if (bigGoal) {
+        html += `
+            <div class="big-goal" style="margin-bottom: 24px;">
+                <h3 style="color: var(--poppy-primary); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">
+                    🎯 One Big Goal - Non-Negotiable
+                </h3>
+                <p style="font-size: 28px; font-weight: 600; line-height: 1.3; color: var(--text);">
+                    ${bigGoal}
+                </p>
+            </div>
+        `;
+    }
+
+    // Other goals
+    if (goals.length > 0) {
+        html += `
+            <div style="border-top: 1px solid var(--border); padding-top: 24px;">
+                <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text-secondary);">
+                    2026 Goals
+                </h3>
+                <ul class="goals-list" style="list-style: none; margin: 0;">
+        `;
+        goals.forEach(goal => {
+            html += `<li style="padding: 12px 0 12px 24px; border-left: 2px solid var(--border); margin-bottom: 8px; font-size: 16px;">${goal}</li>`;
+        });
+        html += `
+                </ul>
+            </div>
+        `;
+    }
+
+    container.innerHTML = html;
+}
+
+// Goals expand state
+let goalsExpanded = false;
+
+function renderGoalsPreviewCompact() {
+    const container = document.getElementById('goals-preview-compact');
+    const planning = yearData.planning || {};
+
+    // Get ONE BIG GOAL
+    const bigGoal = planning.bigmove || planning['goal-1'] || '';
+
+    // Get other goals
+    const goals = [];
+    for (let i = 1; i <= 5; i++) {
+        const goal = planning[`goal-${i}`];
+        if (goal && goal !== bigGoal && goal.trim()) {
+            goals.push(goal);
+        }
+    }
+
+    if (!bigGoal && goals.length === 0) {
+        container.style.display = 'none';
+        return;
+    }
+
+    container.style.display = 'block';
+    container.className = goalsExpanded ? 'goals-preview-compact expanded' : 'goals-preview-compact collapsed';
+
+    let html = '';
+
+    // Big goal
+    if (bigGoal) {
+        html += `<div class="big-goal-compact">${bigGoal}</div>`;
+    }
+
+    // Other goals - only show if expanded
+    if (goalsExpanded && goals.length > 0) {
+        html += '<div class="other-goals-compact">';
+        goals.forEach(goal => {
+            html += `<span>${goal}</span>`;
+        });
+        html += '</div>';
+    }
+
+    container.innerHTML = html;
+
+    // Click to toggle
+    container.onclick = () => {
+        goalsExpanded = !goalsExpanded;
+        renderGoalsPreviewCompact();
+    };
+}
+
+// Fear/Power expand state
+let fearPowerExpanded = false;
+
+function renderFearPowerPreview() {
+    const container = document.getElementById('fear-power-preview');
+    const planning = yearData.planning || {};
+
+    const fearText = planning['fear-map'] || '';
+    const powerText = planning['power-map'] || '';
+
+    if (!fearText && !powerText) {
+        container.style.display = 'none';
+        return;
+    }
+
+    container.style.display = 'block';
+
+    // Parse into line items
+    const fearItems = fearText.split('\n').filter(line => line.trim());
+    const powerItems = powerText.split('\n').filter(line => line.trim());
+
+    if (fearPowerExpanded) {
+        // Expanded state - show all line items
+        container.className = 'fear-power-inline fear-power-expanded';
+        container.innerHTML = `
+            <div class="fear-section">
+                <div class="fear-section-title">Fear</div>
+                ${fearItems.map(item => `<div class="fear-item">${item}</div>`).join('')}
+            </div>
+            <span class="fear-arrow">→</span>
+            <div class="power-section">
+                <div class="power-section-title">Power</div>
+                ${powerItems.map(item => `<div class="power-item">${item}</div>`).join('')}
+            </div>
+        `;
+    } else {
+        // Collapsed state - single line
+        container.className = 'fear-power-inline fear-power-collapsed';
+        const fearFirst = fearItems[0] || 'Define your fear';
+        const powerFirst = powerItems[0] || 'Define your power';
+        container.innerHTML = `
+            <span class="fear-text">${fearFirst}</span>
+            <span class="fear-arrow">→</span>
+            <span class="power-text">${powerFirst}</span>
+        `;
+    }
+
+    // Click to toggle
+    container.onclick = () => {
+        fearPowerExpanded = !fearPowerExpanded;
+        renderFearPowerPreview();
+    };
+}
+
+function renderWrittenSection() {
+    const content = document.getElementById('content-written');
+
+    const html = `
+        <div class="section-content" style="text-align: center; padding: 100px 40px;">
+            <h2>📝 Comprehensive Year Planning</h2>
+            <p style="margin: 24px 0 40px; color: var(--text-secondary); font-size: 18px;">
+                Access your full 50+ field comprehensive year planning and retrospective.
+            </p>
+            <button class="pos-btn pos-btn-primary" onclick="window.location.href='year.html'" style="font-size: 18px; padding: 16px 32px;">
+                Edit Comprehensive Plan →
+            </button>
+        </div>
+    `;
+
+    content.innerHTML = html;
+}
+
+function renderSummarySection() {
+    const content = document.getElementById('content-summary');
+    const reflection = yearReviewData.reflection || {};
+    const planning = yearReviewData.planning || {};
+
+    if (!reflection || Object.keys(reflection).length === 0) {
+        content.innerHTML = `
+            <div class="empty-state">
+                <h2>No reflection data yet</h2>
+                <p>Complete your <a href="year-review.html">quick reflection</a> to see your data here.</p>
+            </div>
+        `;
+        return;
+    }
+
+    let html = '<div class="section-content">';
+    html += '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">';
+    html += '<h2 style="margin: 0;">📋 Full Year Review</h2>';
+    html += '<button class="pos-btn pos-btn-secondary" onclick="window.location.href=\'year-review.html\'">Edit →</button>';
+    html += '</div>';
+
+    // 2025 REFLECTION
+    html += '<h3 style="margin-top: 32px;">2025 Reflection</h3>';
+
+    if (reflection.rating) {
+        html += `<div class="reflection-item"><div class="reflection-label">Year Rating</div><div class="reflection-value">${reflection.rating}/10</div></div>`;
+    }
+
+    if (reflection.bigMoment) {
+        html += `<div class="reflection-item"><div class="reflection-label">Pivotal Moment</div><div class="reflection-value">${reflection.bigMoment}</div></div>`;
+    }
+
+    if (reflection.wins && reflection.wins.length > 0) {
+        html += '<h3>Top 3 Wins to Carry Forward</h3>';
+        reflection.wins.forEach((win, i) => {
+            if (win) html += `<div class="reflection-item"><div class="reflection-value">${i + 1}. ${win}</div></div>`;
+        });
+    }
+
+    if (reflection.learnings && reflection.learnings.length > 0) {
+        html += '<h3>Top 3 Learnings</h3>';
+        reflection.learnings.forEach((learning, i) => {
+            if (learning) html += `<div class="reflection-item"><div class="reflection-value">${i + 1}. ${learning}</div></div>`;
+        });
+    }
+
+    if (reflection.letGo && reflection.letGo.length > 0) {
+        html += '<h3>Top 3 Things to Let Go</h3>';
+        reflection.letGo.forEach((item, i) => {
+            if (item) html += `<div class="reflection-item"><div class="reflection-value">${i + 1}. ${item}</div></div>`;
+        });
+    }
+
+    // 2026 PLANNING
+    html += '<h3 style="margin-top: 40px; padding-top: 40px; border-top: 2px solid var(--border);">2026 Planning</h3>';
+
+    if (planning.vision) {
+        html += `<div class="reflection-item"><div class="reflection-label">Vision for 2026</div><div class="reflection-value">${planning.vision}</div></div>`;
+    }
+
+    if (planning.committedMove || planning.generatedMove) {
+        const move = planning.committedMove || planning.generatedMove;
+        html += '<h3>Your Big Move</h3>';
+        html += `<div class="reflection-item">`;
+        html += `<div class="reflection-label">${move.name}</div>`;
+        if (move.why) html += `<div class="reflection-value">${move.why}</div>`;
+        if (move.enables) html += `<div class="reflection-value" style="margin-top: 12px; font-style: italic;">Enables: ${move.enables}</div>`;
+        html += `</div>`;
+    }
+
+    html += '</div>';
+    content.innerHTML = html;
+}
+
+function renderPrinciplesSection() {
+    const content = document.getElementById('content-principles');
+    const principlesData = getPrinciples();
+    const visionData = getVisionData();
+
+    if (principlesData.comprehensive.length === 0 && principlesData.priority.length === 0) {
+        content.innerHTML = `
+            <div class="empty-state">
+                <h2>No principles yet</h2>
+                <p>Principles are fundamental truths that guide your decisions.</p>
+                <button class="pos-btn pos-btn-primary" onclick="generatePrinciplesFlow()" style="margin-top: 20px;">
+                    Generate Principles from Your Data
+                </button>
+            </div>
+        `;
+        return;
+    }
+
+    let html = '<div class="section-content"><h2>💎 Your Principles</h2>';
+
+    // Show core values at the top
+    const values = visionData.values.filter(v => v && v.trim());
+    if (values.length > 0) {
+        html += `
+            <div style="background: linear-gradient(135deg, #FFE0E0 0%, #FFF 100%); padding: 24px; border-radius: 12px; margin-bottom: 32px; border-left: 4px solid var(--poppy-primary);">
+                <h3 style="margin: 0 0 16px; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--poppy-primary);">
+                    ✨ Core Values
+                </h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                    ${values.map(v => `
+                        <span style="
+                            background: white;
+                            padding: 8px 16px;
+                            border-radius: 20px;
+                            font-size: 15px;
+                            font-weight: 500;
+                            border: 1px solid var(--border);
+                            color: var(--text);
+                        ">${v}</span>
+                    `).join('')}
+                </div>
+                <p style="margin: 16px 0 0; font-size: 13px; color: var(--text-secondary); font-style: italic;">
+                    Your principles are generated from your year data and aligned with these values
+                </p>
+            </div>
+        `;
+    }
+
+    html += `<div style="display: flex; gap: 12px; margin-bottom: 24px;">
+        <button class="pos-btn pos-btn-secondary" onclick="refreshPrinciplesFlow()">↻ Refresh</button>
+        <button class="pos-btn pos-btn-secondary" onclick="editPrinciplesMode()">✎ Edit</button>
+    </div>`;
+
+    // Priority principles first
+    if (principlesData.priority.length > 0) {
+        html += '<h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px; color: var(--text);">Priority Principles (Weighted 2.5x)</h3>';
+        html += '<p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14px;">These are your non-negotiables - the most important principles that will have the biggest impact.</p>';
+        principlesData.priority.forEach((p, i) => {
+            html += `<div class="pos-principle-item" style="background: var(--poppy-light); border-radius: 8px; padding: 16px; margin-bottom: 12px;">
+                <div class="pos-principle-priority">⚡</div>
+                <div class="pos-principle-number">${i + 1}.</div>
+                <div class="pos-principle-text" style="font-weight: 500;">${p.text}</div>
+            </div>`;
+        });
+    }
+
+    // Comprehensive principles
+    if (principlesData.comprehensive.length > 0) {
+        html += '<h3 style="margin-top: 40px; font-size: 18px; font-weight: 600; margin-bottom: 16px; color: var(--text);">Comprehensive Principles</h3>';
+        html += '<p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14px;">Actionable truths extracted from your year\'s experiences, mistakes, and learnings.</p>';
+        principlesData.comprehensive.forEach((p, i) => {
+            html += `<div class="pos-principle-item">
+                <div class="pos-principle-number">${i + 1}.</div>
+                <div class="pos-principle-text">${p.text}</div>
+            </div>`;
+        });
+    }
+
+    if (principlesData.lastRefreshed) {
+        const date = new Date(principlesData.lastRefreshed);
+        html += `<p style="margin-top: 32px; color: var(--text-secondary); font-size: 14px;">Last refreshed: ${date.toLocaleDateString()}</p>`;
+    }
+
+    html += '</div>';
+    content.innerHTML = html;
+}
+
+async function refreshPrinciplesFlow() {
+    const confirm = window.confirm('This will regenerate your principles from your current year data. User-edited principles will be preserved.\n\nContinue?');
+    if (!confirm) return;
+
+    const content = document.getElementById('content-principles');
+    content.innerHTML = `
+        <div class="loading-container">
+            <div class="pos-loading" style="width: 40px; height: 40px;"></div>
+            <p style="margin-top: 16px;">Refreshing principles...</p>
+        </div>
+    `;
+
+    try {
+        await POS.Principles.refreshPrinciples((message) => {
+            content.innerHTML = `
+                <div class="loading-container">
+                    <div class="pos-loading" style="width: 40px; height: 40px;"></div>
+                    <p style="margin-top: 16px;">${message}</p>
+                </div>
+            `;
+        });
+
+        renderPrinciplesSection();
+        alert('Principles refreshed successfully!');
+    } catch (error) {
+        alert('Error refreshing principles: ' + error.message);
+        renderPrinciplesSection();
+    }
+}
+
+function editPrinciplesMode() {
+    alert('Edit mode coming soon! For now, use the Refresh button to regenerate principles.');
+}
+
+function renderFearPowerSection() {
+    const content = document.getElementById('content-fear-power');
+    const planning = yearData.planning || {};
+
+    const fear = planning['fear-map'] || '';
+    const power = planning['power-map'] || '';
+
+    if (!fear && !power) {
+        content.innerHTML = `
+            <div class="empty-state">
+                <h2>No fear → power transformation yet</h2>
+                <p>Complete your <a href="year.html">year plan</a> to map your fear to power.</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Convert line breaks in text
+    const fearFormatted = fear.replace(/\n/g, '<br>');
+    const powerFormatted = power.replace(/\n/g, '<br>');
+
+    const html = `
+        <div class="section-content">
+            <h2>⚡ Fear → Power Transformation</h2>
+            <div class="fear-power-container">
+                <div class="fear-side">
+                    <h3>Fear</h3>
+                    <p>${fearFormatted || 'Not specified'}</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="power-side">
+                    <h3>Power</h3>
+                    <p>${powerFormatted || 'Not specified'}</p>
+                </div>
+            </div>
+        </div>
+    `;
+
+    content.innerHTML = html;
+}
+
+function renderVisionSection() {
+    const content = document.getElementById('content-vision');
+
+    // Vision images only - no text, no goals
+    const visionImages = [
+        "badass.jpg",
+        "b.jpg",
+        "stick-to-your-plan.jpg",
+        "powerfulenergy.jpg",
+        "goddess.jpg",
+        "gold-flow.jpg",
+        "goodthings.jpg",
+        "pexels-photo-15448063.webp",
+        "spirit.jpg"
+    ];
+
+    let html = '<div class="section-content">';
+    html += '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">';
+    html += '<h2 style="margin: 0;">🎯 Vision Board</h2>';
+    html += '<button class="pos-btn pos-btn-secondary" onclick="window.location.href=\'vision.html\'">Edit →</button>';
+    html += '</div>';
+    html += '<div class="vision-board-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 40px;">';
+
+    visionImages.forEach((imgSrc, index) => {
+        const isHero = index === 0;
+        const gridStyle = isHero ? 'grid-column: span 2; grid-row: span 2;' : '';
+        html += `
+            <div class="vision-img" style="
+                ${gridStyle}
+                background-image: url('${imgSrc}');
+                background-size: cover;
+                background-position: center;
+                border-radius: 12px;
+                aspect-ratio: 1;
+                cursor: pointer;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            " onclick="window.open('${imgSrc}', '_blank')"></div>
+        `;
+    });
+
+    html += '</div>';
+    html += '</div>';
+    content.innerHTML = html;
+}
+
+function renderUplevelsCollage() {
+    const container = document.getElementById('uplevelsCollage');
+    let visionData = getVisionData();
+    let uplevels = visionData.uplevel || [];
+
+    // Define the correct 8 uplevels
+    const correctUplevels = [
+        'Badass builder',
+        'Open hips and flexibility',
+        'Pleasure experiences',
+        'Dark feminine 👑',
+        'Japanese, nose job and tattoo',
+        'Build social media',
+        'Fun, smart friends',
+        'Incredible routines'
+    ];
+
+    // Always reinitialize to ensure correct uplevels
+    if (true) {
+        // Preserve any existing images/completed states if they exist
+        const existingData = {};
+        uplevels.forEach(uplevel => {
+            const name = typeof uplevel === 'string' ? uplevel : uplevel.name;
+            if (name) {
+                existingData[name] = uplevel;
+            }
+        });
+
+        uplevels = correctUplevels.map(name => {
+            const existing = existingData[name];
+            if (existing && typeof existing === 'object') {
+                return { ...existing, name }; // Preserve existing data
+            }
+            return {
+                name: name,
+                description: '',
+                image: '',
+                completed: false
+            };
+        });
+
+        visionData.uplevel = uplevels;
+        localStorage.setItem('visionData', JSON.stringify(visionData));
+    }
+
+    let html = '';
+
+    uplevels.forEach((uplevel, index) => {
+        const name = typeof uplevel === 'string' ? uplevel : uplevel.name;
+        const image = typeof uplevel === 'object' ? uplevel.image : '';
+        const completed = typeof uplevel === 'object' ? uplevel.completed : false;
+
+        if (!name || !name.trim()) return;
+
+        const completedClass = completed ? 'completed' : '';
+        const backgroundStyle = image ? `background-image: url('${image}')` : 'background: #333';
+
+        html += `
+            <div class="uplevel-img ${completedClass}" style="${backgroundStyle}" onclick="openUplevelDetail(${index})">
+                <!-- Overlay with checkbox and label -->
+                <div class="uplevel-overlay">
+                    <input type="checkbox" class="uplevel-checkbox" ${completed ? 'checked' : ''}
+                           onclick="event.stopPropagation(); toggleUplevelComplete(${index})" />
+                    <div class="uplevel-label">${name}</div>
+                </div>
+
+                <!-- Upload button -->
+                <button class="uplevel-upload-btn" onclick="event.stopPropagation(); uploadUplevelImage(${index})">
+                    📷 ${image ? 'Change' : 'Upload'}
+                </button>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+
+    // Trigger floating animations
+    setTimeout(() => {
+        const images = container.querySelectorAll('.uplevel-img');
+        images.forEach(img => img.classList.add('loaded'));
+    }, 100);
+}
+
+function toggleUplevelComplete(index) {
+    const visionData = getVisionData();
+    const uplevels = visionData.uplevel || [];
+
+    // Convert string to object if needed
+    if (typeof uplevels[index] === 'string') {
+        uplevels[index] = { name: uplevels[index], description: '', image: '', completed: false };
+    }
+
+    // Toggle completed state
+    uplevels[index].completed = !uplevels[index].completed;
+
+    // Save
+    visionData.uplevel = uplevels;
+    localStorage.setItem('visionData', JSON.stringify(visionData));
+
+    // Re-render
+    renderUplevelsCollage();
+}
+
+function renderUplevelsSection() {
+    const content = document.getElementById('content-uplevels');
+    const visionData = getVisionData();
+    const uplevels = visionData.uplevel || [];
+
+    if (uplevels.length === 0) {
+        content.innerHTML = `
+            <div class="empty-state">
+                <h2>No uplevels yet</h2>
+                <p>Define your uplevels in <a href="vision.html">vision.html</a> to see them here.</p>
+            </div>
+        `;
+        return;
+    }
+
+    let html = '<div class="section-content" style="padding: 40px 20px;">';
+    html += '<h2 style="text-align: center; margin-bottom: 40px;">🏔️ Uplevels</h2>';
+
+    // Grid layout similar to questionnaire.html milestones
+    html += '<div class="uplevels-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; max-width: 1400px; margin: 0 auto;">';
+
+    uplevels.forEach((uplevel, index) => {
+        // Handle both string and object formats
+        const name = typeof uplevel === 'string' ? uplevel : uplevel.name;
+        const description = typeof uplevel === 'object' ? uplevel.description : '';
+        const image = typeof uplevel === 'object' ? uplevel.image : '';
+
+        if (!name || !name.trim()) return;
+
+        html += `
+            <div class="uplevel-card-grid" style="
+                position: relative;
+                background: ${image ? `url('${image}')` : '#f5f5f5'};
+                background-size: cover;
+                background-position: center;
+                border-radius: 16px;
+                min-height: 320px;
+                overflow: hidden;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            " onclick="openUplevelDetail(${index})">
+                <!-- Overlay for text -->
+                <div style="
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    background: linear-gradient(transparent, rgba(0,0,0,0.9));
+                    padding: 60px 20px 20px;
+                    color: white;
+                ">
+                    <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px;">
+                        ${name}
+                    </h3>
+                    ${description ? `
+                        <p style="font-size: 14px; opacity: 0.9; line-height: 1.4;">
+                            ${description.length > 100 ? description.substring(0, 100) + '...' : description}
+                        </p>
+                    ` : ''}
+                </div>
+
+                <!-- Upload button (top right) -->
+                <div style="position: absolute; top: 12px; right: 12px;">
+                    <button onclick="event.stopPropagation(); uploadUplevelImage(${index})" style="
+                        background: rgba(255,255,255,0.9);
+                        border: none;
+                        border-radius: 8px;
+                        padding: 8px 12px;
+                        cursor: pointer;
+                        font-size: 14px;
+                        font-weight: 500;
+                        transition: all 0.2s ease;
+                    " onmouseover="this.style.background='white'" onmouseout="this.style.background='rgba(255,255,255,0.9)'">
+                        📷 ${image ? 'Change' : 'Upload'}
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+
+    html += '</div>';
+    html += '</div>';
+    content.innerHTML = html;
+}
+
+// Upload image for an uplevel
+function uploadUplevelImage(index) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const visionData = getVisionData();
+            const uplevels = visionData.uplevel || [];
+
+            // Convert string to object if needed
+            if (typeof uplevels[index] === 'string') {
+                uplevels[index] = { name: uplevels[index], description: '', image: '', completed: false };
+            }
+
+            // Set image
+            uplevels[index].image = event.target.result;
+
+            // Save back to vision data
+            visionData.uplevel = uplevels;
+            localStorage.setItem('visionData', JSON.stringify(visionData));
+
+            // Re-render both collage and modal section
+            renderUplevelsCollage();
+            renderUplevelsSection();
+        };
+        reader.readAsDataURL(file);
+    };
+    input.click();
+}
+
+// Open uplevel detail modal
+function openUplevelDetail(index) {
+    const visionData = getVisionData();
+    const uplevels = visionData.uplevel || [];
+    const uplevel = uplevels[index];
+
+    if (!uplevel) return;
+
+    const name = typeof uplevel === 'string' ? uplevel : uplevel.name;
+    const description = typeof uplevel === 'object' ? uplevel.description : '';
+    const success = typeof uplevel === 'object' ? uplevel.success : '';
+    const milestones = typeof uplevel === 'object' && uplevel.milestones ? uplevel.milestones : [];
+    const image = typeof uplevel === 'object' ? uplevel.image : '';
+
+    const modalHTML = `
+        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;" onclick="this.remove()">
+            <div style="background: white; border-radius: 16px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 40px;" onclick="event.stopPropagation()">
+                ${image ? `<div style="width: 100%; height: 200px; background: url('${image}'); background-size: cover; background-position: center; border-radius: 12px; margin-bottom: 24px;"></div>` : ''}
+
+                <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 16px;">${name}</h2>
+
+                ${description ? `<p style="color: var(--text-secondary); font-size: 16px; line-height: 1.6; margin-bottom: 24px;">${description}</p>` : ''}
+
+                ${success ? `
+                    <div style="background: var(--poppy-light); padding: 20px; border-radius: 12px; border-left: 4px solid var(--poppy-primary); margin-bottom: 24px;">
+                        <strong style="color: var(--poppy-primary); font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Success Looks Like:</strong>
+                        <p style="margin-top: 12px; color: var(--text);">${success}</p>
+                    </div>
+                ` : ''}
+
+                ${milestones.length > 0 ? `
+                    <div>
+                        <strong style="font-size: 14px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Milestones:</strong>
+                        <ul style="margin-top: 16px; padding-left: 0; list-style: none;">
+                            ${milestones.map(m => `
+                                <li style="padding: 12px 0 12px 20px; border-left: 3px solid var(--border); margin-bottom: 8px; font-size: 15px;">
+                                    ${m}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+
+                <button onclick="this.closest('div[style*=\"position: fixed\"]').remove()" style="
+                    margin-top: 32px;
+                    padding: 12px 24px;
+                    background: var(--poppy-primary);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 16px;
+                    font-weight: 500;
+                    cursor: pointer;
+                    width: 100%;
+                ">Close</button>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+// Navigation
+function openSection(sectionId) {
+    document.getElementById(`modal-${sectionId}`).classList.add('active');
+}
+
+function closeSection() {
+    sections.forEach(s => {
+        document.getElementById(`modal-${s}`).classList.remove('active');
+    });
+}
+
+function nextSection(currentSection) {
+    const currentIndex = sections.indexOf(currentSection);
+    const nextIndex = (currentIndex + 1) % sections.length;
+    closeSection();
+    openSection(sections[nextIndex]);
+}
+
+function openDecisionEngine() {
+    if (window.posDecisionEngine) {
+        window.posDecisionEngine.open();
+    } else {
+        alert('Decision engine is loading. Please try again in a moment.');
+    }
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+    const activeModal = document.querySelector('.pos-fullscreen-modal.active');
+    if (!activeModal) return;
+
+    if (e.key === 'Escape') {
+        closeSection();
+    } else if (e.key === 'ArrowRight') {
+        const modalId = activeModal.id.replace('modal-', '');
+        nextSection(modalId);
+    } else if (e.key === 'ArrowLeft') {
+        const modalId = activeModal.id.replace('modal-', '');
+        const currentIndex = sections.indexOf(modalId);
+        const prevIndex = (currentIndex - 1 + sections.length) % sections.length;
+        closeSection();
+        openSection(sections[prevIndex]);
+    }
+});
+
+</script>
+
+</body>
+</html>

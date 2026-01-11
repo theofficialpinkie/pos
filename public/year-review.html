@@ -493,11 +493,428 @@
                 width: 200px;
             }
         }
+
+        /* ========== YEAR ZONE STYLES ========== */
+        .year-zone {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 60px 80px 120px;
+            background: #ffffff;
+        }
+
+        .zone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 80px;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .zone-title {
+            text-align: center;
+            flex: 1;
+        }
+
+        .zone-title h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 8px;
+            margin: 0;
+            color: #000;
+        }
+
+        .zone-year {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-top: 6px;
+            font-weight: 300;
+            letter-spacing: 3px;
+        }
+
+        .zone-section {
+            margin: 120px 0;
+        }
+
+        .zone-section h2 {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            color: #999;
+            opacity: 0.6;
+        }
+
+        /* Reflection Summary */
+        .reflection-summary {
+            background: transparent;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 60px;
+        }
+
+        .reflection-summary > div {
+            padding: 30px 0;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .reflection-summary .rating {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            color: #666;
+        }
+
+        .reflection-summary .pivotal-moment {
+            margin-bottom: 0;
+        }
+
+        .reflection-summary .pivotal-moment p {
+            font-style: italic;
+            color: #666;
+            margin-top: 12px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .reflection-summary strong {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #999;
+            font-weight: 500;
+        }
+
+        .reflection-summary ul {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0 0;
+        }
+
+        .reflection-summary li {
+            margin: 10px 0;
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Vision Board Grid */
+        .vision-board-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-auto-rows: minmax(150px, 1fr);
+            gap: 20px;
+            padding: 30px 0;
+        }
+
+        .vision-img {
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            min-height: 150px;
+        }
+
+        .vision-img.loaded {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .vision-img:hover {
+            animation: gentleFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% { transform: scale(1) translateY(0); }
+            25% { transform: scale(1.01) translateY(-8px) translateX(3px); }
+            50% { transform: scale(0.99) translateY(-5px) translateX(-2px); }
+            75% { transform: scale(1.01) translateY(-10px) translateX(2px); }
+        }
+
+        /* Big Move Card */
+        .big-move-card {
+            background: #000;
+            color: #fff;
+            padding: 60px;
+            border-radius: 0;
+            position: relative;
+        }
+
+        .big-move-card h3 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 40px;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .big-move-card .move-why,
+        .big-move-card .move-enables {
+            margin-bottom: 32px;
+        }
+
+        .big-move-card strong {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.7rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .big-move-card p {
+            line-height: 1.8;
+            color: rgba(255,255,255,0.85);
+            margin-top: 12px;
+            font-size: 1.05rem;
+        }
+
+        .big-move-card button {
+            margin-top: 20px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .big-move-card button:hover {
+            opacity: 1;
+        }
+
+        /* Milestones Grid */
+        .milestones-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-auto-rows: minmax(150px, 1fr);
+            gap: 20px;
+            padding: 30px 0;
+        }
+
+        .milestone-img {
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            cursor: pointer;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.8s ease;
+            overflow: hidden;
+            min-height: 150px;
+        }
+
+        .milestone-img.loaded {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .milestone-img.no-image {
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #666;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .milestone-img:hover {
+            animation: gentleFloat 6s ease-in-out infinite;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        /* Completed state - desaturate + checkmark */
+        .milestone-img.completed {
+            filter: saturate(0.2) brightness(0.6);
+        }
+
+        .milestone-img.completed::before {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6rem;
+            font-weight: 200;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
+            animation: checkGlow 3s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes checkGlow {
+            0%, 100% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.5); }
+            50% { text-shadow: 0 0 60px rgba(255, 255, 255, 0.8); }
+        }
+
+        /* Compounding badge */
+        .compounding-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 10;
+        }
+
+        /* Milestone name overlay */
+        .milestone-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 20px 15px 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Upload button */
+        .upload-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 10;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            opacity: 0;
+        }
+
+        .milestone-img:hover .upload-btn {
+            opacity: 1;
+        }
+
+        .upload-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Compounding Gains Section */
+        .compounding-section {
+            background: transparent;
+            padding: 30px 0;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .compounding-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 16px;
+        }
+
+        .compounding-list li {
+            font-size: 0.95rem;
+            margin: 10px 0;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .compounding-note {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 16px;
+        }
+
+        /* Obstacles Section */
+        .obstacles-section {
+            padding: 30px 0;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .obstacles-list {
+            margin: 0;
+        }
+
+        .obstacle-card {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #f5f5f5;
+            margin: 0;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .obstacle-card:last-child {
+            border-bottom: none;
+        }
+
+        .obstacle-card:hover {
+            background: #fafafa;
+        }
+
+        .obstacle-header {
+            padding: 16px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .toggle-icon {
+            color: #ccc;
+            font-size: 0.8rem;
+        }
+
+        .obstacle-detail {
+            padding: 0 0 16px 0;
+            color: #999;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Year Zone */
+        @media (max-width: 768px) {
+            .year-zone {
+                padding: 20px;
+            }
+
+            .zone-title h1 {
+                font-size: 2rem;
+            }
+
+            .milestones-grid,
+            .vision-board-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
+        <div class="header" style="display: none;">
             <h1>Year Review</h1>
             <p>2025 → 2026</p>
         </div>
@@ -630,6 +1047,11 @@
                 <button class="btn-secondary btn" id="back-to-reflection">← Back to Reflection</button>
                 <button class="btn" id="to-dashboard">See Dashboard →</button>
             </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn" onclick="window.location.href='year-dashboard.html'" style="background: #FF6B6B; color: white; border: none;">
+                    🎯 See Year Dashboard →
+                </button>
+            </div>
         </div>
     </div>
 
@@ -708,6 +1130,69 @@
         </div>
     </div>
 
+    <!-- EDIT BIG MOVE MODAL -->
+    <div class="modal" id="edit-big-move-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="edit-modal-close">×</button>
+            <h2 class="modal-title">Edit Your Big Move</h2>
+            <div class="field-group">
+                <div class="field-label">Big Move Name:</div>
+                <input type="text" class="field-input" id="edit-move-name">
+            </div>
+            <div class="field-group">
+                <div class="field-label">Why this works:</div>
+                <textarea class="field-input" id="edit-move-why" style="min-height: 100px;"></textarea>
+            </div>
+            <div class="field-group">
+                <div class="field-label">What this enables:</div>
+                <textarea class="field-input" id="edit-move-enables" style="min-height: 100px;"></textarea>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+                <button class="btn-secondary btn" id="cancel-edit-move">Cancel</button>
+                <button class="btn" id="save-edit-move">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- YEAR ZONE DASHBOARD -->
+    <div class="year-zone" id="year-zone-dashboard" style="display: none;">
+        <div class="zone-header">
+            <button class="btn-secondary btn zone-back-btn" id="zone-back-to-planning">← Setup</button>
+            <div class="zone-title">
+                <h1>YEAR ZONE</h1>
+                <div class="zone-year">2026</div>
+            </div>
+            <button class="btn-secondary btn" id="zone-export-btn">Export</button>
+        </div>
+
+        <!-- Reflection -->
+        <section class="zone-section" id="zone-reflection-summary"></section>
+
+        <!-- Vision Board -->
+        <section class="zone-section">
+            <h2>Vision</h2>
+            <div id="zone-vision-board"></div>
+        </section>
+
+        <!-- Big Move -->
+        <section class="zone-section">
+            <h2>Focus</h2>
+            <div id="zone-big-move"></div>
+        </section>
+
+        <!-- Milestones -->
+        <section class="zone-section">
+            <h2>Milestones</h2>
+            <div id="zone-milestones-grid"></div>
+        </section>
+
+        <!-- Compounding Gains -->
+        <section class="zone-section" id="zone-compounding-gains"></section>
+
+        <!-- Obstacles -->
+        <section class="zone-section" id="zone-obstacles-section"></section>
+    </div>
+
     <input type="file" id="import-file" accept=".json" style="display: none;">
 
     <script>
@@ -738,7 +1223,10 @@
                 vision: '',
                 generatedMove: null,  // { name, why, enables }
                 committedMove: null   // { name, why, enables }
-            }
+            },
+            // Year Zone additions
+            milestones: [],  // { name, image (base64), completed, compounding, source }
+            obstacles: []    // { name, reminder, expanded }
         };
 
         let currentView = '2026';
@@ -749,6 +1237,14 @@
             if (saved) {
                 state = JSON.parse(saved);
                 migrateOldPlanningData();
+
+                // Ensure Year Zone fields exist
+                if (!state.milestones) {
+                    state.milestones = [];
+                }
+                if (!state.obstacles) {
+                    state.obstacles = [];
+                }
             }
         }
 
@@ -912,12 +1408,13 @@
                 showSection('reflection');
             });
 
-            document.getElementById('to-dashboard').addEventListener('click', () => {
-                showSection('dashboard');
-            });
+            // This is now handled in the Year Zone section below
+            // document.getElementById('to-dashboard').addEventListener('click', () => {
+            //     showSection('dashboard');
+            // });
         }
 
-        // Generate big move using AI (mock implementation - replace with real AI later)
+        // Generate big move using real AI
         async function generateBigMove() {
             const button = document.getElementById('generate-big-move');
             const refreshButton = document.getElementById('refresh-big-move');
@@ -928,69 +1425,94 @@
             button.disabled = true;
             refreshButton.disabled = true;
 
-            // Simulate AI thinking
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            try {
+                // Get API key
+                const apiKey = getAPIKey() || promptForAPIKey();
+                if (!apiKey) {
+                    alert('API key required to generate Big Move');
+                    button.textContent = originalText;
+                    button.disabled = false;
+                    refreshButton.disabled = false;
+                    return;
+                }
 
-            // Mock AI generation based on vision and reflection
-            const vision = state.planning.vision || '';
-            const reflection = state.reflection;
+                // Get vision and reflection data
+                const vision = state.planning.vision || '';
+                const reflection = state.reflection;
 
-            // Simple mock logic - in production, this would call Claude API
-            const mockMove = analyzeMoveFromReflection(vision, reflection);
+                // Call real AI
+                const aiMove = await analyzeMoveFromReflection(vision, reflection, apiKey);
 
-            // Store generated move
-            state.planning.generatedMove = mockMove;
-            saveState();
+                // Store generated move
+                state.planning.generatedMove = aiMove;
+                saveState();
 
-            // Display the result
-            document.getElementById('big-move-name').textContent = mockMove.name;
-            document.getElementById('big-move-why').textContent = mockMove.why;
-            document.getElementById('big-move-enables').textContent = mockMove.enables;
-            document.getElementById('big-move-result').style.display = 'block';
+                // Display the result
+                document.getElementById('big-move-name').textContent = aiMove.name;
+                document.getElementById('big-move-why').textContent = aiMove.why;
+                document.getElementById('big-move-enables').textContent = aiMove.enables;
+                document.getElementById('big-move-result').style.display = 'block';
 
-            // Reset button
-            button.textContent = originalText;
-            button.disabled = false;
-            refreshButton.disabled = false;
+                // Reset button
+                button.textContent = originalText;
+                button.disabled = false;
+                refreshButton.disabled = false;
 
-            // Scroll to result
-            document.getElementById('big-move-result').scrollIntoView({ behavior: 'smooth' });
+                // Scroll to result
+                document.getElementById('big-move-result').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                console.error('Error generating big move:', error);
+                alert('Error generating Big Move: ' + error.message);
+                button.textContent = originalText;
+                button.disabled = false;
+                refreshButton.disabled = false;
+            }
         }
 
-        // Mock AI analysis function (replace with real Claude API call)
-        function analyzeMoveFromReflection(vision, reflection) {
-            // Extract key themes from vision and reflection
-            const visionLower = vision.toLowerCase();
-            const wins = reflection.wins.filter(Boolean).join(' ').toLowerCase();
-            const pivotal = reflection.bigMoment.toLowerCase();
+        // Real AI analysis using OpenAI GPT-4o-mini
+        async function analyzeMoveFromReflection(vision, reflection, apiKey) {
+            // Build context
+            const wins = reflection.wins.filter(Boolean);
+            const learnings = reflection.learnings.filter(Boolean);
+            const letGo = reflection.letGo.filter(Boolean);
 
-            // Simple pattern matching for mock (replace with Claude API)
-            if (visionLower.includes('nyc') || visionLower.includes('new york')) {
-                return {
-                    name: 'Move to NYC',
-                    why: 'Based on your 2025 reflection showing ' + reflection.wins.filter(Boolean)[0] + ', and your vision for 2026, a move to NYC addresses your desires for community, environment, and career growth. This is a foundation move that enables multiple goals at once.',
-                    enables: 'New community and relationships, career opportunities, energizing environment, sense of belonging, foundation for building your next chapter'
-                };
-            } else if (visionLower.includes('product') || visionLower.includes('launch') || visionLower.includes('build')) {
-                return {
-                    name: 'Launch Your Product Publicly',
-                    why: 'Your 2025 reflection shows you learned ' + reflection.learnings.filter(Boolean)[0] + '. Building on this, launching publicly creates accountability and opens doors to community, income, and purpose.',
-                    enables: 'Revenue and financial freedom, credibility and visibility, community of users, clarity of purpose, professional growth'
-                };
-            } else if (wins.includes('health') || wins.includes('fitness') || visionLower.includes('health')) {
-                return {
-                    name: 'Complete a Fitness Transformation',
-                    why: 'Your pivotal moment in 2025 was "' + reflection.bigMoment.substring(0, 60) + '...". A focused fitness transformation builds on this momentum and creates energy for everything else you want to achieve.',
-                    enables: 'Physical energy and confidence, mental clarity, discipline that carries into other areas, visible progress to inspire you'
-                };
-            } else {
-                // Default fallback
-                return {
-                    name: 'Design Your Ideal Environment',
-                    why: 'Based on your 2025 wins of ' + reflection.wins.filter(Boolean).slice(0, 2).join(' and ') + ', creating the right environment is the foundation that enables everything else. Where you are shapes who you become.',
-                    enables: 'Alignment with your vision, daily inspiration and motivation, foundation for growth, peace and clarity'
-                };
-            }
+            const systemMessage = `You are a life coach helping someone identify their ONE big move for 2026.
+
+A "Big Move" is a high-leverage action that:
+- Addresses root causes, not symptoms
+- Enables multiple goals simultaneously
+- Creates momentum and clarity
+- Aligns with who they want to become
+
+Be specific and personal. Reference their actual experiences.`;
+
+            const userPrompt = `Based on this person's 2025 reflection and 2026 vision, identify their ONE BIG MOVE.
+
+2025 REFLECTION:
+Year Rating: ${reflection.rating}/10
+Pivotal Moment: ${reflection.bigMoment}
+
+Top 3 Wins:
+${wins.map((w, i) => `${i + 1}. ${w}`).join('\n')}
+
+Top 3 Learnings:
+${learnings.map((l, i) => `${i + 1}. ${l}`).join('\n')}
+
+Things to Let Go:
+${letGo.map((l, i) => `${i + 1}. ${l}`).join('\n')}
+
+2026 VISION:
+${vision}
+
+Return ONLY valid JSON:
+{
+  "name": "Concise name for the big move (3-6 words)",
+  "why": "Why this is THE move (reference their specific wins, learnings, vision). 2-3 sentences max.",
+  "enables": "What this enables (specific outcomes, not vague benefits). Comma-separated list."
+}`;
+
+            const response = await callOpenAI(userPrompt, systemMessage, { maxTokens: 500 });
+            return parseAIJSON(response);
         }
 
         function showCommittedMove() {
@@ -1203,10 +1725,444 @@
             URL.revokeObjectURL(url);
         });
 
+        // ========== YEAR ZONE FUNCTIONS ==========
+
+        // Show Year Zone Dashboard
+        function showYearZone() {
+            // First time: generate milestones from planning if empty
+            if (state.milestones.length === 0) {
+                state.milestones = generateMilestonesFromPlan();
+                saveState();
+            }
+
+            // Initialize obstacles from "let go" items if empty
+            if (state.obstacles.length === 0 && state.reflection.letGo.some(Boolean)) {
+                state.obstacles = state.reflection.letGo
+                    .filter(Boolean)
+                    .map(item => ({
+                        name: item,
+                        reminder: "Remember to avoid this pattern from 2025.",
+                        expanded: false
+                    }));
+                saveState();
+            }
+
+            // Render Year Zone
+            renderYearZone();
+
+            // Hide other sections, show Year Zone
+            document.querySelectorAll('.section, .dashboard').forEach(s => s.classList.remove('active'));
+            document.getElementById('year-zone-dashboard').style.display = 'block';
+        }
+
+        // Main Year Zone rendering function
+        function renderYearZone() {
+            renderReflectionSummary();
+            renderVisionBoard();
+            renderBigMove();
+            renderMilestones();
+            renderCompoundingGains();
+            renderObstacles();
+        }
+
+        // 1. Render Reflection Summary
+        function renderReflectionSummary() {
+            const container = document.getElementById('zone-reflection-summary');
+            const rating = '⭐'.repeat(state.reflection.rating);
+
+            const html = `
+                <h2>${state.year}</h2>
+                <div class="reflection-summary">
+                    ${state.reflection.bigMoment ? `
+                        <div class="pivotal-moment">
+                            <strong>Pivotal Moment</strong>
+                            <p>"${state.reflection.bigMoment}"</p>
+                        </div>
+                    ` : ''}
+                    ${state.reflection.wins.some(Boolean) ? `
+                        <div class="wins">
+                            <strong>Wins</strong>
+                            <ul>${state.reflection.wins.filter(Boolean).map(w => `<li>✓ ${w}</li>`).join('')}</ul>
+                        </div>
+                    ` : ''}
+                    ${state.reflection.learnings.some(Boolean) ? `
+                        <div class="learnings">
+                            <strong>Learnings</strong>
+                            <ul>${state.reflection.learnings.filter(Boolean).map(l => `<li>• ${l}</li>`).join('')}</ul>
+                        </div>
+                    ` : ''}
+                    ${state.reflection.letGo.some(Boolean) ? `
+                        <div class="let-go">
+                            <strong>Let Go</strong>
+                            <ul>${state.reflection.letGo.filter(Boolean).map(l => `<li>✕ ${l}</li>`).join('')}</ul>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // 2. Render Vision Board
+        function renderVisionBoard() {
+            const container = document.getElementById('zone-vision-board');
+
+            // Use same vision board images from questionnaire.html
+            const visionImagePool = [
+                "badass.jpg",
+                "b.jpg",
+                "stick-to-your-plan.jpg",
+                "powerfulenergy.jpg",
+                "goddess.jpg",
+                "gold-flow.jpg",
+                "goodthings.jpg",
+                "pexels-photo-15448063.webp",
+                "spirit.jpg"
+            ];
+
+            const grid = document.createElement('div');
+            grid.className = 'vision-board-grid';
+
+            visionImagePool.forEach((imgSrc, index) => {
+                const imgDiv = document.createElement('div');
+                imgDiv.className = 'vision-img';
+                imgDiv.style.backgroundImage = `url(${imgSrc})`;
+
+                // Asymmetric sizing (first item larger)
+                if (index === 0) {
+                    imgDiv.style.gridColumn = 'span 2';
+                    imgDiv.style.gridRow = 'span 2';
+                }
+
+                // Staggered fade-in
+                setTimeout(() => imgDiv.classList.add('loaded'), index * 350);
+
+                grid.appendChild(imgDiv);
+            });
+
+            container.innerHTML = '';
+            container.appendChild(grid);
+        }
+
+        // 3. Render Big Move with Edit Modal
+        function renderBigMove() {
+            const container = document.getElementById('zone-big-move');
+            const move = state.planning.committedMove || state.planning.generatedMove;
+
+            if (!move) {
+                container.innerHTML = '<p style="color: #999;">No big move set yet. <a href="#" onclick="showSection(\'planning\'); return false;">Go to planning →</a></p>';
+                return;
+            }
+
+            const html = `
+                <div class="big-move-card">
+                    <h3>🎯 ${move.name}</h3>
+                    <div class="move-why">
+                        <strong>Why this works:</strong>
+                        <p>${move.why}</p>
+                    </div>
+                    <div class="move-enables">
+                        <strong>What this enables:</strong>
+                        <p>${move.enables}</p>
+                    </div>
+                    <button class="btn" onclick="openEditBigMoveModal()" style="background: #fff; color: #000;">Edit Big Move</button>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Edit Big Move Modal Functions
+        function openEditBigMoveModal() {
+            const move = state.planning.committedMove || state.planning.generatedMove;
+            if (!move) return;
+
+            document.getElementById('edit-move-name').value = move.name;
+            document.getElementById('edit-move-why').value = move.why;
+            document.getElementById('edit-move-enables').value = move.enables;
+            document.getElementById('edit-big-move-modal').classList.add('active');
+        }
+
+        function closeEditBigMoveModal() {
+            document.getElementById('edit-big-move-modal').classList.remove('active');
+        }
+
+        function saveEditedBigMove() {
+            const updatedMove = {
+                name: document.getElementById('edit-move-name').value,
+                why: document.getElementById('edit-move-why').value,
+                enables: document.getElementById('edit-move-enables').value
+            };
+
+            state.planning.committedMove = updatedMove;
+            saveState();
+            closeEditBigMoveModal();
+            renderBigMove();
+        }
+
+        // 4. Generate Milestones from Planning
+        function generateMilestonesFromPlan() {
+            const vision = state.planning.vision || '';
+            const bigMove = state.planning.committedMove || state.planning.generatedMove;
+
+            const milestones = [];
+
+            // Add big move as first milestone
+            if (bigMove) {
+                milestones.push({
+                    name: bigMove.name,
+                    image: '',
+                    completed: false,
+                    compounding: false,
+                    source: 'bigMove'
+                });
+            }
+
+            // Parse vision for individual goals (line by line)
+            const lines = vision.split('\n').filter(line => line.trim().length > 0);
+
+            lines.forEach(line => {
+                // Clean up line (remove bullets, numbers, etc.)
+                const cleaned = line.replace(/^[-•*\d.)\]]+\s*/, '').trim();
+                // Skip short lines and duplicates
+                if (cleaned.length > 5 && !milestones.some(m => m.name === cleaned)) {
+                    milestones.push({
+                        name: cleaned,
+                        image: '',
+                        completed: false,
+                        compounding: false,
+                        source: 'vision'
+                    });
+                }
+            });
+
+            return milestones;
+        }
+
+        // 5. Render Milestones Grid
+        function renderMilestones() {
+            const container = document.getElementById('zone-milestones-grid');
+
+            if (state.milestones.length === 0) {
+                container.innerHTML = '<p style="color: #999;">No milestones yet. Complete the planning section first.</p>';
+                return;
+            }
+
+            const grid = document.createElement('div');
+            grid.className = 'milestones-grid';
+
+            state.milestones.forEach((milestone, index) => {
+                const imgDiv = document.createElement('div');
+                imgDiv.className = 'milestone-img';
+                if (milestone.completed) imgDiv.classList.add('completed');
+
+                // Background image or placeholder
+                if (milestone.image) {
+                    imgDiv.style.backgroundImage = `url(${milestone.image})`;
+                } else {
+                    imgDiv.classList.add('no-image');
+                }
+
+                // Compounding badge
+                if (milestone.compounding) {
+                    const badge = document.createElement('div');
+                    badge.className = 'compounding-badge';
+                    badge.textContent = '🔄';
+                    badge.title = 'Compounding Gain';
+                    imgDiv.appendChild(badge);
+                }
+
+                // Click to toggle completion
+                imgDiv.addEventListener('click', () => toggleMilestone(index));
+
+                // Right-click to toggle compounding
+                imgDiv.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    toggleCompounding(index);
+                });
+
+                // Image upload button (always show, visible on hover)
+                const uploadBtn = document.createElement('button');
+                uploadBtn.className = 'upload-btn';
+                uploadBtn.textContent = milestone.image ? '↻ Change' : '📷 Upload';
+                uploadBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    uploadMilestoneImage(index);
+                };
+                imgDiv.appendChild(uploadBtn);
+
+                // Milestone name overlay
+                const nameOverlay = document.createElement('div');
+                nameOverlay.className = 'milestone-name';
+                nameOverlay.textContent = milestone.name;
+                imgDiv.appendChild(nameOverlay);
+
+                // Asymmetric sizing (first item larger)
+                if (index === 0) {
+                    imgDiv.style.gridColumn = 'span 2';
+                    imgDiv.style.gridRow = 'span 2';
+                }
+
+                // Staggered animation
+                setTimeout(() => imgDiv.classList.add('loaded'), index * 350);
+
+                grid.appendChild(imgDiv);
+            });
+
+            container.innerHTML = '';
+            container.appendChild(grid);
+        }
+
+        function toggleMilestone(index) {
+            state.milestones[index].completed = !state.milestones[index].completed;
+            saveState();
+            renderMilestones();
+        }
+
+        function toggleCompounding(index) {
+            state.milestones[index].compounding = !state.milestones[index].compounding;
+            saveState();
+            renderMilestones();
+            renderCompoundingGains(); // Update compounding section
+        }
+
+        function uploadMilestoneImage(index) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    state.milestones[index].image = event.target.result; // Base64
+                    saveState();
+                    renderMilestones();
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        }
+
+        // 6. Render Compounding Gains
+        function renderCompoundingGains() {
+            const container = document.getElementById('zone-compounding-gains');
+            const compoundingMilestones = state.milestones.filter(m => m.compounding);
+
+            if (compoundingMilestones.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const html = `
+                <h2>Compounding</h2>
+                <div class="compounding-section">
+                    <ul class="compounding-list">
+                        ${compoundingMilestones.map(m => `<li>🔄 ${m.name}</li>`).join('')}
+                    </ul>
+                    <p class="compounding-note">Keep these going.</p>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // 7. Render Obstacles
+        function renderObstacles() {
+            const container = document.getElementById('zone-obstacles-section');
+
+            if (state.obstacles.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const html = `
+                <h2>Obstacles</h2>
+                <div class="obstacles-section">
+                    <div class="obstacles-list">
+                        ${state.obstacles.map((obstacle, index) => `
+                            <div class="obstacle-card ${obstacle.expanded ? 'expanded' : ''}">
+                                <div class="obstacle-header" onclick="toggleObstacle(${index})">
+                                    <span>⚠️ ${obstacle.name}</span>
+                                    <span class="toggle-icon">${obstacle.expanded ? '▲' : '▼'}</span>
+                                </div>
+                                ${obstacle.expanded ? `
+                                    <div class="obstacle-detail">
+                                        ${obstacle.reminder}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function toggleObstacle(index) {
+            state.obstacles[index].expanded = !state.obstacles[index].expanded;
+            renderObstacles();
+        }
+
+        function addObstacle() {
+            const name = prompt("What obstacle do you want to avoid?");
+            if (!name) return;
+
+            const reminder = prompt("Why is this important to avoid?");
+            if (!reminder) return;
+
+            state.obstacles.push({
+                name,
+                reminder,
+                expanded: false
+            });
+            saveState();
+            renderObstacles();
+        }
+
+        // Year Zone Navigation
+        document.getElementById('zone-back-to-planning').addEventListener('click', () => {
+            document.getElementById('year-zone-dashboard').style.display = 'none';
+            showSection('planning');
+        });
+
+        document.getElementById('zone-export-btn').addEventListener('click', () => {
+            const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `year-zone-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        // Edit Big Move Modal Event Listeners
+        document.getElementById('edit-modal-close').addEventListener('click', closeEditBigMoveModal);
+        document.getElementById('cancel-edit-move').addEventListener('click', closeEditBigMoveModal);
+        document.getElementById('save-edit-move').addEventListener('click', saveEditedBigMove);
+
+        document.getElementById('edit-big-move-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'edit-big-move-modal') {
+                closeEditBigMoveModal();
+            }
+        });
+
+        // Setup "to-dashboard" button to go to Year Zone
+        document.getElementById('to-dashboard').addEventListener('click', () => {
+            showYearZone();
+        });
+
         // Initialize
         loadState();
         setupReflection();
         setupPlanning();
+
+        // Show Year Zone by default
+        showYearZone();
     </script>
+    <script src="shared/pos-api.js"></script>
+    <script src="shared/pos-floating-button.js"></script>
 </body>
 </html>

@@ -1649,6 +1649,11 @@
                 <button class="btn-secondary" id="back-to-retro">← Back to Retro</button>
                 <button id="next-to-dashboard">See Your Year →</button>
             </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn-secondary" onclick="window.location.href='year-dashboard.html'" style="background: #FF6B6B; color: white; border: none;">
+                    🎯 See Year Dashboard →
+                </button>
+            </div>
         </div>
 
         <!-- DASHBOARD SECTION -->
@@ -3268,5 +3273,6 @@ ${state.planning.intentions || 'Not specified'}
     setTimeout(() => status.classList.remove('visible'), 2000);
 }
     </script>
+    <script src="shared/pos-floating-button.js"></script>
 </body>
 </html>

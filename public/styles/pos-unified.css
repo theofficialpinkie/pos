@@ -1,0 +1,452 @@
+/* POS Unified Styles - Shared across decision engine, dashboard, and floating button */
+
+/* ===== COLOR PALETTE ===== */
+:root {
+    /* Poppy coral colors */
+    --poppy-primary: #FF6B6B;
+    --poppy-hover: #FF5252;
+    --poppy-light: #FFE0E0;
+    --poppy-dark: #E85555;
+
+    /* Base colors */
+    --bg: #FFFFFF;
+    --text: #000000;
+    --text-secondary: #666666;
+    --border: rgba(0,0,0,0.06);
+    --border-hover: rgba(0,0,0,0.12);
+
+    /* Semantic colors */
+    --success: #4CAF50;
+    --warning: #FF9800;
+    --error: #F44336;
+}
+
+/* ===== FLOATING BUTTON ===== */
+.pos-floating-decision {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--poppy-primary);
+    border: none;
+    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+}
+
+.pos-floating-decision:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(255, 107, 107, 0.6);
+    background: var(--poppy-hover);
+}
+
+.pos-floating-decision:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.5);
+}
+
+.pos-button-label {
+    position: absolute;
+    left: 70px;
+    background: var(--text);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.pos-floating-decision:hover .pos-button-label {
+    opacity: 1;
+}
+
+/* Mobile: smaller button */
+@media (max-width: 768px) {
+    .pos-floating-decision {
+        width: 50px;
+        height: 50px;
+        bottom: 20px;
+        left: 20px;
+        font-size: 20px;
+    }
+}
+
+/* ===== MODAL BASE ===== */
+.pos-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease;
+}
+
+.pos-modal-overlay.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.pos-modal {
+    background: var(--bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    width: 90%;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.pos-modal-header {
+    padding: 30px 30px 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.pos-modal-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+.pos-modal-body {
+    padding: 30px;
+}
+
+.pos-modal-footer {
+    padding: 20px 30px 30px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+/* ===== FORM ELEMENTS ===== */
+.pos-form-group {
+    margin-bottom: 24px;
+}
+
+.pos-form-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--text);
+}
+
+.pos-textarea,
+.pos-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    font-size: 15px;
+    transition: border-color 0.2s ease;
+    resize: vertical;
+}
+
+.pos-textarea {
+    min-height: 100px;
+}
+
+.pos-textarea:focus,
+.pos-input:focus {
+    outline: none;
+    border-color: var(--poppy-primary);
+}
+
+.pos-textarea::placeholder,
+.pos-input::placeholder {
+    color: var(--text-secondary);
+}
+
+/* ===== BUTTONS ===== */
+.pos-btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+}
+
+.pos-btn-primary {
+    background: var(--poppy-primary);
+    color: white;
+}
+
+.pos-btn-primary:hover {
+    background: var(--poppy-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+.pos-btn-primary:disabled {
+    background: #CCC;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.pos-btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+.pos-btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.pos-btn-link {
+    background: transparent;
+    color: var(--poppy-primary);
+    padding: 8px 16px;
+}
+
+.pos-btn-link:hover {
+    background: var(--poppy-light);
+}
+
+/* ===== ICON GRID (Dashboard) ===== */
+.pos-icon-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .pos-icon-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+}
+
+.pos-icon-card {
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.pos-icon-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-hover);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.pos-icon-card-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.pos-icon-card-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+/* ===== FULLSCREEN MODAL (Dashboard sections) ===== */
+.pos-fullscreen-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
+    z-index: 10001;
+    overflow-y: auto;
+    animation: slideFromRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pos-fullscreen-modal.active {
+    display: block;
+}
+
+@keyframes slideFromRight {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+.pos-fullscreen-header {
+    padding: 24px 40px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+}
+
+.pos-fullscreen-back {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s ease;
+}
+
+.pos-fullscreen-back:hover {
+    color: var(--text);
+}
+
+.pos-fullscreen-next {
+    color: var(--poppy-primary);
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s ease;
+}
+
+.pos-fullscreen-next:hover {
+    color: var(--poppy-hover);
+}
+
+.pos-fullscreen-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 40px;
+}
+
+/* ===== PRINCIPLES DISPLAY ===== */
+.pos-principle-item {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.pos-principle-item:last-child {
+    border-bottom: none;
+}
+
+.pos-principle-number {
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 30px;
+}
+
+.pos-principle-text {
+    flex: 1;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.pos-principle-priority {
+    color: var(--poppy-primary);
+    font-size: 18px;
+}
+
+.pos-principle-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.pos-icon-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: background 0.2s ease;
+}
+
+.pos-icon-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* ===== LOADING STATE ===== */
+.pos-loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ===== UTILITIES ===== */
+.pos-hidden {
+    display: none !important;
+}
+
+.pos-text-center {
+    text-align: center;
+}
+
+.pos-text-secondary {
+    color: var(--text-secondary);
+}
+
+.pos-mt-4 {
+    margin-top: 24px;
+}
+
+.pos-mb-4 {
+    margin-bottom: 24px;
+}
