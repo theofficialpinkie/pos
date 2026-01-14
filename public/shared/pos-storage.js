@@ -8,7 +8,9 @@ const STORAGE_KEYS = {
     VISION: 'visionData',                     // vision.html data
     PRINCIPLES: 'pos_unified_principles',     // Generated principles
     DECISIONS: 'pos_decision_history',        // Decision history
-    DASHBOARD_CONFIG: 'pos_dashboard_config'  // Dashboard preferences
+    DASHBOARD_CONFIG: 'pos_dashboard_config', // Dashboard preferences
+    SPRINTS: 'pos_sprints',                   // Sprint data: { sprints: Sprint[] }
+    ACTIVE_SPRINT: 'pos_active_sprint'        // Active sprint ID: string
 };
 
 // Get year.html comprehensive data
@@ -256,6 +258,306 @@ function saveDashboardConfig(config) {
     }
 }
 
+// ===== SPRINT STORAGE FUNCTIONS =====
+
+// Get all sprints from localStorage
+function getSprints() {
+    try {
+        const data = localStorage.getItem(STORAGE_KEYS.SPRINTS);
+        if (!data) {
+            return { sprints: [] };
+        }
+        return JSON.parse(data);
+    } catch (e) {
+        console.error('Error loading sprints:', e);
+        return { sprints: [] };
+    }
+}
+
+// Save sprints to localStorage
+function saveSprints(sprintsData) {
+    try {
+        localStorage.setItem(STORAGE_KEYS.SPRINTS, JSON.stringify(sprintsData));
+        return true;
+    } catch (e) {
+        console.error('Error saving sprints:', e);
+        return false;
+    }
+}
+
+// Get currently active sprint
+function getActiveSprint() {
+    try {
+        const activeSprintId = localStorage.getItem(STORAGE_KEYS.ACTIVE_SPRINT);
+        if (!activeSprintId) return null;
+
+        const sprints = getSprints();
+        return sprints.sprints.find(s => s.id === activeSprintId) || null;
+    } catch (e) {
+        console.error('Error loading active sprint:', e);
+        return null;
+    }
+}
+
+// Set active sprint, mark others as completed
+function setActiveSprint(sprintId) {
+    try {
+        const sprints = getSprints();
+
+        // Mark all other sprints as completed
+        sprints.sprints.forEach(s => {
+            if (s.id !== sprintId && s.status === 'active') {
+                s.status = 'completed';
+                s.updatedAt = new Date().toISOString();
+            }
+        });
+
+        // Set the new active sprint
+        const sprint = sprints.sprints.find(s => s.id === sprintId);
+        if (sprint) {
+            sprint.status = 'active';
+            sprint.updatedAt = new Date().toISOString();
+        }
+
+        saveSprints(sprints);
+        localStorage.setItem(STORAGE_KEYS.ACTIVE_SPRINT, sprintId);
+        return true;
+    } catch (e) {
+        console.error('Error setting active sprint:', e);
+        return false;
+    }
+}
+
+// Create new sprint with auto-generated ID
+function createSprint(sprintData) {
+    try {
+        const sprints = getSprints();
+
+        const newSprint = {
+            id: `sprint_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            name: sprintData.name || '',
+            description: sprintData.description || '',
+
+            // Execution-focused fields
+            bigMove: sprintData.bigMove || '',
+            workGoals: sprintData.workGoals || [],
+            lifeGoals: sprintData.lifeGoals || [],
+            uplevelActions: sprintData.uplevelActions || [],
+            goalActions: sprintData.goalActions || [],
+            lifeUplevelActions: sprintData.lifeUplevelActions || [],
+            simplicityCheck: sprintData.simplicityCheck || '',
+            metrics: sprintData.metrics || [],
+            excitement: sprintData.excitement || '',
+
+            status: 'active',
+            startDate: sprintData.startDate || '',
+            endDate: sprintData.endDate || '',
+            durationWeeks: sprintData.durationWeeks || 0,
+            uplevelIds: sprintData.uplevelIds || [],
+            milestones: (sprintData.milestones || []).map((m, i) => ({
+                id: `milestone_${Date.now()}_${i}`,
+                text: m.text || m,
+                category: m.category || 'general',
+                completed: m.completed || false,
+                completedDate: m.completedDate || null,
+                weeklyGoalLinks: m.weeklyGoalLinks || []
+            })),
+            weeklyCommitments: sprintData.weeklyCommitments || [],
+            philosophy: sprintData.philosophy || '',
+            progress: {
+                milestonesCompleted: 0,
+                milestonesTotal: (sprintData.milestones || []).length,
+                weeklyGoalsCompleted: 0,
+                weeklyGoalsTotal: 0,
+                percentComplete: 0
+            },
+            retrospective: {
+                retroId: null,
+                completedDate: null
+            },
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            createdFrom: sprintData.createdFrom || null
+        };
+
+        sprints.sprints.push(newSprint);
+        saveSprints(sprints);
+        setActiveSprint(newSprint.id);
+
+        return newSprint.id;
+    } catch (e) {
+        console.error('Error creating sprint:', e);
+        return null;
+    }
+}
+
+// Update sprint and recalculate progress
+function updateSprint(sprintId, updates) {
+    try {
+        const sprints = getSprints();
+        const sprint = sprints.sprints.find(s => s.id === sprintId);
+
+        if (!sprint) {
+            console.error('Sprint not found:', sprintId);
+            return false;
+        }
+
+        // Apply updates
+        Object.assign(sprint, updates);
+        sprint.updatedAt = new Date().toISOString();
+
+        // Recalculate progress
+        if (sprint.milestones) {
+            const milestonesCompleted = sprint.milestones.filter(m => m.completed).length;
+            const milestonesTotal = sprint.milestones.length;
+
+            // Count weekly goal links
+            let weeklyGoalsTotal = 0;
+            let weeklyGoalsCompleted = 0;
+            sprint.milestones.forEach(m => {
+                if (m.weeklyGoalLinks && m.weeklyGoalLinks.length > 0) {
+                    weeklyGoalsTotal += m.weeklyGoalLinks.length;
+                    m.weeklyGoalLinks.forEach(link => {
+                        // Check if the linked goal is completed
+                        const weekKey = link.weekKey;
+                        const goalId = link.goalId;
+                        const dashboardState = JSON.parse(localStorage.getItem(`dashboardState-${weekKey}`) || '{}');
+                        if (dashboardState.goals) {
+                            const goal = dashboardState.goals.find(g => g.id === goalId);
+                            if (goal && goal.completed) {
+                                weeklyGoalsCompleted++;
+                            }
+                        }
+                    });
+                }
+            });
+
+            sprint.progress = {
+                milestonesCompleted,
+                milestonesTotal,
+                weeklyGoalsCompleted,
+                weeklyGoalsTotal,
+                percentComplete: milestonesTotal > 0
+                    ? Math.round((milestonesCompleted / milestonesTotal) * 100)
+                    : 0
+            };
+        }
+
+        saveSprints(sprints);
+        return true;
+    } catch (e) {
+        console.error('Error updating sprint:', e);
+        return false;
+    }
+}
+
+// Toggle milestone completion
+function toggleMilestone(sprintId, milestoneId) {
+    try {
+        const sprints = getSprints();
+        const sprint = sprints.sprints.find(s => s.id === sprintId);
+
+        if (!sprint) return false;
+
+        const milestone = sprint.milestones.find(m => m.id === milestoneId);
+        if (!milestone) return false;
+
+        milestone.completed = !milestone.completed;
+        milestone.completedDate = milestone.completed ? new Date().toISOString() : null;
+
+        updateSprint(sprintId, { milestones: sprint.milestones });
+        return true;
+    } catch (e) {
+        console.error('Error toggling milestone:', e);
+        return false;
+    }
+}
+
+// Link weekly goal to milestone
+function linkGoalToMilestone(sprintId, milestoneId, weekKey, goalId) {
+    try {
+        const sprints = getSprints();
+        const sprint = sprints.sprints.find(s => s.id === sprintId);
+
+        if (!sprint) return false;
+
+        const milestone = sprint.milestones.find(m => m.id === milestoneId);
+        if (!milestone) return false;
+
+        // Check if link already exists
+        const existingLink = milestone.weeklyGoalLinks.find(
+            l => l.weekKey === weekKey && l.goalId === goalId
+        );
+
+        if (!existingLink) {
+            milestone.weeklyGoalLinks.push({ weekKey, goalId });
+            updateSprint(sprintId, { milestones: sprint.milestones });
+        }
+
+        return true;
+    } catch (e) {
+        console.error('Error linking goal to milestone:', e);
+        return false;
+    }
+}
+
+// Update sprint progress from weekly task completion
+function updateSprintProgressFromWeekly(weekKey) {
+    try {
+        const sprints = getSprints();
+
+        // Update progress for all sprints that have links to this week
+        sprints.sprints.forEach(sprint => {
+            const hasLinksToThisWeek = sprint.milestones.some(m =>
+                m.weeklyGoalLinks.some(l => l.weekKey === weekKey)
+            );
+
+            if (hasLinksToThisWeek) {
+                updateSprint(sprint.id, {});
+            }
+        });
+
+        return true;
+    } catch (e) {
+        console.error('Error updating sprint progress:', e);
+        return false;
+    }
+}
+
+// Link uplevel to sprint
+function linkUplevelToSprint(sprintId, uplevelIndex) {
+    try {
+        const sprints = getSprints();
+        const sprint = sprints.sprints.find(s => s.id === sprintId);
+
+        if (!sprint) return false;
+
+        const uplevelId = `uplevel_${uplevelIndex}`;
+        if (!sprint.uplevelIds.includes(uplevelId)) {
+            sprint.uplevelIds.push(uplevelId);
+            updateSprint(sprintId, { uplevelIds: sprint.uplevelIds });
+        }
+
+        return true;
+    } catch (e) {
+        console.error('Error linking uplevel to sprint:', e);
+        return false;
+    }
+}
+
+// Get all sprints for an uplevel
+function getSprintsForUplevel(uplevelIndex) {
+    try {
+        const sprints = getSprints();
+        const uplevelId = `uplevel_${uplevelIndex}`;
+
+        return sprints.sprints.filter(s => s.uplevelIds.includes(uplevelId));
+    } catch (e) {
+        console.error('Error getting sprints for uplevel:', e);
+        return [];
+    }
+}
+
 // Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
@@ -274,6 +576,18 @@ if (typeof module !== 'undefined' && module.exports) {
         principlesExist,
         hasYearData,
         getDashboardConfig,
-        saveDashboardConfig
+        saveDashboardConfig,
+        // Sprint functions
+        getSprints,
+        saveSprints,
+        getActiveSprint,
+        setActiveSprint,
+        createSprint,
+        updateSprint,
+        toggleMilestone,
+        linkGoalToMilestone,
+        updateSprintProgressFromWeekly,
+        linkUplevelToSprint,
+        getSprintsForUplevel
     };
 }

@@ -465,15 +465,16 @@
         .uplevel-img:nth-child(14).loaded { animation-delay: 6.5s; }
         .uplevel-img:nth-child(15).loaded { animation-delay: 7s; }
 
-        /* Grid layout - optimized for 8 items */
+        /* Grid layout - optimized for 9 items */
         .uplevel-img:nth-child(1) { grid-column: span 2; grid-row: span 2; }
         .uplevel-img:nth-child(2) { grid-column: span 1; grid-row: span 1; }
         .uplevel-img:nth-child(3) { grid-column: span 1; grid-row: span 1; }
         .uplevel-img:nth-child(4) { grid-column: span 1; grid-row: span 2; }
         .uplevel-img:nth-child(5) { grid-column: span 2; grid-row: span 1; }
         .uplevel-img:nth-child(6) { grid-column: span 1; grid-row: span 1; }
-        .uplevel-img:nth-child(7) { grid-column: span 2; grid-row: span 1; }
-        .uplevel-img:nth-child(8) { grid-column: span 2; grid-row: span 1; }
+        .uplevel-img:nth-child(7) { grid-column: span 1; grid-row: span 1; }
+        .uplevel-img:nth-child(8) { grid-column: span 1; grid-row: span 1; }
+        .uplevel-img:nth-child(9) { grid-column: span 2; grid-row: span 1; }
 
         /* Text overlay on each image */
         .uplevel-overlay {
@@ -666,6 +667,16 @@
         .empty-state a:hover {
             text-decoration: underline;
         }
+
+        /* Spin animation for AI brainstorm buttons */
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -704,6 +715,7 @@
             <button onclick="openSection('principles')" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ffffff; padding: 5px 9px; border-radius: 2px; cursor: pointer; font-size: 0.65rem; font-weight: 300; letter-spacing: 1px;">PRINCIPLES</button>
             <button onclick="openSection('vision')" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ffffff; padding: 5px 9px; border-radius: 2px; cursor: pointer; font-size: 0.65rem; font-weight: 300; letter-spacing: 1px;">VISION</button>
             <button onclick="openDecisionEngine()" style="background: #ffffff; color: #000000; border: none; padding: 5px 12px; border-radius: 2px; cursor: pointer; font-size: 0.65rem; font-weight: 500; letter-spacing: 1px;">DECIDE</button>
+            <button onclick="openCreateSprintFlow()" style="background: #10b981; color: #000000; border: none; padding: 5px 12px; border-radius: 2px; cursor: pointer; font-size: 0.65rem; font-weight: 500; letter-spacing: 1px;">CREATE SPRINT</button>
         </div>
     </div>
 
@@ -789,6 +801,249 @@
         </div>
         <div class="pos-fullscreen-content" id="content-uplevels">
             <!-- Dynamic content -->
+        </div>
+    </div>
+
+    <!-- Sprint Retrospective Modal (Embedded) -->
+    <div class="pos-fullscreen-modal" id="modal-sprint-retro">
+        <div class="pos-fullscreen-content" style="max-width: 800px; padding: 40px; background: #1a1a1a; color: white;">
+            <h2 id="retro-modal-heading" style="margin-bottom: 12px; color: white;">Sprint Retrospective</h2>
+            <p id="retro-modal-description" style="color: rgba(255,255,255,0.7); margin-bottom: 32px;">
+                Review your last sprint before planning the next one
+            </p>
+
+            <div id="retro-sprint-info" style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px; margin-bottom: 32px; color: white;">
+                <!-- Sprint name, dates, progress populated dynamically -->
+            </div>
+
+            <form id="sprint-retro-form" style="display: flex; flex-direction: column; gap: 24px;">
+                <!-- Section 1: What Went Well -->
+                <div class="retro-section">
+                    <h3 style="margin-bottom: 12px; font-size: 18px; color: white;">What Went Well 🎉</h3>
+                    <textarea id="wentWell" name="wentWell" placeholder="What worked well recently? What wins can you build on?" rows="4" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+
+                <!-- Section 2: What Didn't Go Well -->
+                <div class="retro-section">
+                    <h3 style="margin-bottom: 12px; font-size: 18px; color: white;">What Didn't Go Well 🤔</h3>
+                    <textarea id="didntGoWell" name="didntGoWell" placeholder="What challenges did you face? What needs improvement?" rows="4" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+
+                <!-- Section 3: Key Learnings -->
+                <div class="retro-section">
+                    <h3 style="margin-bottom: 12px; font-size: 18px; color: white;">Key Learnings 💡</h3>
+                    <textarea id="learnings" name="learnings" placeholder="What insights can you take forward? What patterns do you notice?" rows="3" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+
+                <!-- Section 4: The Retro Questions -->
+                <div class="retro-section">
+                    <h3 style="margin-bottom: 12px; font-size: 18px; color: white;">Going Forward</h3>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: white;">START: What should you start doing?</label>
+                    <textarea name="start" rows="2" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit; resize: vertical; margin-bottom: 16px;"></textarea>
+
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: white;">STOP: What should you stop doing?</label>
+                    <textarea name="stop" rows="2" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit; resize: vertical; margin-bottom: 16px;"></textarea>
+
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: white;">CONTINUE: What should you keep doing?</label>
+                    <textarea name="continue" rows="2" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+
+                <!-- Section 5: Sprint Grade -->
+                <div class="retro-section">
+                    <h3 style="margin-bottom: 12px; font-size: 18px; color: white;">Sprint Grade</h3>
+                    <select name="sprintGrade" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;">
+                        <option value="" style="background: #1a1a1a; color: white;">Select grade...</option>
+                        <option value="A" style="background: #1a1a1a; color: white;">A - Excellent</option>
+                        <option value="B" style="background: #1a1a1a; color: white;">B - Good</option>
+                        <option value="C" style="background: #1a1a1a; color: white;">C - Average</option>
+                        <option value="D" style="background: #1a1a1a; color: white;">D - Needs Improvement</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+                    <button id="load-last-retro-btn" type="button" onclick="loadMyLastRetro()" style="width: 100%; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: 2px solid #f5576c; padding: 14px 24px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 15px; box-shadow: 0 4px 12px rgba(245, 87, 108, 0.4); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">📝 Load My Last Retro Data</button>
+                    <div style="display: flex; gap: 12px;">
+                        <button id="retro-submit-btn" type="submit" style="flex: 1; background: #10b981; color: #000; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">Complete Retro & Create Next Sprint</button>
+                        <button id="retro-skip-btn" type="button" onclick="skipRetro()" style="flex: 1; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">Skip Retro</button>
+                    </div>
+                    <button id="reuse-last-sprint-btn" type="button" onclick="reuseLastSprint()" style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: 2px solid #764ba2; padding: 14px 24px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 15px; display: none; box-shadow: 0 4px 12px rgba(118, 75, 162, 0.4); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">🔄 Reuse Last Sprint Structure</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sprint Creation Modal - Execution Focused -->
+    <div class="pos-fullscreen-modal" id="modal-create-sprint">
+        <div class="pos-fullscreen-content" style="max-width: 1000px; padding: 40px; background: #1a1a1a; color: white; max-height: 90vh; overflow-y: auto;">
+            <h2 style="margin-bottom: 12px; color: white;">Plan Your Sprint</h2>
+            <p style="color: rgba(255,255,255,0.6); margin-bottom: 32px; font-size: 14px;">Execution-focused planning to achieve your uplevels</p>
+
+            <form id="sprint-creation-form" style="display: flex; flex-direction: column; gap: 32px;">
+
+                <!-- 1. RETRO INSIGHTS BOX -->
+                <div id="retro-insights-box" style="background: rgba(16, 185, 129, 0.1); border: 2px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 20px; display: none;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <span style="font-size: 24px;">💡</span>
+                        <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: #10b981;">Key Insights from Last Sprint</h3>
+                    </div>
+                    <div id="retro-insights-content" style="font-size: 14px; line-height: 1.6;">
+                        <!-- Populated from last retro -->
+                    </div>
+                </div>
+
+                <!-- 2. ONE BIG MOVE -->
+                <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 24px; border: 2px solid rgba(79, 70, 229, 0.3);">
+                    <label style="display: block; margin-bottom: 12px; font-weight: 600; font-size: 16px; color: #818cf8;">
+                        🎯 One Big Move This Sprint *
+                    </label>
+                    <p style="font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 12px;">What's the main focus? What do you want to achieve?</p>
+                    <textarea name="bigMove" placeholder="e.g., Launch my first paid product and get 10 paying customers" required rows="2" style="width: 100%; padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit; resize: vertical; font-size: 15px;"></textarea>
+                </div>
+
+                <!-- 3. DATES -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: white;">Start Date *</label>
+                        <input type="date" name="startDate" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit; color-scheme: dark;" />
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: white;">Duration</label>
+                        <select name="duration" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;">
+                            <option value="6" style="background: #1a1a1a; color: white;">6 weeks</option>
+                            <option value="12" selected style="background: #1a1a1a; color: white;">3 months (12 weeks)</option>
+                            <option value="4" style="background: #1a1a1a; color: white;">4 weeks (1 month)</option>
+                            <option value="8" style="background: #1a1a1a; color: white;">8 weeks (2 months)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 4. GOALS (LIFE & WORK) -->
+                <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 24px;">
+                    <h3 style="margin: 0 0 20px 0; font-size: 16px; font-weight: 600; color: white;">📋 Sprint Goals</h3>
+
+                    <!-- Work Goals -->
+                    <div style="margin-bottom: 24px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <label style="font-weight: 500; color: rgba(255,255,255,0.9);">Work Goals</label>
+                            <button type="button" onclick="brainstormGoals('work')" style="background: rgba(139, 92, 246, 0.2); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                                <span>✨</span> AI Brainstorm
+                            </button>
+                        </div>
+                        <div id="work-goals-list" style="display: flex; flex-direction: column; gap: 8px;">
+                            <input type="text" name="workGoal-1" placeholder="Work goal 1" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;" />
+                            <input type="text" name="workGoal-2" placeholder="Work goal 2" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;" />
+                        </div>
+                        <button type="button" onclick="addGoalInput('work')" style="margin-top: 8px; background: transparent; color: rgba(255,255,255,0.6); border: 1px dashed rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px;">+ Add Work Goal</button>
+                    </div>
+
+                    <!-- Life Goals -->
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <label style="font-weight: 500; color: rgba(255,255,255,0.9);">Life Goals</label>
+                            <button type="button" onclick="brainstormGoals('life')" style="background: rgba(139, 92, 246, 0.2); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                                <span>✨</span> AI Brainstorm
+                            </button>
+                        </div>
+                        <div id="life-goals-list" style="display: flex; flex-direction: column; gap: 8px;">
+                            <input type="text" name="lifeGoal-1" placeholder="Life goal 1" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;" />
+                            <input type="text" name="lifeGoal-2" placeholder="Life goal 2" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;" />
+                        </div>
+                        <button type="button" onclick="addGoalInput('life')" style="margin-top: 8px; background: transparent; color: rgba(255,255,255,0.6); border: 1px dashed rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px;">+ Add Life Goal</button>
+                    </div>
+                </div>
+
+                <!-- 5. CONNECTED UPLEVELS + UPLEVEL PLAN -->
+                <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 24px;">
+                    <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600; color: white;">⬆️ How Will You Uplevel This Sprint?</h3>
+
+                    <!-- Uplevels Selection -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 12px; font-weight: 500; color: rgba(255,255,255,0.9);">Connected Uplevels</label>
+                        <div class="uplevel-checkboxes" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
+                            <!-- Dynamically populated from getVisionData().uplevel -->
+                        </div>
+                    </div>
+
+                    <!-- Uplevel Actions -->
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <label style="font-weight: 500; color: rgba(255,255,255,0.9);">Committed Actions to Uplevel</label>
+                            <button type="button" onclick="brainstormActions('uplevel')" style="background: rgba(139, 92, 246, 0.2); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                                <span>✨</span> AI Brainstorm
+                            </button>
+                        </div>
+                        <p style="font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 12px;">What specific actions will you take to grow in your selected uplevels?</p>
+                        <div id="uplevel-actions-list" style="display: flex; flex-direction: column; gap: 8px;">
+                            <input type="text" name="uplevelAction-1" placeholder="e.g., Complete advanced course on topic X" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;" />
+                            <input type="text" name="uplevelAction-2" placeholder="e.g., Build 3 projects to master skill Y" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;" />
+                        </div>
+                        <button type="button" onclick="addActionInput('uplevel')" style="margin-top: 8px; background: transparent; color: rgba(255,255,255,0.6); border: 1px dashed rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px;">+ Add Action</button>
+                    </div>
+                </div>
+
+                <!-- 6. GOAL ACHIEVEMENT ACTIONS -->
+                <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: white;">🎬 How Will You Achieve Your Goals?</h3>
+                        <button type="button" onclick="brainstormActions('goals')" style="background: rgba(139, 92, 246, 0.2); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                            <span>✨</span> AI Brainstorm
+                        </button>
+                    </div>
+                    <p style="font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 12px;">Committed actions and execution plan</p>
+                    <div id="goal-actions-list" style="display: flex; flex-direction: column; gap: 8px;">
+                        <input type="text" name="goalAction-1" placeholder="e.g., Launch landing page by Week 2" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;" />
+                        <input type="text" name="goalAction-2" placeholder="e.g., Reach out to 20 potential customers per week" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;" />
+                    </div>
+                    <button type="button" onclick="addActionInput('goal')" style="margin-top: 8px; background: transparent; color: rgba(255,255,255,0.6); border: 1px dashed rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px;">+ Add Action</button>
+                </div>
+
+                <!-- 7. LIFE UPLEVEL (OUTSIDE GOALS) -->
+                <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: white;">🌱 How Will You Uplevel Yourself Outside of Goals?</h3>
+                        <button type="button" onclick="brainstormActions('life-uplevel')" style="background: rgba(139, 92, 246, 0.2); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                            <span>✨</span> AI Brainstorm
+                        </button>
+                    </div>
+                    <p style="font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 12px;">Personal growth beyond work/life goals (habits, mindset, relationships, health, etc.)</p>
+                    <div id="life-uplevel-actions-list" style="display: flex; flex-direction: column; gap: 8px;">
+                        <input type="text" name="lifeUplevelAction-1" placeholder="e.g., Meditate 10 minutes daily" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;" />
+                        <input type="text" name="lifeUplevelAction-2" placeholder="e.g., Weekly dinner with close friend" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;" />
+                    </div>
+                    <button type="button" onclick="addActionInput('life-uplevel')" style="margin-top: 8px; background: transparent; color: rgba(255,255,255,0.6); border: 1px dashed rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px;">+ Add Action</button>
+                </div>
+
+                <!-- 8. SIMPLICITY CHECK -->
+                <div style="background: rgba(234, 179, 8, 0.1); border: 2px solid rgba(234, 179, 8, 0.3); border-radius: 12px; padding: 24px;">
+                    <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #fbbf24;">⚡ Simplicity Check</h3>
+                    <p style="font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 12px;">What might you be overextending or overcomplicating? What should you cut or simplify?</p>
+                    <textarea name="simplicityCheck" placeholder="e.g., Skip the fancy website for now - just use a simple landing page. Don't try to learn 3 skills at once - focus on mastering 1." rows="3" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(234, 179, 8, 0.3); background: rgba(255,255,255,0.05); color: white; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+
+                <!-- 9. KEY METRICS -->
+                <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 24px;">
+                    <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: white;">📊 Key Metrics to Track Week Over Week</h3>
+                    <p style="font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 12px;">What will you measure to know you're on track?</p>
+                    <div id="metrics-list" style="display: flex; flex-direction: column; gap: 8px;">
+                        <input type="text" name="metric-1" placeholder="e.g., Number of customer conversations" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;" />
+                        <input type="text" name="metric-2" placeholder="e.g., Hours spent building product" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;" />
+                    </div>
+                    <button type="button" onclick="addMetricInput()" style="margin-top: 8px; background: transparent; color: rgba(255,255,255,0.6); border: 1px dashed rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px;">+ Add Metric</button>
+                </div>
+
+                <!-- 10. EXCITEMENT -->
+                <div style="background: rgba(236, 72, 153, 0.1); border: 2px solid rgba(236, 72, 153, 0.3); border-radius: 12px; padding: 24px;">
+                    <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #f472b6;">🎉 What Are You Most Excited About?</h3>
+                    <p style="font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 12px;">Keep it fun! What makes this sprint energizing?</p>
+                    <textarea name="excitement" placeholder="e.g., Getting to build something people actually want! Testing my ideas in the real world. Potentially making my first revenue!" rows="2" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(236, 72, 153, 0.3); background: rgba(255,255,255,0.05); color: white; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+
+                <!-- Submit Buttons -->
+                <div style="display: flex; gap: 12px; margin-top: 16px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <button type="submit" style="flex: 1; background: #10b981; color: #000; border: none; padding: 14px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 15px;">Create Sprint 🚀</button>
+                    <button type="button" onclick="closeSprintCreationModal()" style="flex: 1; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 14px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 15px;">Cancel</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -1336,7 +1591,7 @@ function renderUplevelsCollage() {
     let visionData = getVisionData();
     let uplevels = visionData.uplevel || [];
 
-    // Define the correct 8 uplevels
+    // Define the correct 9 uplevels
     const correctUplevels = [
         'Badass builder',
         'Open hips and flexibility',
@@ -1345,7 +1600,8 @@ function renderUplevelsCollage() {
         'Japanese, nose job and tattoo',
         'Build social media',
         'Fun, smart friends',
-        'Incredible routines'
+        'Incredible routines',
+        'Financially Green'
     ];
 
     // Always reinitialize to ensure correct uplevels
@@ -1598,6 +1854,41 @@ function openUplevelDetail(index) {
                     </div>
                 ` : ''}
 
+                ${(() => {
+                    // Get connected sprints
+                    const connectedSprints = getSprintsForUplevel(index);
+
+                    if (connectedSprints.length === 0) return '';
+
+                    return `
+                        <div style="background: #f0f8ff; padding: 20px; border-radius: 12px; margin-top: 24px; border-left: 4px solid #4a90e2;">
+                            <strong style="font-size: 14px; color: #4a90e2; text-transform: uppercase;">Connected Sprints (${connectedSprints.length}):</strong>
+                            <ul style="margin-top: 16px; padding-left: 0; list-style: none;">
+                                ${connectedSprints.map(sprint => `
+                                    <li style="padding: 12px; background: white; border-radius: 8px; margin-bottom: 8px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <div style="font-weight: 600; color: #4a90e2;">${sprint.name}</div>
+                                                <div style="font-size: 12px; color: rgba(0,0,0,0.6); margin-top: 4px;">
+                                                    ${sprint.startDate} → ${sprint.endDate}
+                                                    ${sprint.status === 'active' ? '<span style="background: #10b981; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; margin-left: 8px;">ACTIVE</span>' : ''}
+                                                </div>
+                                            </div>
+                                            <div style="text-align: right;">
+                                                <div style="font-size: 24px; font-weight: 600; color: #4a90e2;">${sprint.progress.percentComplete}%</div>
+                                                <div style="font-size: 10px; color: rgba(0,0,0,0.6);">Complete</div>
+                                            </div>
+                                        </div>
+                                        <div style="margin-top: 8px; background: #e0e0e0; height: 6px; border-radius: 3px;">
+                                            <div style="background: #4a90e2; height: 100%; width: ${sprint.progress.percentComplete}%; border-radius: 3px;"></div>
+                                        </div>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                })()}
+
                 <button onclick="this.closest('div[style*=\"position: fixed\"]').remove()" style="
                     margin-top: 32px;
                     padding: 12px 24px;
@@ -1661,6 +1952,875 @@ document.addEventListener('keydown', (e) => {
         openSection(sections[prevIndex]);
     }
 });
+
+// ===== SPRINT CREATION & RETROSPECTIVE FUNCTIONS =====
+
+function openCreateSprintFlow() {
+    const activeSprint = getActiveSprint();
+    const allSprints = getSprints();
+    const lastSprint = allSprints.sprints.length > 0
+        ? allSprints.sprints[allSprints.sprints.length - 1]
+        : null;
+
+    // ALWAYS show retro first - even if there's no previous sprint
+    // The retro is about reflecting on recent experiences to bring learnings forward
+    const sprintToReview = activeSprint || lastSprint;
+
+    sessionStorage.setItem('creatingNewSprintAfterRetro', 'true');
+    if (sprintToReview) {
+        sessionStorage.setItem('reviewSprintId', sprintToReview.id);
+    } else {
+        sessionStorage.removeItem('reviewSprintId');
+    }
+
+    // Open retro experience modal
+    openSprintRetroModal(sprintToReview);
+}
+
+function openSprintRetroModal(sprint) {
+    const modal = document.getElementById('modal-sprint-retro');
+
+    // AUTO-LOAD: Check if there's saved retro data and pre-fill the form
+    const retros = JSON.parse(localStorage.getItem('completedSprintRetros') || '[]');
+    if (retros.length > 0) {
+        const lastRetro = retros[retros.length - 1];
+        console.log('📝 Found saved retro data! Auto-filling form...', lastRetro);
+
+        // Pre-fill form fields
+        setTimeout(() => {
+            const form = document.getElementById('sprint-retro-form');
+            if (form) {
+                const wentWellField = form.querySelector('[name="wentWell"]');
+                const didntGoWellField = form.querySelector('[name="didntGoWell"]');
+                const learningsField = form.querySelector('[name="learnings"]');
+                const startField = form.querySelector('[name="start"]');
+                const stopField = form.querySelector('[name="stop"]');
+                const continueField = form.querySelector('[name="continue"]');
+                const gradeField = form.querySelector('[name="sprintGrade"]');
+
+                if (wentWellField) wentWellField.value = lastRetro.wentWell || '';
+                if (didntGoWellField) didntGoWellField.value = lastRetro.didntGoWell || '';
+                if (learningsField) learningsField.value = lastRetro.learnings || '';
+                if (startField) startField.value = lastRetro.start || '';
+                if (stopField) stopField.value = lastRetro.stop || '';
+                if (continueField) continueField.value = lastRetro.continue || '';
+                if (gradeField) gradeField.value = lastRetro.sprintGrade || '';
+
+                console.log('✅ Retro form pre-filled with your last saved data!');
+            }
+        }, 100);
+    } else {
+        console.log('ℹ️ No previous retro data found');
+    }
+
+    // Update modal heading and description based on whether there's a previous sprint
+    const heading = document.getElementById('retro-modal-heading');
+    const description = document.getElementById('retro-modal-description');
+    const submitBtn = document.getElementById('retro-submit-btn');
+    const skipBtn = document.getElementById('retro-skip-btn');
+    const reuseBtn = document.getElementById('reuse-last-sprint-btn');
+
+    if (sprint) {
+        console.log('✅ Previous sprint found:', sprint.name, sprint.id);
+        heading.textContent = 'Sprint Retrospective';
+        description.textContent = 'Review your last sprint before planning the next one';
+        submitBtn.textContent = 'Complete Retro & Create Next Sprint';
+        skipBtn.textContent = 'Skip Retro';
+        // Show reuse button if there's a previous sprint
+        reuseBtn.style.display = 'block';
+        console.log('🔄 "Reuse Last Sprint" button is now VISIBLE');
+    } else {
+        console.log('ℹ️ No previous sprint - this is your first sprint');
+        heading.textContent = 'Pre-Sprint Reflection';
+        description.textContent = 'Reflect on recent experiences and capture learnings to compound into your next sprint';
+        submitBtn.textContent = 'Complete Reflection & Create Sprint';
+        skipBtn.textContent = 'Skip Reflection';
+        // Hide reuse button for first sprint
+        reuseBtn.style.display = 'none';
+        console.log('🔄 "Reuse Last Sprint" button is HIDDEN (no previous sprint)');
+    }
+
+    // Populate sprint info
+    const infoDiv = document.getElementById('retro-sprint-info');
+
+    if (sprint) {
+        // Show previous sprint details
+        infoDiv.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div style="font-size: 20px; font-weight: 600; margin-bottom: 4px;">${sprint.name}</div>
+                    <div style="font-size: 14px; opacity: 0.8;">${sprint.startDate} → ${sprint.endDate}</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 36px; font-weight: 700;">${sprint.progress.percentComplete}%</div>
+                    <div style="font-size: 12px; opacity: 0.8;">Complete</div>
+                </div>
+            </div>
+        `;
+    } else {
+        // No previous sprint - show generic reflection prompt
+        infoDiv.innerHTML = `
+            <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 48px; margin-bottom: 12px;">✨</div>
+                <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Your First Sprint</div>
+                <div style="font-size: 14px; opacity: 0.8;">Reflect on your recent experiences to bring learnings forward</div>
+            </div>
+        `;
+    }
+
+    // Show modal
+    modal.classList.add('active');
+
+    // Handle form submission
+    document.getElementById('sprint-retro-form').onsubmit = (e) => {
+        e.preventDefault();
+        submitSprintRetro(sprint ? sprint.id : null);
+    };
+}
+
+function submitSprintRetro(sprintId) {
+    const form = document.getElementById('sprint-retro-form');
+    const formData = new FormData(form);
+
+    // Save retro data
+    const retroData = {
+        sprintId: sprintId || null, // null if no previous sprint
+        timestamp: Date.now().toString(),
+        wentWell: formData.get('wentWell'),
+        didntGoWell: formData.get('didntGoWell'),
+        learnings: formData.get('learnings'),
+        start: formData.get('start'),
+        stop: formData.get('stop'),
+        continue: formData.get('continue'),
+        sprintGrade: formData.get('sprintGrade')
+    };
+
+    // Save to completedSprintRetros
+    const retros = JSON.parse(localStorage.getItem('completedSprintRetros') || '[]');
+    retros.push(retroData);
+    localStorage.setItem('completedSprintRetros', JSON.stringify(retros));
+
+    // Only link retro to sprint and update sprint status if there's a previous sprint
+    if (sprintId) {
+        // Link retro to sprint
+        updateSprint(sprintId, {
+            retrospective: {
+                retroId: retroData.timestamp,
+                completedDate: new Date().toISOString()
+            },
+            status: 'completed'
+        });
+
+        // Clear active sprint if this was the active one
+        const activeSprint = getActiveSprint();
+        if (activeSprint && activeSprint.id === sprintId) {
+            localStorage.removeItem('pos_active_sprint');
+        }
+    }
+
+    // Close retro modal
+    document.getElementById('modal-sprint-retro').classList.remove('active');
+
+    // Reset form
+    form.reset();
+
+    // Open sprint creation modal
+    openSprintCreationModal();
+}
+
+function skipRetro() {
+    const sprintId = sessionStorage.getItem('reviewSprintId');
+
+    if (sprintId) {
+        // Mark sprint as completed without retro
+        updateSprint(sprintId, { status: 'completed' });
+
+        // Clear active sprint
+        localStorage.removeItem('pos_active_sprint');
+    }
+
+    // Close retro modal
+    document.getElementById('modal-sprint-retro').classList.remove('active');
+
+    // Open sprint creation modal
+    openSprintCreationModal();
+}
+
+function reuseLastSprint() {
+    const sprintId = sessionStorage.getItem('reviewSprintId');
+
+    if (!sprintId) {
+        alert('No previous sprint found to reuse');
+        return;
+    }
+
+    const sprints = getSprints();
+    const lastSprint = sprints.sprints.find(s => s.id === sprintId);
+
+    if (!lastSprint) {
+        alert('Previous sprint not found');
+        return;
+    }
+
+    // Get the last retro data from localStorage
+    const retros = JSON.parse(localStorage.getItem('completedSprintRetros') || '[]');
+    const lastRetro = retros.length > 0 ? retros[retros.length - 1] : null;
+
+    // Pre-fill the retro form with last retro's data if available
+    if (lastRetro) {
+        const form = document.getElementById('sprint-retro-form');
+        if (form) {
+            const wentWellField = form.querySelector('[name="wentWell"]');
+            const didntGoWellField = form.querySelector('[name="didntGoWell"]');
+            const learningsField = form.querySelector('[name="learnings"]');
+            const startField = form.querySelector('[name="start"]');
+            const stopField = form.querySelector('[name="stop"]');
+            const continueField = form.querySelector('[name="continue"]');
+            const gradeField = form.querySelector('[name="sprintGrade"]');
+
+            if (wentWellField) wentWellField.value = lastRetro.wentWell || '';
+            if (didntGoWellField) didntGoWellField.value = lastRetro.didntGoWell || '';
+            if (learningsField) learningsField.value = lastRetro.learnings || '';
+            if (startField) startField.value = lastRetro.start || '';
+            if (stopField) stopField.value = lastRetro.stop || '';
+            if (continueField) continueField.value = lastRetro.continue || '';
+            if (gradeField) gradeField.value = lastRetro.sprintGrade || '';
+        }
+    }
+
+    // Store last sprint as template in sessionStorage for creation form
+    sessionStorage.setItem('sprintTemplate', JSON.stringify({
+        bigMove: lastSprint.bigMove || '',
+        workGoals: lastSprint.workGoals || [],
+        lifeGoals: lastSprint.lifeGoals || [],
+        uplevelIds: lastSprint.uplevelIds || [],
+        uplevelActions: lastSprint.uplevelActions || [],
+        goalActions: lastSprint.goalActions || [],
+        lifeUplevelActions: lastSprint.lifeUplevelActions || [],
+        simplicityCheck: lastSprint.simplicityCheck || '',
+        metrics: lastSprint.metrics || [],
+        excitement: lastSprint.excitement || '',
+        durationWeeks: lastSprint.durationWeeks || 12
+    }));
+
+    // Keep retro modal open so user can review/edit the pre-filled data
+    // Scroll to top of modal so they can see the pre-filled content
+    const retroModal = document.getElementById('modal-sprint-retro');
+    if (retroModal) {
+        retroModal.scrollTop = 0;
+    }
+
+    // Show confirmation message
+    const confirmMsg = document.createElement('div');
+    confirmMsg.style.cssText = 'position: fixed; top: 20px; right: 20px; background: rgba(16, 185, 129, 0.9); color: white; padding: 16px 24px; border-radius: 8px; z-index: 10001; font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+    confirmMsg.textContent = '✓ Retro form pre-filled with previous sprint data. Review and edit before continuing.';
+    document.body.appendChild(confirmMsg);
+    setTimeout(() => confirmMsg.remove(), 3000);
+}
+
+function openSprintCreationModal() {
+    const modal = document.getElementById('modal-create-sprint');
+
+    // Load retro insights if available
+    loadRetroInsights();
+
+    // Check if there's a sprint template to reuse
+    const templateData = sessionStorage.getItem('sprintTemplate');
+    let template = null;
+    if (templateData) {
+        template = JSON.parse(templateData);
+        sessionStorage.removeItem('sprintTemplate'); // Clear it after using
+    }
+
+    // Populate uplevel checkboxes
+    const visionData = getVisionData();
+    const uplevels = visionData.uplevel || [];
+    const checkboxContainer = modal.querySelector('.uplevel-checkboxes');
+
+    checkboxContainer.innerHTML = uplevels.map((uplevel, index) => {
+        const name = typeof uplevel === 'string' ? uplevel : uplevel.name;
+        const uplevelId = `uplevel_${index}`;
+        const isChecked = template && template.uplevelIds.includes(uplevelId) ? 'checked' : '';
+        return `
+            <label style="display: flex; align-items: center; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer;">
+                <input type="checkbox" name="uplevel-${index}" value="${index}" ${isChecked} style="margin-right: 8px; width: 18px; height: 18px;" />
+                <span style="font-size: 14px;">${name}</span>
+            </label>
+        `;
+    }).join('');
+
+    // Pre-fill form if template exists
+    if (template) {
+        preFillSprintForm(template);
+    }
+
+    // Show modal
+    modal.classList.add('active');
+
+    // Handle form submission
+    document.getElementById('sprint-creation-form').onsubmit = (e) => {
+        e.preventDefault();
+        submitSprintCreation(e);
+    };
+}
+
+// Load retro insights from last sprint
+function loadRetroInsights() {
+    const retros = JSON.parse(localStorage.getItem('completedSprintRetros') || '[]');
+    const lastRetro = retros.length > 0 ? retros[retros.length - 1] : null;
+
+    const insightsBox = document.getElementById('retro-insights-box');
+    const insightsContent = document.getElementById('retro-insights-content');
+
+    if (!lastRetro) {
+        insightsBox.style.display = 'none';
+        return;
+    }
+
+    let insights = [];
+
+    if (lastRetro.continue && lastRetro.continue.trim()) {
+        insights.push(`<div style="margin-bottom: 12px;"><strong style="color: #10b981;">✓ Keep doing:</strong> ${lastRetro.continue}</div>`);
+    }
+    if (lastRetro.start && lastRetro.start.trim()) {
+        insights.push(`<div style="margin-bottom: 12px;"><strong style="color: #10b981;">→ Start:</strong> ${lastRetro.start}</div>`);
+    }
+    if (lastRetro.stop && lastRetro.stop.trim()) {
+        insights.push(`<div style="margin-bottom: 12px;"><strong style="color: #ef4444;">✗ Stop:</strong> ${lastRetro.stop}</div>`);
+    }
+    if (lastRetro.learnings && lastRetro.learnings.trim()) {
+        insights.push(`<div style="margin-bottom: 12px;"><strong style="color: #fbbf24;">💡 Key learning:</strong> ${lastRetro.learnings}</div>`);
+    }
+
+    if (insights.length > 0) {
+        insightsContent.innerHTML = insights.join('');
+        insightsBox.style.display = 'block';
+    } else {
+        insightsBox.style.display = 'none';
+    }
+}
+
+// Pre-fill sprint form with template data
+function preFillSprintForm(template) {
+    const inputStyle = 'width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;';
+
+    // Pre-fill Big Move
+    if (template.bigMove) {
+        const bigMoveField = document.querySelector('[name="bigMove"]');
+        if (bigMoveField) bigMoveField.value = template.bigMove;
+    }
+
+    // Pre-fill duration
+    if (template.durationWeeks) {
+        const durationField = document.querySelector('[name="duration"]');
+        if (durationField) durationField.value = template.durationWeeks.toString();
+    }
+
+    // Pre-fill Work Goals
+    if (template.workGoals && template.workGoals.length > 0) {
+        const workGoalsList = document.getElementById('work-goals-list');
+        workGoalsList.innerHTML = template.workGoals.map((goal, i) =>
+            `<input type="text" name="workGoal-${i + 1}" value="${goal}" style="${inputStyle}" />`
+        ).join('');
+    }
+
+    // Pre-fill Life Goals
+    if (template.lifeGoals && template.lifeGoals.length > 0) {
+        const lifeGoalsList = document.getElementById('life-goals-list');
+        lifeGoalsList.innerHTML = template.lifeGoals.map((goal, i) =>
+            `<input type="text" name="lifeGoal-${i + 1}" value="${goal}" style="${inputStyle}" />`
+        ).join('');
+    }
+
+    // Pre-fill Uplevel Actions
+    if (template.uplevelActions && template.uplevelActions.length > 0) {
+        const uplevelActionsList = document.getElementById('uplevel-actions-list');
+        uplevelActionsList.innerHTML = template.uplevelActions.map((action, i) =>
+            `<input type="text" name="uplevelAction-${i + 1}" value="${action}" style="${inputStyle}" />`
+        ).join('');
+    }
+
+    // Pre-fill Goal Actions
+    if (template.goalActions && template.goalActions.length > 0) {
+        const goalActionsList = document.getElementById('goal-actions-list');
+        goalActionsList.innerHTML = template.goalActions.map((action, i) =>
+            `<input type="text" name="goalAction-${i + 1}" value="${action}" style="${inputStyle}" />`
+        ).join('');
+    }
+
+    // Pre-fill Life Uplevel Actions
+    if (template.lifeUplevelActions && template.lifeUplevelActions.length > 0) {
+        const lifeUplevelActionsList = document.getElementById('life-uplevel-actions-list');
+        lifeUplevelActionsList.innerHTML = template.lifeUplevelActions.map((action, i) =>
+            `<input type="text" name="lifeUplevelAction-${i + 1}" value="${action}" style="${inputStyle}" />`
+        ).join('');
+    }
+
+    // Pre-fill Simplicity Check
+    if (template.simplicityCheck) {
+        const simplicityField = document.querySelector('[name="simplicityCheck"]');
+        if (simplicityField) simplicityField.value = template.simplicityCheck;
+    }
+
+    // Pre-fill Metrics
+    if (template.metrics && template.metrics.length > 0) {
+        const metricsList = document.getElementById('metrics-list');
+        metricsList.innerHTML = template.metrics.map((metric, i) =>
+            `<input type="text" name="metric-${i + 1}" value="${metric}" style="${inputStyle}" />`
+        ).join('');
+    }
+
+    // Pre-fill Excitement
+    if (template.excitement) {
+        const excitementField = document.querySelector('[name="excitement"]');
+        if (excitementField) excitementField.value = template.excitement;
+    }
+}
+
+function closeSprintCreationModal() {
+    const modal = document.getElementById('modal-create-sprint');
+    modal.classList.remove('active');
+
+    // Reset form
+    document.getElementById('sprint-creation-form').reset();
+
+    // Reset dynamic lists to defaults
+    resetDynamicLists();
+
+    // Clear session storage
+    sessionStorage.removeItem('creatingNewSprintAfterRetro');
+    sessionStorage.removeItem('reviewSprintId');
+}
+
+function resetDynamicLists() {
+    const inputStyle = 'width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;';
+
+    // Work goals
+    document.getElementById('work-goals-list').innerHTML = `
+        <input type="text" name="workGoal-1" placeholder="Work goal 1" style="${inputStyle}" />
+        <input type="text" name="workGoal-2" placeholder="Work goal 2" style="${inputStyle}" />
+    `;
+
+    // Life goals
+    document.getElementById('life-goals-list').innerHTML = `
+        <input type="text" name="lifeGoal-1" placeholder="Life goal 1" style="${inputStyle}" />
+        <input type="text" name="lifeGoal-2" placeholder="Life goal 2" style="${inputStyle}" />
+    `;
+
+    // Uplevel actions
+    document.getElementById('uplevel-actions-list').innerHTML = `
+        <input type="text" name="uplevelAction-1" placeholder="e.g., Complete advanced course on topic X" style="${inputStyle}" />
+        <input type="text" name="uplevelAction-2" placeholder="e.g., Build 3 projects to master skill Y" style="${inputStyle}" />
+    `;
+
+    // Goal actions
+    document.getElementById('goal-actions-list').innerHTML = `
+        <input type="text" name="goalAction-1" placeholder="e.g., Launch landing page by Week 2" style="${inputStyle}" />
+        <input type="text" name="goalAction-2" placeholder="e.g., Reach out to 20 potential customers per week" style="${inputStyle}" />
+    `;
+
+    // Life uplevel actions
+    document.getElementById('life-uplevel-actions-list').innerHTML = `
+        <input type="text" name="lifeUplevelAction-1" placeholder="e.g., Meditate 10 minutes daily" style="${inputStyle}" />
+        <input type="text" name="lifeUplevelAction-2" placeholder="e.g., Weekly dinner with close friend" style="${inputStyle}" />
+    `;
+
+    // Metrics
+    document.getElementById('metrics-list').innerHTML = `
+        <input type="text" name="metric-1" placeholder="e.g., Number of customer conversations" style="${inputStyle}" />
+        <input type="text" name="metric-2" placeholder="e.g., Hours spent building product" style="${inputStyle}" />
+    `;
+}
+
+// Add goal input (work or life)
+function addGoalInput(type) {
+    const listId = type === 'work' ? 'work-goals-list' : 'life-goals-list';
+    const list = document.getElementById(listId);
+    const currentCount = list.querySelectorAll('input').length;
+    const goalType = type === 'work' ? 'Work' : 'Life';
+
+    const newInput = document.createElement('input');
+    newInput.type = 'text';
+    newInput.name = `${type}Goal-${currentCount + 1}`;
+    newInput.placeholder = `${goalType} goal ${currentCount + 1}`;
+    newInput.style.cssText = 'width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;';
+
+    list.appendChild(newInput);
+}
+
+// Add action input (uplevel, goal, or life-uplevel)
+function addActionInput(type) {
+    const listMap = {
+        'uplevel': 'uplevel-actions-list',
+        'goal': 'goal-actions-list',
+        'life-uplevel': 'life-uplevel-actions-list'
+    };
+    const nameMap = {
+        'uplevel': 'uplevelAction',
+        'goal': 'goalAction',
+        'life-uplevel': 'lifeUplevelAction'
+    };
+
+    const listId = listMap[type];
+    const list = document.getElementById(listId);
+    const currentCount = list.querySelectorAll('input').length;
+
+    const newInput = document.createElement('input');
+    newInput.type = 'text';
+    newInput.name = `${nameMap[type]}-${currentCount + 1}`;
+    newInput.placeholder = 'New action...';
+    newInput.style.cssText = 'width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;';
+
+    list.appendChild(newInput);
+}
+
+// Add metric input
+function addMetricInput() {
+    const list = document.getElementById('metrics-list');
+    const currentCount = list.querySelectorAll('input').length;
+
+    const newInput = document.createElement('input');
+    newInput.type = 'text';
+    newInput.name = `metric-${currentCount + 1}`;
+    newInput.placeholder = 'New metric to track...';
+    newInput.style.cssText = 'width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;';
+
+    list.appendChild(newInput);
+}
+
+// AI Brainstorming for Goals
+async function brainstormGoals(type) {
+    const apiKey = getAPIKey();
+    if (!apiKey) {
+        alert('Please set your OpenAI API key in settings first.');
+        return;
+    }
+
+    const bigMove = document.querySelector('[name="bigMove"]').value;
+    const selectedUplevels = getSelectedUplevels();
+    const visionData = getVisionData();
+    const yearData = getYearData();
+    const yearReviewData = getYearReviewData();
+
+    if (!bigMove) {
+        alert('Please fill in your "One Big Move" first so AI can generate relevant goals.');
+        return;
+    }
+
+    const goalType = type === 'work' ? 'work' : 'life';
+    const listId = type === 'work' ? 'work-goals-list' : 'life-goals-list';
+
+    // Show loading state
+    const button = event.target;
+    const originalHTML = button.innerHTML;
+    button.innerHTML = '<span style="display: inline-block; width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite;"></span> Thinking...';
+    button.disabled = true;
+
+    try {
+        const systemMessage = `You are an expert sprint planning coach helping someone plan execution-focused goals.`;
+
+        const userPrompt = `Help me brainstorm ${goalType} goals for my sprint.
+
+CONTEXT:
+- One Big Move: ${bigMove}
+- Connected Uplevels: ${selectedUplevels.join(', ') || 'None selected yet'}
+- Sprint Duration: ${document.querySelector('[name="duration"]').value} weeks
+
+${visionData.oneliner ? `- Vision: ${visionData.oneliner}` : ''}
+${visionData.values && visionData.values.length > 0 ? `- Core Values: ${visionData.values.filter(v => v).join(', ')}` : ''}
+
+Generate 3-5 specific, actionable ${goalType} goals that:
+1. Support the "One Big Move"
+2. Are achievable within the sprint duration
+3. Are measurable and concrete (not vague)
+4. ${type === 'work' ? 'Directly contribute to career/business growth' : 'Enhance personal wellbeing and life quality'}
+
+Return ONLY a JSON array of goal strings:
+["Goal 1", "Goal 2", "Goal 3"]`;
+
+        const response = await callOpenAI(userPrompt, systemMessage, { maxTokens: 500 });
+        const goals = JSON.parse(response.trim());
+
+        // Append suggestions to the list
+        const list = document.getElementById(listId);
+        const currentCount = list.querySelectorAll('input').length;
+
+        goals.forEach((goal, i) => {
+            const newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.name = `${type}Goal-${currentCount + i + 1}`;
+            newInput.value = goal;
+            newInput.style.cssText = 'width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;';
+            list.appendChild(newInput);
+        });
+
+        // Restore button
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+    } catch (error) {
+        console.error('AI brainstorm error:', error);
+        alert('Failed to generate ideas. Please try again or fill in manually.');
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+    }
+}
+
+// AI Brainstorming for Actions
+async function brainstormActions(type) {
+    const apiKey = getAPIKey();
+    if (!apiKey) {
+        alert('Please set your OpenAI API key in settings first.');
+        return;
+    }
+
+    const bigMove = document.querySelector('[name="bigMove"]').value;
+    const selectedUplevels = getSelectedUplevels();
+    const workGoals = getInputValues('workGoal');
+    const lifeGoals = getInputValues('lifeGoal');
+
+    if (!bigMove) {
+        alert('Please fill in your "One Big Move" first.');
+        return;
+    }
+
+    const listMap = {
+        'uplevel': 'uplevel-actions-list',
+        'goals': 'goal-actions-list',
+        'life-uplevel': 'life-uplevel-actions-list'
+    };
+    const nameMap = {
+        'uplevel': 'uplevelAction',
+        'goals': 'goalAction',
+        'life-uplevel': 'lifeUplevelAction'
+    };
+
+    const listId = listMap[type];
+    const namePrefix = nameMap[type];
+
+    // Show loading state
+    const button = event.target;
+    const originalHTML = button.innerHTML;
+    button.innerHTML = '<span style="display: inline-block; width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite;"></span> Thinking...';
+    button.disabled = true;
+
+    try {
+        let contextPrompt = '';
+        if (type === 'uplevel') {
+            contextPrompt = `Generate 3-5 specific, committed actions to uplevel myself in these areas: ${selectedUplevels.join(', ') || 'general personal/professional growth'}.`;
+        } else if (type === 'goals') {
+            contextPrompt = `Generate 3-5 specific, committed actions to achieve these goals:\nWork: ${workGoals.join(', ') || 'None yet'}\nLife: ${lifeGoals.join(', ') || 'None yet'}`;
+        } else if (type === 'life-uplevel') {
+            contextPrompt = `Generate 3-5 specific actions for personal growth OUTSIDE of work/life goals (habits, mindset, relationships, health, etc.).`;
+        }
+
+        const systemMessage = `You are an expert sprint planning coach helping someone create actionable execution plans.`;
+
+        const userPrompt = `Help me brainstorm committed actions for my sprint.
+
+CONTEXT:
+- One Big Move: ${bigMove}
+- Sprint Duration: ${document.querySelector('[name="duration"]').value} weeks
+
+${contextPrompt}
+
+Each action should be:
+1. Specific and concrete (not vague)
+2. Time-bound (mention weeks/deadlines if relevant)
+3. Measurable
+4. Achievable within the sprint duration
+
+Return ONLY a JSON array of action strings:
+["Action 1", "Action 2", "Action 3"]`;
+
+        const response = await callOpenAI(userPrompt, systemMessage, { maxTokens: 500 });
+        const actions = JSON.parse(response.trim());
+
+        // Append suggestions to the list
+        const list = document.getElementById(listId);
+        const currentCount = list.querySelectorAll('input').length;
+
+        actions.forEach((action, i) => {
+            const newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.name = `${namePrefix}-${currentCount + i + 1}`;
+            newInput.value = action;
+            newInput.style.cssText = 'width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: white; font-family: inherit;';
+            list.appendChild(newInput);
+        });
+
+        // Restore button
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+    } catch (error) {
+        console.error('AI brainstorm error:', error);
+        alert('Failed to generate ideas. Please try again or fill in manually.');
+        button.innerHTML = originalHTML;
+        button.disabled = false;
+    }
+}
+
+// Helper: Get selected uplevels
+function getSelectedUplevels() {
+    const visionData = getVisionData();
+    const uplevels = visionData.uplevel || [];
+    const checked = document.querySelectorAll('.uplevel-checkboxes input:checked');
+    return Array.from(checked).map(cb => {
+        const index = parseInt(cb.value);
+        const uplevel = uplevels[index];
+        return typeof uplevel === 'string' ? uplevel : uplevel.name;
+    });
+}
+
+// Helper: Get all input values for a name prefix
+function getInputValues(namePrefix) {
+    const inputs = document.querySelectorAll(`[name^="${namePrefix}-"]`);
+    return Array.from(inputs).map(input => input.value.trim()).filter(v => v);
+}
+
+function submitSprintCreation(event) {
+    const form = document.getElementById('sprint-creation-form');
+    const formData = new FormData(form);
+
+    // Get One Big Move (required)
+    const bigMove = formData.get('bigMove');
+    if (!bigMove || !bigMove.trim()) {
+        alert('Please enter your "One Big Move" for this sprint');
+        return;
+    }
+
+    // Get dates and calculate end date
+    const startDate = formData.get('startDate');
+    if (!startDate) {
+        alert('Please select a start date');
+        return;
+    }
+
+    const durationWeeks = parseInt(formData.get('duration')) || 12;
+    const start = new Date(startDate);
+    const end = new Date(start);
+    end.setDate(end.getDate() + (durationWeeks * 7));
+    const endDate = end.toISOString().split('T')[0];
+
+    // Get work goals
+    const workGoals = [];
+    const workGoalInputs = document.querySelectorAll('[name^="workGoal-"]');
+    workGoalInputs.forEach(input => {
+        if (input.value.trim()) {
+            workGoals.push(input.value.trim());
+        }
+    });
+
+    // Get life goals
+    const lifeGoals = [];
+    const lifeGoalInputs = document.querySelectorAll('[name^="lifeGoal-"]');
+    lifeGoalInputs.forEach(input => {
+        if (input.value.trim()) {
+            lifeGoals.push(input.value.trim());
+        }
+    });
+
+    // Get selected uplevels
+    const uplevelIds = [];
+    const uplevelCheckboxes = document.querySelectorAll('.uplevel-checkboxes input:checked');
+    uplevelCheckboxes.forEach(checkbox => {
+        uplevelIds.push(`uplevel_${checkbox.value}`);
+    });
+
+    // Get uplevel actions
+    const uplevelActions = [];
+    const uplevelActionInputs = document.querySelectorAll('[name^="uplevelAction-"]');
+    uplevelActionInputs.forEach(input => {
+        if (input.value.trim()) {
+            uplevelActions.push(input.value.trim());
+        }
+    });
+
+    // Get goal achievement actions
+    const goalActions = [];
+    const goalActionInputs = document.querySelectorAll('[name^="goalAction-"]');
+    goalActionInputs.forEach(input => {
+        if (input.value.trim()) {
+            goalActions.push(input.value.trim());
+        }
+    });
+
+    // Get life uplevel actions
+    const lifeUplevelActions = [];
+    const lifeUplevelActionInputs = document.querySelectorAll('[name^="lifeUplevelAction-"]');
+    lifeUplevelActionInputs.forEach(input => {
+        if (input.value.trim()) {
+            lifeUplevelActions.push(input.value.trim());
+        }
+    });
+
+    // Get simplicity check
+    const simplicityCheck = formData.get('simplicityCheck') || '';
+
+    // Get metrics
+    const metrics = [];
+    const metricInputs = document.querySelectorAll('[name^="metric-"]');
+    metricInputs.forEach(input => {
+        if (input.value.trim()) {
+            metrics.push(input.value.trim());
+        }
+    });
+
+    // Get excitement
+    const excitement = formData.get('excitement') || '';
+
+    // Create milestones from all actions (combine all action types)
+    const allActions = [
+        ...uplevelActions.map(a => ({ text: a, category: 'uplevel' })),
+        ...goalActions.map(a => ({ text: a, category: 'goal' })),
+        ...lifeUplevelActions.map(a => ({ text: a, category: 'life' }))
+    ];
+
+    // If no actions, require at least some content
+    if (allActions.length === 0 && workGoals.length === 0 && lifeGoals.length === 0) {
+        alert('Please add at least some goals or committed actions for this sprint');
+        return;
+    }
+
+    // Create sprint data with new structure
+    const sprintData = {
+        name: bigMove.substring(0, 100), // Use big move as sprint name (truncated)
+        description: '', // No longer used
+        bigMove: bigMove,
+        workGoals: workGoals,
+        lifeGoals: lifeGoals,
+        startDate: startDate,
+        endDate: endDate,
+        durationWeeks: durationWeeks,
+        uplevelIds: uplevelIds,
+        uplevelActions: uplevelActions,
+        goalActions: goalActions,
+        lifeUplevelActions: lifeUplevelActions,
+        simplicityCheck: simplicityCheck,
+        metrics: metrics,
+        excitement: excitement,
+        milestones: allActions.length > 0 ? allActions : [
+            { text: bigMove, category: 'main' }
+        ], // Milestones are now derived from actions
+        philosophy: excitement, // Philosophy is now the excitement section
+        createdFrom: sessionStorage.getItem('creatingNewSprintAfterRetro') === 'true' ? 'retro' : null
+    };
+
+    // Create the sprint
+    const sprintId = createSprint(sprintData);
+
+    if (sprintId) {
+        // Close modal
+        closeSprintCreationModal();
+
+        // Show success message
+        alert(`Sprint created successfully!\n\nFocus: ${bigMove.substring(0, 80)}${bigMove.length > 80 ? '...' : ''}`);
+
+        // Refresh the page to show the new sprint
+        location.reload();
+    } else {
+        alert('Failed to create sprint. Please try again.');
+    }
+}
 
 </script>
 

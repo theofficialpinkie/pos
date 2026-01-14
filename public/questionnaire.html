@@ -1418,87 +1418,8 @@ body.dark-bg .sidebar-toggle {
 
     <!-- Step 3: 6-Week Sprint Focus -->
     <div class="bp-step" id="step-sprint">
-      <div class="sprint-container">
-        <div class="sprint-header">
-          <div class="sprint-badge">CURRENT SPRINT</div>
-          <h2 class="sprint-title">Develop a Source of Income<br/>That is Aligned with Living a Life You Enjoy</h2>
-          <div class="sprint-dates">Nov 16 - Dec 28, 2025 • 6 Weeks</div>
-        </div>
-
-        <div class="sprint-body">
-          <!-- Key Milestones -->
-          <div class="sprint-section">
-            <div class="sprint-section-title">🎯 Key Milestones</div>
-            <div class="sprint-milestones">
-              <div class="sprint-milestone">
-                <div class="milestone-number">1</div>
-                <div class="milestone-text">Build useful automations and products for yourself</div>
-              </div>
-              <div class="sprint-milestone">
-                <div class="milestone-number">2</div>
-                <div class="milestone-text">Document learnings and process as your v1 offering to businesses</div>
-              </div>
-              <div class="sprint-milestone">
-                <div class="milestone-number">3</div>
-                <div class="milestone-text">Package automations into simple landing page and social media</div>
-              </div>
-              <div class="sprint-milestone">
-                <div class="milestone-number">4</div>
-                <div class="milestone-text">Start outreach for design partnerships (money-back guarantee)</div>
-              </div>
-              <div class="sprint-milestone">
-                <div class="milestone-number">5</div>
-                <div class="milestone-text">Ship and impress initial customers to get testimonials and referrals</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Weekly Commitments -->
-          <div class="sprint-section">
-            <div class="sprint-section-title">💎 Weekly Commitments</div>
-            <div class="commitment-grid">
-              <div class="commitment-card">
-                <div class="commitment-icon">🏦</div>
-                <div class="commitment-title">Spend &lt;$150</div>
-                <div class="commitment-details">
-                  <div>• Groceries & meal prep</div>
-                  <div>• Cafe spend &lt;$10</div>
-                  <div>• Dinner out 1x/week</div>
-                </div>
-              </div>
-              <div class="commitment-card">
-                <div class="commitment-icon">🌳</div>
-                <div class="commitment-title">Healthy Routines</div>
-                <div class="commitment-details">
-                  <div>• Move body 2-3x/week</div>
-                  <div>• Morning routine daily</div>
-                  <div>• Sunday planning ritual</div>
-                </div>
-              </div>
-              <div class="commitment-card">
-                <div class="commitment-icon">🌸</div>
-                <div class="commitment-title">Trust the Process</div>
-                <div class="commitment-details">
-                  <div>• One step at a time</div>
-                  <div>• Enjoy the journey</div>
-                  <div>• Reflect weekly</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Sprint Philosophy -->
-          <div class="sprint-section">
-            <div class="sprint-philosophy">
-              <div class="philosophy-icon">✨</div>
-              <div class="philosophy-text">
-                Take your time, like your Bali sabbatical but with work. Trust your intuition to go one step at a time. Focus on enjoying the process, gaining conviction in yourself and your offering. Small actions add up.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <button class="sprint-begin-btn" onclick="closeBiggerPicture()">Begin Weekly Planning →</button>
+      <div class="sprint-container" id="dynamic-sprint-container">
+        <!-- Populated by renderActiveSprint() JavaScript -->
       </div>
     </div>
 
@@ -2870,7 +2791,13 @@ function generateDashboard() {
   // CLEAR the old dashboard state to force a fresh one
   localStorage.removeItem(`dashboardState-week-${week}`);
 
-  window.location.href = 'dashboard.html';
+  // Check if there's an active sprint - if so, show milestone tagging modal
+  const activeSprint = getActiveSprint();
+  if (activeSprint) {
+    showMilestoneTaggingModal(week);
+  } else {
+    window.location.href = 'dashboard.html';
+  }
 }
 
     // Don't auto-render on load - wait for ritual
@@ -3176,6 +3103,230 @@ if (document.readyState === 'loading') {
     }
   }
 }
+
+// ===== SPRINT RENDERING FUNCTIONS =====
+
+function formatDateRange(startDate, endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const options = { month: 'short', day: 'numeric' };
+    return `${start.toLocaleDateString('en-US', options)} - ${end.toLocaleDateString('en-US', options)}, ${end.getFullYear()}`;
+}
+
+function renderActiveSprint() {
+    const container = document.getElementById('dynamic-sprint-container');
+    if (!container) return;
+
+    const activeSprint = getActiveSprint();
+
+    if (!activeSprint) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 60px 20px;">
+                <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
+                <h3 style="margin-bottom: 12px;">No Active Sprint</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 24px;">Create a sprint to align your weekly planning with your yearly uplevels.</p>
+                <button onclick="window.location.href='year-dashboard.html'" class="pos-btn pos-btn-primary" style="padding: 12px 24px; background: #4a90e2; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer;">
+                    Create Sprint in Dashboard →
+                </button>
+            </div>
+        `;
+        return;
+    }
+
+    // Render active sprint
+    container.innerHTML = `
+        <div class="sprint-header">
+            <div class="sprint-badge">CURRENT SPRINT</div>
+            <h2 class="sprint-title">${activeSprint.name}</h2>
+            <div class="sprint-dates">${formatDateRange(activeSprint.startDate, activeSprint.endDate)} • ${activeSprint.durationWeeks} Weeks</div>
+
+            <!-- Progress Bar -->
+            <div style="margin: 20px 0;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>Sprint Progress</span>
+                    <span>${activeSprint.progress.percentComplete}%</span>
+                </div>
+                <div style="background: #e0e0e0; height: 12px; border-radius: 6px;">
+                    <div style="background: #4a90e2; height: 100%; width: ${activeSprint.progress.percentComplete}%; border-radius: 6px; transition: width 0.3s ease;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sprint-body">
+            <!-- Milestones -->
+            <div class="sprint-section">
+                <div class="sprint-section-title">🎯 Key Milestones</div>
+                <div class="sprint-milestones">
+                    ${activeSprint.milestones.map((m, i) => `
+                        <div class="sprint-milestone" style="opacity: ${m.completed ? 0.6 : 1}; display: flex; align-items: center; padding: 16px; background: ${m.completed ? '#f0f0f0' : 'white'}; border-radius: 8px; margin-bottom: 12px;">
+                            <input type="checkbox" ${m.completed ? 'checked' : ''}
+                                   onchange="toggleSprintMilestone('${activeSprint.id}', '${m.id}')"
+                                   style="margin-right: 12px; width: 20px; height: 20px; cursor: pointer;" />
+                            <div class="milestone-number">${i + 1}</div>
+                            <div class="milestone-text" style="${m.completed ? 'text-decoration: line-through;' : ''}">${m.text}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+            ${activeSprint.weeklyCommitments && activeSprint.weeklyCommitments.length > 0 ? `
+                <div class="sprint-section">
+                    <div class="sprint-section-title">💎 Weekly Commitments</div>
+                    <div class="commitment-grid">
+                        ${activeSprint.weeklyCommitments.map(c => `
+                            <div class="commitment-card">
+                                <div class="commitment-icon">${c.icon}</div>
+                                <div class="commitment-title">${c.title}</div>
+                                <div class="commitment-details">
+                                    ${c.details.map(d => `<div>• ${d}</div>`).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : ''}
+
+            ${activeSprint.philosophy ? `
+                <div class="sprint-section">
+                    <div class="sprint-philosophy">
+                        <div class="philosophy-icon">✨</div>
+                        <div class="philosophy-text">${activeSprint.philosophy}</div>
+                    </div>
+                </div>
+            ` : ''}
+        </div>
+
+        <button class="sprint-begin-btn" onclick="closeBiggerPicture()">Begin Weekly Planning →</button>
+    `;
+}
+
+function toggleSprintMilestone(sprintId, milestoneId) {
+    toggleMilestone(sprintId, milestoneId);
+    renderActiveSprint(); // Re-render to show updated state
+}
+
+// Call renderActiveSprint on page load
+document.addEventListener('DOMContentLoaded', () => {
+    renderActiveSprint();
+});
+
+// ===== MILESTONE TAGGING FUNCTIONS =====
+
+function getCurrentWeekKey() {
+    return localStorage.getItem('currentWeek') || '';
+}
+
+function getFormData() {
+    const weekKey = getCurrentWeekKey();
+    const storedWeek = JSON.parse(localStorage.getItem(`week-${weekKey}`) || '{}');
+    return storedWeek.formData || {};
+}
+
+function showMilestoneTaggingModal(weekKey) {
+    const activeSprint = getActiveSprint();
+    if (!activeSprint) {
+        window.location.href = 'dashboard.html';
+        return;
+    }
+
+    const formData = getFormData();
+
+    // Parse weekly goals from workGoals and lifeGoals
+    const workGoals = (formData.workGoals || '').split('\n').filter(g => g.trim());
+    const lifeGoals = (formData.lifeGoals || '').split('\n').filter(g => g.trim());
+    const allGoals = [...workGoals.map(g => ({text: g, type: 'work'})), ...lifeGoals.map(g => ({text: g, type: 'life'}))];
+
+    if (allGoals.length === 0) {
+        window.location.href = 'dashboard.html';
+        return;
+    }
+
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'pos-fullscreen-modal active';
+    modal.id = 'milestone-tagging-modal';
+    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;';
+
+    modal.innerHTML = `
+        <div style="background: white; border-radius: 16px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 40px;">
+            <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 12px;">Tag Goals with Sprint Milestones</h2>
+            <p style="color: rgba(0,0,0,0.6); margin-bottom: 32px; line-height: 1.6;">
+                Connect your weekly goals to <strong>${activeSprint.name}</strong> milestones to track progress automatically.
+            </p>
+
+            <div id="goal-milestone-links">
+                ${allGoals.map((goal, i) => `
+                    <div style="margin-bottom: 20px; padding: 16px; background: #f9f9f9; border-radius: 8px; border-left: 3px solid ${goal.type === 'work' ? '#4a90e2' : '#10b981'};">
+                        <div style="font-weight: 500; margin-bottom: 8px; color: #333;">${goal.text}</div>
+                        <select id="milestone-select-${i}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                            <option value="">No milestone (skip)</option>
+                            ${activeSprint.milestones.map(m => `
+                                <option value="${m.id}">${m.text}</option>
+                            `).join('')}
+                        </select>
+                    </div>
+                `).join('')}
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 32px;">
+                <button onclick="saveMilestoneLinks()" style="flex: 1; padding: 14px 24px; background: #4a90e2; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer;">
+                    Save & Continue
+                </button>
+                <button onclick="skipMilestoneTagging()" style="flex: 1; padding: 14px 24px; background: #f0f0f0; color: #333; border: none; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer;">
+                    Skip
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+}
+
+function saveMilestoneLinks() {
+    const activeSprint = getActiveSprint();
+    const weekKey = getCurrentWeekKey();
+    const formData = getFormData();
+
+    // Get goals with milestone selections
+    const workGoals = (formData.workGoals || '').split('\n').filter(g => g.trim());
+    const lifeGoals = (formData.lifeGoals || '').split('\n').filter(g => g.trim());
+    const allGoals = [...workGoals, ...lifeGoals];
+
+    // Collect tagging intent
+    const tagIntent = [];
+    allGoals.forEach((goal, i) => {
+        const select = document.getElementById(`milestone-select-${i}`);
+        if (select && select.value) {
+            const milestoneId = select.value;
+            tagIntent.push({
+                weekKey: `week-${weekKey}`,
+                goalText: goal,
+                milestoneId: milestoneId,
+                sprintId: activeSprint.id
+            });
+        }
+    });
+
+    // Save intent to localStorage
+    if (tagIntent.length > 0) {
+        const existingIntent = JSON.parse(localStorage.getItem('milestoneTaggingIntent') || '[]');
+        const updatedIntent = [...existingIntent, ...tagIntent];
+        localStorage.setItem('milestoneTaggingIntent', JSON.stringify(updatedIntent));
+    }
+
+    // Close modal and redirect
+    const modal = document.getElementById('milestone-tagging-modal');
+    if (modal) modal.remove();
+    window.location.href = 'dashboard.html';
+}
+
+function skipMilestoneTagging() {
+    // Close modal and redirect
+    const modal = document.getElementById('milestone-tagging-modal');
+    if (modal) modal.remove();
+    window.location.href = 'dashboard.html';
+}
+
 </script>
 
   </div> <!-- Close mainContent -->

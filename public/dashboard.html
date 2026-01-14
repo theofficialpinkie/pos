@@ -2491,7 +2491,12 @@ body.dark-bg .sidebar-toggle {
   <!-- Main Container -->
   <div class="main-container">
     <!-- Daily Routines -->
-    
+
+    <!-- Sprint Progress Widget -->
+    <div id="sprint-progress-widget" style="margin-bottom: 32px;">
+      <!-- Populated by renderSprintProgressWidget() -->
+    </div>
+
     <!-- Weekly Planner - Two Column Layout -->
     <div class="planner-section" id="plannerSection">
       
@@ -3118,11 +3123,15 @@ function initializeDashboard() {
 
   console.log("Dashboard initialized for week:", weekKey, dashboardState);
 
+  // Process milestone tagging intent
+  processTaggingIntent();
+
   initializeRoutines();
   renderTasks();
   initializeInlineTaskInput();
   initializeEmptyStateInput();
   initializeQuickActions();
+  renderSprintProgressWidget();
 }
 
     let currentJDITask = null;
@@ -4412,11 +4421,16 @@ function addQuickTask(taskName) {
     function toggleGoalComplete(goalId) {
       const goal = dashboardState.goals.find(g => g.id === goalId);
       if (!goal) return;
-      
+
       goal.completed = !goal.completed;
       saveDashboard();
       renderTasks(); // Re-render to update goals in empty state
-      
+
+      // Update sprint progress
+      const weekKey = getCurrentWeek();
+      updateSprintProgressFromWeekly(`week-${weekKey}`);
+      renderSprintProgressWidget();
+
       if (goal.completed) {
         showFullScreenCelebration(goal);
       }
@@ -5148,13 +5162,13 @@ task.scheduledDay = currentDay;
   function toggleGoalTask(goalId, taskIndex) {
     const goal = dashboardState.goals.find(g => g.id === goalId);
     if (!goal || !goal.tasks[taskIndex]) return;
-    
+
     goal.tasks[taskIndex].completed = !goal.tasks[taskIndex].completed;
-    
+
     if (goal.tasks[taskIndex].completed) {
       showConfetti(event.target);
     }
-    
+
     // Sync with weekly planner - update all instances of this task
     Object.keys(dashboardState.weeklyTasks).forEach(day => {
       dashboardState.weeklyTasks[day].forEach(weeklyTask => {
@@ -5169,6 +5183,11 @@ task.scheduledDay = currentDay;
   renderGoalTasks(goal);
   renderGoals();
   renderTasks();
+
+  // Update sprint progress
+  const weekKey = getCurrentWeek();
+  updateSprintProgressFromWeekly(`week-${weekKey}`);
+  renderSprintProgressWidget();
 }
 
     function scheduleGoalTask(goalId, taskIndex, day) {
@@ -6125,6 +6144,98 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = `questionnaire.html?week=${week}`;
   });
 });
+
+// ===== SPRINT PROGRESS WIDGET =====
+
+function formatDateRange(startDate, endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const options = { month: 'short', day: 'numeric' };
+    return `${start.toLocaleDateString('en-US', options)} - ${end.toLocaleDateString('en-US', options)}, ${end.getFullYear()}`;
+}
+
+function renderSprintProgressWidget() {
+    const container = document.getElementById('sprint-progress-widget');
+    if (!container) return;
+
+    const activeSprint = getActiveSprint();
+
+    if (!activeSprint) {
+        container.innerHTML = '';
+        return;
+    }
+
+    container.innerHTML = `
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                <div>
+                    <div style="font-size: 12px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Current Sprint</div>
+                    <div style="font-size: 20px; font-weight: 600;">${activeSprint.name}</div>
+                    <div style="font-size: 13px; opacity: 0.8; margin-top: 4px;">${formatDateRange(activeSprint.startDate, activeSprint.endDate)}</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 48px; font-weight: 700; line-height: 1;">${activeSprint.progress.percentComplete}%</div>
+                    <div style="font-size: 12px; opacity: 0.8;">Complete</div>
+                </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.2); height: 8px; border-radius: 4px; margin-bottom: 16px;">
+                <div style="background: white; height: 100%; width: ${activeSprint.progress.percentComplete}%; border-radius: 4px; transition: width 0.5s ease;"></div>
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                ${activeSprint.milestones.map(m => `
+                    <div style="background: ${m.completed ? 'rgba(16, 185, 129, 0.3)' : 'rgba(255,255,255,0.2)'}; padding: 6px 12px; border-radius: 16px; font-size: 12px; border: 1px solid ${m.completed ? 'rgba(16, 185, 129, 0.5)' : 'rgba(255,255,255,0.3)'};">
+                        ${m.completed ? '✓' : '○'} ${m.text}
+                    </div>
+                `).join('')}
+            </div>
+
+            <div style="margin-top: 16px; text-align: center;">
+                <a href="year-dashboard.html" style="color: white; text-decoration: none; font-size: 12px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">
+                    View Full Dashboard →
+                </a>
+            </div>
+        </div>
+    `;
+}
+
+// ===== SPRINT PROGRESS TRACKING =====
+
+function getCurrentWeek() {
+    return localStorage.getItem("currentWeek") || localStorage.getItem("dashboardWeek") || '';
+}
+
+function processTaggingIntent() {
+    const intent = JSON.parse(localStorage.getItem('milestoneTaggingIntent') || '[]');
+    if (intent.length === 0) return;
+
+    const weekKey = getCurrentWeek();
+    const intentForThisWeek = intent.filter(i => i.weekKey === `week-${weekKey}`);
+
+    if (intentForThisWeek.length === 0) return;
+
+    // Match goals by text and link to milestones
+    intentForThisWeek.forEach(i => {
+        const goal = dashboardState.goals.find(g =>
+            g.name === i.goalText ||
+            g.description === i.goalText ||
+            (g.name + ' ' + g.description).includes(i.goalText)
+        );
+        if (goal) {
+            linkGoalToMilestone(i.sprintId, i.milestoneId, `week-${weekKey}`, goal.id);
+        }
+    });
+
+    // Clear processed intent
+    const remainingIntent = intent.filter(i => i.weekKey !== `week-${weekKey}`);
+    localStorage.setItem('milestoneTaggingIntent', JSON.stringify(remainingIntent));
+
+    // Update sprint progress
+    updateSprintProgressFromWeekly(`week-${weekKey}`);
+    renderSprintProgressWidget();
+}
+
 </script>
 
 <script>
