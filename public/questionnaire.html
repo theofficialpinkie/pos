@@ -1410,7 +1410,7 @@ body.dark-bg .sidebar-toggle {
 
     <!-- Bottom Right Overlay -->
     <div class="milestones-bottom-overlay" id="milestonesOverlay">
-      <button class="milestone-continue-btn" onclick="nextBPStep()">Continue to Sprint →</button>
+      <button class="milestone-continue-btn" onclick="closeBiggerPicture()">Continue to Sprint →</button>
     </div>
 
   </div>
@@ -2203,9 +2203,10 @@ function renderAll() {
       html += `
         <div class="nav-footer">
           ${currentIndex > 0 ? `<button class="nav-btn" onclick="navigatePrevious()">← Previous</button>` : ''}
-          ${currentIndex < sections.length - 1 ? 
+          ${currentIndex < sections.length - 1 ?
             `<button class="nav-btn nav-btn-primary" onclick="navigateNext()">Next →</button>` :
-            `<button class="nav-btn nav-btn-primary" onclick="generateDashboard()">Generate Dashboard →</button>`
+            `<button class="nav-btn" onclick="downloadAnswers()">Download Answers</button>
+             <button class="nav-btn nav-btn-primary" onclick="generateDashboard()">Generate Dashboard →</button>`
           }
         </div>
       `;
@@ -2782,6 +2783,76 @@ function saveFormData() {
         window.scrollTo(0, 0);
       }
     }
+
+function downloadAnswers() {
+  saveFormData();
+
+  const week = localStorage.getItem("currentWeek");
+  const storedWeek = JSON.parse(localStorage.getItem(`week-${week}`) || "{}");
+  const data = storedWeek.formData || {};
+
+  // Build readable text output
+  let output = `Weekly Planning Answers\n`;
+  output += `Week of: ${week}\n`;
+  output += `Downloaded: ${new Date().toLocaleString()}\n`;
+  output += `${'='.repeat(50)}\n\n`;
+
+  // Map field IDs to readable labels
+  const fieldLabels = {
+    // Reality section
+    'energyLevel': 'Energy Level (0-10)',
+    'emotionalState': 'Emotional State',
+    'bodyState': 'Body State',
+    'spiritualState': 'Spiritual State',
+    'environmentState': 'Environment State',
+    'financesState': 'Finances State',
+    'workState': 'Work State',
+    'relationshipsState': 'Relationships State',
+    'biggestWin': 'Biggest Win This Week',
+    'biggestChallenge': 'Biggest Challenge',
+    'lessonLearned': 'Lesson Learned',
+
+    // Aliveness section
+    'alivenessScore': 'Aliveness Score (0-10)',
+    'alivenessPlan': 'Aliveness Plan',
+
+    // KPIs
+    'kpi1': 'KPI 1',
+    'kpi2': 'KPI 2',
+    'kpi3': 'KPI 3',
+
+    // Context
+    'contextNotes': 'Context Notes',
+
+    // Goals
+    'weeklyGoal1': 'Weekly Goal 1',
+    'weeklyGoal2': 'Weekly Goal 2',
+    'weeklyGoal3': 'Weekly Goal 3',
+    'oneBigMove': 'One Big Move',
+
+    // Integration
+    'excitementCheck': 'Excitement Level (0-10)'
+  };
+
+  for (const [key, value] of Object.entries(data)) {
+    if (value && value !== '' && value !== '[]') {
+      const label = fieldLabels[key] || key;
+      const displayValue = Array.isArray(value) ? value.join(', ') : value;
+      output += `${label}:\n${displayValue}\n\n`;
+    }
+  }
+
+  // Create and trigger download
+  const blob = new Blob([output], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `weekly-planning-${week}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 
 function generateDashboard() {
   saveFormData();

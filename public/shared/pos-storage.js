@@ -338,16 +338,10 @@ function createSprint(sprintData) {
             name: sprintData.name || '',
             description: sprintData.description || '',
 
-            // Execution-focused fields
+            // Execution-focused fields (NEW STRUCTURE)
             bigMove: sprintData.bigMove || '',
-            workGoals: sprintData.workGoals || [],
-            lifeGoals: sprintData.lifeGoals || [],
-            uplevelActions: sprintData.uplevelActions || [],
-            goalActions: sprintData.goalActions || [],
-            lifeUplevelActions: sprintData.lifeUplevelActions || [],
-            simplicityCheck: sprintData.simplicityCheck || '',
-            metrics: sprintData.metrics || [],
-            excitement: sprintData.excitement || '',
+            goals: sprintData.goals || [],           // Array of { text, uplevelIds[] }
+            projects: sprintData.projects || [],     // Array of { name, description, docUrl, uplevelIds[] }
 
             status: 'active',
             startDate: sprintData.startDate || '',

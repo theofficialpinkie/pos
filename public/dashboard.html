@@ -103,6 +103,26 @@
       transform: translateY(-1px);
     }
 
+    .download-btn {
+      background: transparent;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      color: rgba(0, 0, 0, 0.7);
+      padding: 8px 20px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-radius: 4px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .download-btn:hover {
+      background: rgba(0, 0, 0, 0.03);
+      border-color: rgba(0, 0, 0, 0.3);
+      transform: translateY(-1px);
+    }
+
     /* Main Container */
     .main-container {
       padding-top: 20px;
@@ -2485,7 +2505,10 @@ body.dark-bg .sidebar-toggle {
     <button class="day-nav-btn" onclick="previousDay()">←</button>
     <div class="current-day-header" id="currentDayHeader">Monday</div>
     <button class="day-nav-btn" onclick="nextDay()">→</button>
-    <a href="questionnaire.html" class="back-btn">← Back to Planner</a>
+    <div style="position: absolute; right: 60px; display: flex; gap: 10px;">
+      <button class="download-btn" onclick="downloadDashboardData()">Download Data</button>
+      <a href="questionnaire.html" class="back-btn" style="position: static;">← Back to Planner</a>
+    </div>
   </div>
 
   <!-- Main Container -->
@@ -6115,8 +6138,94 @@ function getNextWeekDates() {
   function saveDashboard() {
   localStorage.setItem(`dashboardState-${weekKey}`, JSON.stringify(dashboardState));
 }
-    
-      
+
+function downloadDashboardData() {
+  const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+  let output = `Weekly Dashboard Export\n`;
+  output += `Week: ${weekKey}\n`;
+  output += `Downloaded: ${new Date().toLocaleString()}\n`;
+  output += `${'='.repeat(60)}\n\n`;
+
+  // Goals Section
+  output += `GOALS\n`;
+  output += `${'-'.repeat(60)}\n`;
+
+  const regularGoals = dashboardState.goals.filter(g => !g.isBacklog);
+  regularGoals.forEach((goal, index) => {
+    const status = goal.completed ? '[COMPLETED]' : '[IN PROGRESS]';
+    output += `\n${index + 1}. ${goal.name} ${status}\n`;
+    if (goal.description) {
+      output += `   Description: ${goal.description}\n`;
+    }
+
+    // Goal tasks/milestones
+    if (goal.tasks && goal.tasks.length > 0) {
+      output += `   Milestones:\n`;
+      goal.tasks.forEach(task => {
+        const taskStatus = task.completed ? '[x]' : '[ ]';
+        output += `     ${taskStatus} ${task.name}\n`;
+      });
+    }
+  });
+
+  // Backlog
+  const backlog = dashboardState.goals.find(g => g.isBacklog);
+  if (backlog && backlog.tasks && backlog.tasks.length > 0) {
+    output += `\n\nBACKLOG\n`;
+    output += `${'-'.repeat(60)}\n`;
+    backlog.tasks.forEach(task => {
+      const taskStatus = task.completed ? '[x]' : '[ ]';
+      output += `${taskStatus} ${task.name}\n`;
+    });
+  }
+
+  // Daily Tasks Section
+  output += `\n\nDAILY TASKS\n`;
+  output += `${'-'.repeat(60)}\n`;
+
+  days.forEach(day => {
+    const dayTasks = dashboardState.weeklyTasks[day] || [];
+    if (dayTasks.length > 0) {
+      output += `\n${day.charAt(0).toUpperCase() + day.slice(1)}:\n`;
+      dayTasks.forEach(task => {
+        const taskStatus = task.completed ? '[x]' : '[ ]';
+        output += `  ${taskStatus} ${task.name}\n`;
+      });
+    }
+  });
+
+  // Summary Stats
+  output += `\n\n${'='.repeat(60)}\n`;
+  output += `SUMMARY\n`;
+  output += `${'-'.repeat(60)}\n`;
+
+  const totalGoals = regularGoals.length;
+  const completedGoals = regularGoals.filter(g => g.completed).length;
+  output += `Goals: ${completedGoals}/${totalGoals} completed\n`;
+
+  let totalTasks = 0;
+  let completedTasks = 0;
+  days.forEach(day => {
+    const dayTasks = dashboardState.weeklyTasks[day] || [];
+    totalTasks += dayTasks.length;
+    completedTasks += dayTasks.filter(t => t.completed).length;
+  });
+  output += `Daily Tasks: ${completedTasks}/${totalTasks} completed\n`;
+
+  // Create and trigger download
+  const blob = new Blob([output], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `dashboard-${weekKey}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+
 
     // Initialize
     initializeDashboard();
