@@ -979,6 +979,32 @@
       border: 2px dashed rgba(0, 0, 0, 0.2);
     }
 
+    .task-item.drop-above::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: #000;
+      border-radius: 2px;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .task-item.drop-below::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: #000;
+      border-radius: 2px;
+      z-index: 100;
+      pointer-events: none;
+    }
+
     .empty-state.drag-over {
       background: rgba(0, 0, 0, 0.03);
       border: 2px dashed rgba(0, 0, 0, 0.2);
@@ -4856,13 +4882,107 @@ function handleWeeklyTaskDragStart(e) {
 
 
 function handleWeeklyTaskDragEnd(e) {
-  console.log('🧊 DRAG END - WEEKLY TASK');
   e.currentTarget.classList.remove('dragging');
+  // Clear any drop indicators
+  document.querySelectorAll('.task-item.drop-above, .task-item.drop-below').forEach(el => {
+    el.classList.remove('drop-above', 'drop-below');
+  });
+  dropTargetTaskId = null;
+  dropPosition = null;
 }
 
 function handleTaskDragEnd(e) {
-  console.log('🧊 DRAG END - GOAL TASK');
   e.currentTarget.classList.remove('dragging');
+  // Clear any drop indicators
+  document.querySelectorAll('.task-item.drop-above, .task-item.drop-below').forEach(el => {
+    el.classList.remove('drop-above', 'drop-below');
+  });
+  dropTargetTaskId = null;
+  dropPosition = null;
+}
+
+// Task item reordering handlers
+function handleTaskItemDragOver(e) {
+  e.preventDefault();
+  e.stopPropagation();
+
+  if (!draggedWeeklyTaskData) return;
+
+  const taskEl = e.currentTarget;
+
+  // Don't show indicator on the dragged item itself
+  if (taskEl.dataset.taskId === draggedWeeklyTaskData.taskId) return;
+
+  // Clear previous indicators
+  document.querySelectorAll('.task-item.drop-above, .task-item.drop-below').forEach(el => {
+    el.classList.remove('drop-above', 'drop-below');
+  });
+
+  const rect = taskEl.getBoundingClientRect();
+  const midpoint = rect.top + rect.height / 2;
+
+  dropTargetTaskId = taskEl.dataset.taskId;
+
+  if (e.clientY < midpoint) {
+    dropPosition = 'above';
+    taskEl.classList.add('drop-above');
+  } else {
+    dropPosition = 'below';
+    taskEl.classList.add('drop-below');
+  }
+}
+
+function handleTaskItemDragLeave(e) {
+  e.currentTarget.classList.remove('drop-above', 'drop-below');
+}
+
+function handleTaskItemDrop(e) {
+  e.preventDefault();
+  e.stopPropagation();
+
+  if (!draggedWeeklyTaskData) return;
+
+  const { taskId, weekDay } = draggedWeeklyTaskData;
+
+  // Only handle same-day reordering here
+  if (weekDay !== currentDay) return;
+
+  const tasksList = dashboardState.weeklyTasks[currentDay] || [];
+  const fromIndex = tasksList.findIndex(t => t.id === taskId);
+
+  if (fromIndex === -1) return;
+
+  const task = tasksList[fromIndex];
+
+  // Find target index
+  let toIndex = tasksList.findIndex(t => t.id === dropTargetTaskId);
+  if (toIndex === -1) return;
+
+  // Adjust for position
+  if (dropPosition === 'below') {
+    toIndex++;
+  }
+
+  // Adjust if moving down
+  if (fromIndex < toIndex) {
+    toIndex--;
+  }
+
+  // Remove from old position
+  tasksList.splice(fromIndex, 1);
+  // Insert at new position
+  tasksList.splice(toIndex, 0, task);
+
+  // Clear state
+  draggedWeeklyTaskData = null;
+  dropTargetTaskId = null;
+  dropPosition = null;
+  document.querySelectorAll('.task-item.drop-above, .task-item.drop-below').forEach(el => {
+    el.classList.remove('drop-above', 'drop-below');
+  });
+
+  saveDashboard();
+  renderTasks();
 }
 
 
@@ -4949,12 +5069,12 @@ if (emptyInput) {
 }
 
     // Initialize drop zone on tasks list
+let dropTargetTaskId = null;
+let dropPosition = null; // 'above' or 'below'
+
 function handleDragOver(e) {
   e.preventDefault();
   e.dataTransfer.dropEffect = 'move';
-
-  console.log('📥 DRAG OVER - Tasks Column');
-  console.log("OVER:", e.target);
 
   const dropZone = e.currentTarget;
   dropZone.classList.add('drag-over');
@@ -4969,14 +5089,37 @@ function handleDragOver(e) {
   if (emptyState) {
     emptyState.classList.add('drag-over');
   }
+
+  // Clear previous drop indicators
+  document.querySelectorAll('.task-item.drop-above, .task-item.drop-below').forEach(el => {
+    el.classList.remove('drop-above', 'drop-below');
+  });
+
+  // Find the task element we're hovering over
+  const taskEl = e.target.closest('.task-item');
+  if (taskEl && draggedWeeklyTaskData) {
+    const rect = taskEl.getBoundingClientRect();
+    const midpoint = rect.top + rect.height / 2;
+
+    dropTargetTaskId = taskEl.dataset.taskId;
+
+    if (e.clientY < midpoint) {
+      dropPosition = 'above';
+      taskEl.classList.add('drop-above');
+    } else {
+      dropPosition = 'below';
+      taskEl.classList.add('drop-below');
+    }
+  } else {
+    dropTargetTaskId = null;
+    dropPosition = null;
+  }
 }
 
     function handleDragLeave(e) {
   const dropZone = e.currentTarget;
 
-  console.log('📥 DRAG LEAVE - Tasks Column');
-  
-   // Only remove highlight if pointer really left the column
+  // Only remove highlight if pointer really left the column
   if (!dropZone.contains(e.relatedTarget)) {
     dropZone.classList.remove('drag-over');
 
@@ -4989,6 +5132,13 @@ function handleDragOver(e) {
     if (emptyState) {
       emptyState.classList.remove('drag-over');
     }
+
+    // Clear drop indicators
+    document.querySelectorAll('.task-item.drop-above, .task-item.drop-below').forEach(el => {
+      el.classList.remove('drop-above', 'drop-below');
+    });
+    dropTargetTaskId = null;
+    dropPosition = null;
   }
 }
 
@@ -5076,7 +5226,7 @@ function handleDragOver(e) {
   }
 
   // ======================
-  // Weekly Task → Weekly Task Drop
+  // Weekly Task → Weekly Task Drop (with reordering support)
   // ======================
   if (draggedWeeklyTaskData) {
     console.log("📌 Weekly task drop detected");
@@ -5093,16 +5243,41 @@ function handleDragOver(e) {
 
     const task = sourceList[index];
 
+    // Remove from source
     sourceList.splice(index, 1);
 
     if (!dashboardState.weeklyTasks[currentDay]) {
       dashboardState.weeklyTasks[currentDay] = [];
     }
-    dashboardState.weeklyTasks[currentDay].push(task);
 
-    console.log("✅ Weekly task moved from", weekDay, "→", currentDay);
+    // Determine insert position
+    let insertIndex = dashboardState.weeklyTasks[currentDay].length; // default: end
 
+    if (dropTargetTaskId && dropPosition) {
+      const targetIndex = dashboardState.weeklyTasks[currentDay].findIndex(t => t.id === dropTargetTaskId);
+      if (targetIndex !== -1) {
+        insertIndex = dropPosition === 'above' ? targetIndex : targetIndex + 1;
+
+        // Adjust if we removed from same list and before target
+        if (weekDay === currentDay && index < targetIndex) {
+          insertIndex--;
+        }
+      }
+    }
+
+    // Insert at position
+    dashboardState.weeklyTasks[currentDay].splice(insertIndex, 0, task);
+
+    console.log("✅ Weekly task moved from", weekDay, "→", currentDay, "at position", insertIndex);
+
+    // Clear drop state
     draggedWeeklyTaskData = null;
+    dropTargetTaskId = null;
+    dropPosition = null;
+    document.querySelectorAll('.task-item.drop-above, .task-item.drop-below').forEach(el => {
+      el.classList.remove('drop-above', 'drop-below');
+    });
+
     saveDashboard();
     renderTasks();
     return;
@@ -5153,6 +5328,11 @@ task.scheduledDay = currentDay;
       }
       
       draggedTaskData = null;
+      dropTargetTaskId = null;
+      dropPosition = null;
+      document.querySelectorAll('.task-item.drop-above, .task-item.drop-below').forEach(el => {
+        el.classList.remove('drop-above', 'drop-below');
+      });
       console.log('  ✅ Drop complete!');
     }
 
@@ -5430,7 +5610,10 @@ task.scheduledDay = currentDay;
         // Drag handlers
         taskEl.addEventListener('dragstart', handleWeeklyTaskDragStart);
         taskEl.addEventListener('dragend', handleWeeklyTaskDragEnd);
-        
+        taskEl.addEventListener('dragover', handleTaskItemDragOver);
+        taskEl.addEventListener('dragleave', handleTaskItemDragLeave);
+        taskEl.addEventListener('drop', handleTaskItemDrop);
+
         taskEl.onclick = (e) => {
           if (e.target.type !== 'checkbox') {
             openTaskSidebar(task.id);
